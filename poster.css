@@ -566,10 +566,10 @@
     line-height: 1.05;
 }
 .gala-date--pro {
-    font-size: 9px !important;
+    font-size: 11px !important;
     letter-spacing: 1.5px !important;
     margin-top: 6px !important;
-    color: rgba(255, 255, 255, 0.85) !important;
+    color: rgba(255, 255, 255, 0.92) !important;
     padding: 0 !important;
     background: none !important;
 }
@@ -594,19 +594,19 @@
     line-height: 1;
 }
 .gala-stats-label {
-    font-size: 7px;
+    font-size: 9px;
     letter-spacing: 1.5px;
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.78);
 }
 .gala-corners-legend {
     display: flex;
     justify-content: center;
     gap: 20px;
-    font-size: 7px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1px;
-    color: rgba(255, 255, 255, 0.65);
-    margin-bottom: 10px;
+    letter-spacing: 1.2px;
+    color: rgba(255, 255, 255, 0.88);
+    margin-bottom: 12px;
     text-transform: uppercase;
 }
 .gala-photo--placeholder,
@@ -631,6 +631,8 @@
 .gala-poster--ufc {
     padding: 14px 16px 18px;
     max-width: 100%;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 .gala-header--compact { margin-bottom: 10px; padding-bottom: 8px; }
@@ -663,8 +665,8 @@
 
 .gala-ufc-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
     align-items: stretch;
 }
 
@@ -679,6 +681,26 @@
     box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
     grid-column: span 1;
 }
+.gala-bout--featured .gala-bout-row {
+    min-height: 108px;
+}
+.gala-bout--featured .gala-bout-photo {
+    height: 58px;
+    max-width: 110px;
+}
+.gala-bout--featured .gala-bout-name {
+    font-size: clamp(11px, 2.8vw, 14px);
+}
+.gala-bout--featured .gala-bout-club {
+    font-size: clamp(8px, 2vw, 10px);
+}
+.gala-bout--featured .gala-bout-cat {
+    font-size: 10px;
+}
+.gala-bout--featured .gala-bout-vs {
+    font-size: 20px;
+    min-width: 30px;
+}
 @media (min-width: 700px) {
     .gala-bout--featured { grid-column: span 2; }
 }
@@ -687,38 +709,39 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 4px 6px;
-    padding: 4px 6px;
+    gap: 5px 8px;
+    padding: 6px 8px;
     background: linear-gradient(90deg, rgba(212, 175, 55, 0.2), transparent);
     border-bottom: 1px solid rgba(212, 175, 55, 0.15);
 }
 .gala-bout-num {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 800;
     background: var(--gala-gold);
     color: #000;
-    padding: 1px 5px;
-    border-radius: 2px;
+    padding: 2px 6px;
+    border-radius: 3px;
 }
 .gala-bout-cat {
-    font-size: 6px;
+    font-size: 9px;
     font-weight: 600;
-    letter-spacing: 0.3px;
-    color: rgba(255, 255, 255, 0.75);
+    letter-spacing: 0.4px;
+    color: rgba(255, 255, 255, 0.92);
     flex: 1;
-    line-height: 1.2;
+    line-height: 1.35;
 }
 .gala-bout-tier {
-    font-size: 6px;
+    font-size: 8px;
     color: var(--gala-gold-light);
     font-weight: 700;
     width: 100%;
+    letter-spacing: 0.5px;
 }
 
 .gala-bout-row {
     display: flex;
     align-items: stretch;
-    min-height: 72px;
+    min-height: 92px;
 }
 
 .gala-bout-corner {
@@ -741,38 +764,47 @@
 
 .gala-bout-photo {
     width: 100%;
-    height: 36px;
-    margin: 0 auto 3px;
+    max-width: 88px;
+    height: 46px;
+    margin: 0 auto 5px;
     background: linear-gradient(145deg, #2a2a30, #121214);
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-size: cover;
+    background-position: center top;
 }
 .gala-bout-name {
-    font-size: 7px;
+    font-size: clamp(9px, 2.2vw, 11px);
     font-weight: 700;
-    line-height: 1.15;
-    letter-spacing: 0.2px;
+    line-height: 1.25;
+    letter-spacing: 0.3px;
     word-break: break-word;
+    color: #f5f5f8;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.85);
 }
 .gala-bout-club {
-    font-size: 5px;
-    color: rgba(255, 255, 255, 0.45);
+    font-size: clamp(7px, 1.8vw, 9px);
+    color: rgba(255, 255, 255, 0.72);
     font-style: italic;
-    margin-top: 2px;
+    margin-top: 3px;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    word-break: break-word;
 }
 .gala-bout-vs {
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 14px;
+    font-size: 17px;
     color: var(--gala-gold);
-    padding: 0 2px;
+    padding: 0 4px;
     flex-shrink: 0;
-    min-width: 22px;
-    background: rgba(0, 0, 0, 0.4);
+    min-width: 26px;
+    background: rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 .gala-bout .gala-winner-badge {
     font-size: 5px;
@@ -790,31 +822,33 @@
 }
 
 .gala-tier-banner--compact {
-    font-size: 8px;
-    padding: 4px 8px;
-    margin-bottom: 6px;
+    font-size: 10px;
+    padding: 5px 10px;
+    margin-bottom: 8px;
+    letter-spacing: 2px;
 }
-.gala-ufc-waiting { margin-top: 10px; }
+.gala-ufc-waiting { margin-top: 12px; }
 .gala-waiting-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
+    gap: 8px;
     justify-content: center;
 }
 .gala-waiting-chip {
     display: flex;
     align-items: center;
-    gap: 6px;
-    font-size: 7px;
+    gap: 8px;
+    font-size: 10px;
     font-weight: 600;
-    padding: 4px 8px;
-    border: 1px dashed rgba(255, 215, 0, 0.35);
+    padding: 6px 12px;
+    border: 1px dashed rgba(255, 215, 0, 0.45);
     border-radius: 20px;
-    background: rgba(255, 215, 0, 0.05);
+    background: rgba(255, 215, 0, 0.08);
+    color: rgba(255, 255, 255, 0.92);
 }
 .gala-waiting-chip-photo {
-    width: 22px;
-    height: 22px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     flex-shrink: 0;
     background: #222;
@@ -848,9 +882,11 @@
     .gala-bout-corner {
         width: 100%;
     }
-    .gala-bout-photo { height: 56px; max-width: 100%; }
-    .gala-bout-name { font-size: 9px; line-height: 1.2; word-break: break-word; }
-    .gala-bout-club { font-size: 7px; }
+    .gala-bout-photo { height: 64px; max-width: 100%; }
+    .gala-bout-name { font-size: 12px; line-height: 1.25; word-break: break-word; }
+    .gala-bout-club { font-size: 10px; -webkit-line-clamp: 3; }
+    .gala-bout-cat { font-size: 10px; }
+    .gala-bout--featured .gala-bout-name { font-size: 14px; }
     .gala-bout-head {
         flex-wrap: wrap;
         gap: 4px;
@@ -873,7 +909,7 @@
     }
     .gala-waiting-chip {
         max-width: 100%;
-        font-size: 9px;
+        font-size: 11px;
     }
 }
 
@@ -932,10 +968,11 @@
         grid-column: span 2 !important;
     }
 
-    body.printing-poster .gala-bout-photo { height: 8mm !important; }
-    body.printing-poster .gala-bout-name { font-size: 5.5pt !important; }
-    body.printing-poster .gala-bout-club { font-size: 4.5pt !important; }
-    body.printing-poster .gala-bout-vs { font-size: 9pt !important; min-width: 5mm !important; }
+    body.printing-poster .gala-bout-photo { height: 10mm !important; }
+    body.printing-poster .gala-bout-name { font-size: 7pt !important; }
+    body.printing-poster .gala-bout-club { font-size: 6pt !important; }
+    body.printing-poster .gala-bout-cat { font-size: 6.5pt !important; }
+    body.printing-poster .gala-bout-vs { font-size: 10pt !important; min-width: 6mm !important; }
     body.printing-poster .gala-title--compact { font-size: 16pt !important; }
     body.printing-poster .gala-header--compact { margin-bottom: 2mm !important; }
 
