@@ -9,10 +9,10 @@ const SECRETS = {
   SUPABASE_URL: 'https://cnlyzqcrlimwiojoffza.supabase.co',
   SUPABASE_KEY:
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNubHl6cWNybGltd2lvam9mZnphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk0ODYyODcsImV4cCI6MjA5NTA2MjI4N30.JUO4zEfOJdEDmKBd8CmFSz2UmjKHqkqlhOhQNamSAgA',
-  WHATSAPP_PHOTO_CONTACT: '+33684698028',
+  CONTACT_EMAIL: 'bc.combat31@gmail.com',
 };
 
-const PHOTO_CONTACT = SECRETS.WHATSAPP_PHOTO_CONTACT;
+const CONTACT_EMAIL = process.env.CONTACT_EMAIL || SECRETS.CONTACT_EMAIL;
 
 function checkAuth(req) {
   const secret = process.env.SITE_API_SECRET || SECRETS.SITE_API_SECRET;
@@ -51,23 +51,15 @@ function buildMessage(reg, missing) {
     lines +
     '\n\n';
 
+  msg +=
+    'Pour nous transmettre les informations manquantes, envoyez-les par e-mail à :\n' +
+    '📧 *' +
+    CONTACT_EMAIL +
+    '*\n\n';
+
   if (missing.some((m) => m.key === 'photo')) {
     msg +=
-      '📷 Envoyez votre *photo* avec votre *nom et prénom* au ' +
-      PHOTO_CONTACT +
-      ' (WhatsApp).\n\n';
-  }
-  if (missing.some((m) => m.key === 'email')) {
-    msg += '📧 Répondez à ce message avec votre *adresse e-mail*.\n\n';
-  }
-  if (missing.some((m) => m.key === 'telephone')) {
-    msg += '📱 Indiquez votre *numéro de mobile*.\n\n';
-  }
-  if (missing.some((m) => m.key === 'numeroLicence')) {
-    msg += '🪪 Envoyez votre *numéro de licence* FFBB.\n\n';
-  }
-  if (missing.some((m) => m.key === 'club')) {
-    msg += '🏟️ Précisez votre *club / salle*.\n\n';
+      '📷 Pour la *photo*, joignez-la à votre e-mail en indiquant votre *nom et prénom* dans le message.\n\n';
   }
 
   msg += 'Merci ! — *Boxing Center St Cyprien*';
@@ -217,7 +209,7 @@ module.exports = async function handler(req, res) {
     });
 
     res.status(200).json({
-      photoContact: PHOTO_CONTACT,
+      contactEmail: CONTACT_EMAIL,
       filter: { nom: nom || null, prenom: prenom || null, query: query || null },
       total: recipients.length,
       recipients
