@@ -60,7 +60,8 @@ DROP POLICY IF EXISTS "Public matches policy" ON matches;
 CREATE POLICY "Public matches policy" ON matches
   FOR ALL USING (true) WITH CHECK (true);
 
--- 3. Create match_metadata table (for last matching timestamp)
+-- 3. Create match_metadata table (timestamps + publication site public)
+-- Clés utilisées : matches_timestamp, matches_published (true/false), matches_published_at (ISO)
 CREATE TABLE IF NOT EXISTS match_metadata (
   key TEXT PRIMARY KEY,
   value TEXT

@@ -53,27 +53,17 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
   <script src="poster.js?v=4"></script>
+  <script src="published-matches.js"></script>
   <script>
     (function () {
-      var MATCH_KEY = 'boxingtrophy18_matches';
       var POLL_MS = 3 * 60 * 1000;
       var lastSnapshot = '';
 
       function loadMatches() {
-        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
-          return supabaseClient.from('matches').select('*').order('sort_order', { ascending: true })
-            .then(function (res) {
-              if (res.error) throw res.error;
-              var data = res.data || [];
-              if (typeof GalaPoster !== 'undefined') {
-                GalaPoster.normalizeMatches(data);
-                GalaPoster.assignMatchMeta(data);
-              }
-              return data;
-            });
-        }
-        try { return Promise.resolve(JSON.parse(localStorage.getItem(MATCH_KEY)) || []); }
-        catch (e) { return Promise.resolve([]); }
+        return BT18PublishedMatches.loadPublishedMatches().then(function (result) {
+          if (!result.published) return [];
+          return result.matches;
+        });
       }
 
       function updateSyncNote() {
@@ -91,6 +81,8 @@
         if (pairs.length === 0 && waiting.length === 0) {
           document.getElementById('afficheLoading').hidden = true;
           document.getElementById('afficheEmpty').hidden = false;
+          document.getElementById('afficheEmpty').textContent =
+            'La carte des combats sera publiée prochainement par l\'organisation.';
           document.getElementById('afficheToolbar').hidden = true;
           return;
         }

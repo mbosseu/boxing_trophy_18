@@ -36,6 +36,9 @@
     const REG_KEY = 'boxingtrophy18_registrations';
     const MATCH_KEY = 'boxingtrophy18_matches';
     const MATCH_TS_KEY = 'boxingtrophy18_matches_timestamp';
+    const MATCH_PUBLISHED_KEY = 'matches_published';
+    const MATCH_PUBLISHED_AT_KEY = 'matches_published_at';
+    const LOCAL_PUBLISHED_KEY = 'boxingtrophy18_matches_published';
 
     // ── DOM References ────────────────────────────────────
     const $ = (s) => document.querySelector(s);
@@ -92,6 +95,8 @@
     // ── State ─────────────────────────────────────────────
     let registrations = [];
     let matches = [];
+    let matchesPublished = false;
+    let matchesPublishedAt = null;
     let pendingDeleteId = null;
     let swapSourceFighterId = null;
     let swapSourceMatchIndex = null;
@@ -416,6 +421,88 @@
         localStorage.setItem(MATCH_TS_KEY, ts);
     }
 
+    async function loadPublishedState() {
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('match_metadata')
+                    .select('key, value')
+                    .in('key', [MATCH_PUBLISHED_KEY, MATCH_PUBLISHED_AT_KEY]);
+                if (error) throw error;
+                matchesPublished = false;
+                matchesPublishedAt = null;
+                (data || []).forEach(function (row) {
+                    if (row.key === MATCH_PUBLISHED_KEY) matchesPublished = row.value === 'true';
+                    if (row.key === MATCH_PUBLISHED_AT_KEY) matchesPublishedAt = row.value || null;
+                });
+                return;
+            } catch (e) {
+                console.warn('loadPublishedState:', e);
+            }
+        }
+        matchesPublished = localStorage.getItem(LOCAL_PUBLISHED_KEY) === 'true';
+        matchesPublishedAt = localStorage.getItem(LOCAL_PUBLISHED_KEY + '_at');
+    }
+
+    async function setMatchesPublished(published) {
+        const ts = published ? new Date().toISOString() : '';
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+            const { error } = await supabaseClient.from('match_metadata').upsert([
+                { key: MATCH_PUBLISHED_KEY, value: published ? 'true' : 'false' },
+                { key: MATCH_PUBLISHED_AT_KEY, value: ts },
+            ]);
+            if (error) throw error;
+        }
+        if (published) {
+            localStorage.setItem(LOCAL_PUBLISHED_KEY, 'true');
+            localStorage.setItem(LOCAL_PUBLISHED_KEY + '_at', ts);
+        } else {
+            localStorage.removeItem(LOCAL_PUBLISHED_KEY);
+            localStorage.removeItem(LOCAL_PUBLISHED_KEY + '_at');
+        }
+        matchesPublished = published;
+        matchesPublishedAt = published ? ts : null;
+        updatePublishStatusUI();
+    }
+
+    async function publishMatchesToSite() {
+        enrichMatchesFromRegistrations();
+        await saveMatches();
+        await setMatchesPublished(true);
+    }
+
+    async function saveMatchesDraft() {
+        enrichMatchesFromRegistrations();
+        await saveMatches();
+        updatePublishStatusUI();
+    }
+
+    function updatePublishStatusUI() {
+        var badge = $('#publishStatusBadge');
+        if (!badge) return;
+        var pairs = getPairMatches();
+        if (!pairs.length) {
+            badge.hidden = true;
+            return;
+        }
+        badge.hidden = false;
+        if (matchesPublished) {
+            badge.textContent = matchesPublishedAt
+                ? '✓ Publié sur le site · ' +
+                  new Date(matchesPublishedAt).toLocaleString('fr-FR', {
+                      day: 'numeric',
+                      month: 'short',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                  })
+                : '✓ Publié sur le site';
+            badge.className = 'publish-status-badge publish-status-badge--on';
+        } else {
+            badge.textContent = '⚠ Brouillon — non visible sur le site public';
+            badge.className = 'publish-status-badge publish-status-badge--draft';
+        }
+    }
+
     async function loadMatches() {
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
             try {
@@ -447,6 +534,7 @@
                 } else {
                     matchTimestamp.textContent = '';
                 }
+                await loadPublishedState();
                 renderMatches();
                 renderAfficheTab();
                 return;
@@ -469,6 +557,7 @@
             const d = new Date(ts);
             matchTimestamp.textContent = 'Dernier appariement : ' + formatDateTime(d);
         }
+        await loadPublishedState();
         renderMatches();
         renderAfficheTab();
     }
@@ -1820,11 +1909,13 @@
                 (waiting ? ' · ' + waiting + ' en attente' : '');
         }
         if (hint) {
+            var pub = matchesPublished ? ' · visible sur le site' : ' · brouillon (non publié)';
             hint.textContent = hasWinners
-                ? '✓ Affiche en mode résultats (automatique)'
-                : 'Carte avant combat — déclarez des vainqueurs pour afficher les résultats';
+                ? '✓ Affiche en mode résultats (automatique)' + pub
+                : 'Carte avant combat — déclarez des vainqueurs pour afficher les résultats' + pub;
             hint.className = 'affiche-mode-hint' + (hasWinners ? ' is-results' : '');
         }
+        updatePublishStatusUI();
     }
 
     function renderAfficheTab() {
@@ -2114,34 +2205,58 @@
     }
 
     function initAfficheTab() {
-        var saveResultsBtn = $('#saveResultsBtn');
+        var saveDraftBtn = $('#saveDraftBtn');
+        var publishSiteBtn = $('#publishSiteBtn');
         var printPosterBtn = $('#printPosterBtn');
         var photoUrlInput = $('#fighterPhotoUrl');
         var photoUploadBtn = $('#fighterPhotoUploadBtn');
         var photoRemoveBtn = $('#fighterPhotoRemoveBtn');
         var photoFile = $('#fighterPhotoFile');
 
-        if (saveResultsBtn) {
-            saveResultsBtn.addEventListener('click', async function () {
-                saveResultsBtn.disabled = true;
-                var oldLabel = saveResultsBtn.innerHTML;
-                saveResultsBtn.textContent = 'Publication…';
+        if (saveDraftBtn) {
+            saveDraftBtn.addEventListener('click', async function () {
+                saveDraftBtn.disabled = true;
                 try {
-                    enrichMatchesFromRegistrations();
-                    await saveMatches();
-                    var pairs = getPairMatches();
+                    await saveMatchesDraft();
+                    showNotification(
+                        matchesPublished
+                            ? '✅ Enregistré — republiez pour mettre le site à jour'
+                            : '✅ Brouillon enregistré (non visible sur le site)'
+                    );
+                    updatePosterPreview();
+                    updateAfficheStatusBar();
+                } catch (e) {
+                    showNotification('❌ Erreur lors de l\'enregistrement.');
+                } finally {
+                    saveDraftBtn.disabled = false;
+                }
+            });
+        }
+
+        if (publishSiteBtn) {
+            publishSiteBtn.addEventListener('click', async function () {
+                var pairs = getPairMatches();
+                if (!pairs.length) {
+                    showNotification('❌ Aucun combat à publier — générez les appariements d\'abord.');
+                    return;
+                }
+                publishSiteBtn.disabled = true;
+                var oldLabel = publishSiteBtn.innerHTML;
+                publishSiteBtn.textContent = 'Publication…';
+                try {
+                    await publishMatchesToSite();
                     var done = pairs.filter(function (m) { return m.winner; }).length;
                     showNotification(
-                        '✅ Publié ! Le site public est à jour' +
-                        (done ? ' (affiche avec ' + done + ' vainqueur(s)).' : '.')
+                        '✅ Publié ! Carte visible sur la page d\'accueil et la carte des combats' +
+                        (done ? ' (' + done + ' vainqueur(s)).' : '.')
                     );
                     updatePosterPreview();
                     updateAfficheStatusBar();
                 } catch (e) {
                     showNotification('❌ Erreur lors de la publication.');
                 } finally {
-                    saveResultsBtn.disabled = false;
-                    saveResultsBtn.innerHTML = oldLabel;
+                    publishSiteBtn.disabled = false;
+                    publishSiteBtn.innerHTML = oldLabel;
                 }
             });
         }

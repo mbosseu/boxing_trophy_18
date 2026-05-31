@@ -2266,6 +2266,26 @@ button, .btn, .tab-btn, .swap-item, .modal-close {
 .affiche-mode-hint { color: var(--text-dim); }
 .affiche-mode-hint.is-results { color: var(--green); font-weight: 600; }
 
+.publish-status-badge {
+    display: block;
+    margin: -8px 0 16px;
+    padding: 10px 14px;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 1.4;
+}
+.publish-status-badge--on {
+    background: rgba(46, 204, 113, 0.12);
+    border: 1px solid rgba(46, 204, 113, 0.35);
+    color: var(--green);
+}
+.publish-status-badge--draft {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid rgba(255, 193, 7, 0.35);
+    color: #e6b800;
+}
+
 .visually-hidden {
     position: absolute;
     width: 1px;

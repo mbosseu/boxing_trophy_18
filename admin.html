@@ -315,17 +315,23 @@
                         Imprimer tout
                     </button>
                     <a href="affiche.html" target="_blank" id="viewPublicPosterLink" class="btn btn-outline btn-sm">Voir le site</a>
-                    <button id="saveResultsBtn" class="btn btn-primary btn-sm">
+                    <button type="button" id="saveDraftBtn" class="btn btn-outline btn-sm" title="Sauvegarde sans afficher sur le site">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                        Enregistrer et publier
+                        Enregistrer brouillon
+                    </button>
+                    <button type="button" id="publishSiteBtn" class="btn btn-primary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+                        Publier sur le site
                     </button>
                 </div>
             </div>
 
+            <p id="publishStatusBadge" class="publish-status-badge publish-status-badge--draft" hidden></p>
+
             <div class="affiche-guide card">
                 <div class="affiche-guide-step"><span>1</span><p><strong>Cliquez sur un combat</strong> (n° ou VS) pour les infos, ou sur un <strong>boxeur</strong> pour sa fiche et le vainqueur.</p></div>
                 <div class="affiche-guide-step"><span>2</span><p>Quand la soirée avance, les vainqueurs s'affichent en <strong>or</strong> sur l'affiche (automatique).</p></div>
-                <div class="affiche-guide-step"><span>3</span><p><strong>Enregistrer et publier</strong> : une seule action pour mettre à jour le site public. Puis « Imprimer tout » si besoin.</p></div>
+                <div class="affiche-guide-step"><span>3</span><p><strong>Publier sur le site</strong> : affiche la carte sur la page d'accueil et « Carte des combats ». <strong>Enregistrer brouillon</strong> sauve sans publier.</p></div>
             </div>
 
             <div id="afficheStatusBar" class="affiche-status-bar" hidden>
@@ -830,6 +836,6 @@ create policy "Accès public total" on match_metadata
     <script src="supabase-config.js"></script>
     <script src="cloudinary-config.js?v=3"></script>
     <script src="poster.js?v=5"></script>
-    <script src="admin.js?v=17"></script>
+    <script src="admin.js?v=18"></script>
 </body>
 </html>

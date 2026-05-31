@@ -3705,3 +3705,38 @@ select#categoriePoids {
     justify-content: center;
   }
 }
+
+/* ── Carte des combats (page d'accueil, après publication admin) ── */
+.home-combats-section {
+  background: linear-gradient(180deg, var(--black) 0%, var(--black-deep) 100%);
+  border-top: 1px solid rgba(255, 215, 0, 0.12);
+  border-bottom: 1px solid rgba(255, 215, 0, 0.12);
+}
+
+.home-poster-wrap {
+  margin: 0 auto 24px;
+  max-width: 1100px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.home-poster-wrap .gala-poster {
+  margin: 0 auto;
+}
+
+.home-combats-cta {
+  text-align: center;
+  margin-top: 8px;
+}
+
+.home-combats-cta .btn {
+  min-width: 220px;
+}
+
+@media (max-width: 600px) {
+  .home-poster-wrap {
+    margin-left: -8px;
+    margin-right: -8px;
+    border-radius: 8px;
+  }
+}
