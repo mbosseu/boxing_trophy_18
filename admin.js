@@ -598,8 +598,46 @@
     const REG_PER_PAGE = 10;
     let regCurrentPage = 1;
 
+    function normalizeSearchText(value) {
+        return String(value || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+    }
+
+    function registrationMatchesSearch(reg, rawQuery) {
+        var q = normalizeSearchText(rawQuery);
+        if (!q) return true;
+        var qDigits = rawQuery.replace(/\D/g, '');
+        var fields = [
+            reg.nom,
+            reg.prenom,
+            reg.email,
+            reg.telephone,
+            reg.club,
+            reg.numeroLicence,
+            reg.categoriePoids,
+            reg.niveau,
+            reg.discipline,
+        ];
+        var haystack = normalizeSearchText(fields.filter(Boolean).join(' '));
+        if (haystack.indexOf(q) !== -1) return true;
+        if (qDigits.length >= 3) {
+            var tel = String(reg.telephone || '').replace(/\D/g, '');
+            if (tel.indexOf(qDigits) !== -1) return true;
+        }
+        return false;
+    }
+
+    function updateRegSearchClearBtn() {
+        var clearBtn = $('#filterSearchClear');
+        if (!clearBtn || !filterSearch) return;
+        clearBtn.hidden = !filterSearch.value.trim();
+    }
+
     function getFilteredRegistrations() {
-        var search = filterSearch.value.toLowerCase().trim();
+        var search = filterSearch ? filterSearch.value.trim() : '';
         var sexe = filterSexe.value;
         var niveau = filterNiveau.value;
         var poids = filterPoids.value;
@@ -610,10 +648,7 @@
             if (niveau && r.niveau !== niveau) return false;
             if (poids && r.categoriePoids !== poids) return false;
             if (licence && r.licencie !== licence) return false;
-            if (search) {
-                var haystack = ((r.nom || '') + ' ' + (r.prenom || '')).toLowerCase();
-                if (haystack.indexOf(search) === -1) return false;
-            }
+            if (search && !registrationMatchesSearch(r, search)) return false;
             return true;
         });
 
@@ -783,8 +818,24 @@
         }
     })();
 
-    // Filters
-    filterSearch.addEventListener('input', resetRegPageAndRender);
+    // Filters & recherche
+    if (filterSearch) {
+        filterSearch.addEventListener('input', function () {
+            updateRegSearchClearBtn();
+            resetRegPageAndRender();
+        });
+        filterSearch.addEventListener('search', resetRegPageAndRender);
+    }
+    var filterSearchClear = $('#filterSearchClear');
+    if (filterSearchClear && filterSearch) {
+        filterSearchClear.addEventListener('click', function () {
+            filterSearch.value = '';
+            updateRegSearchClearBtn();
+            filterSearch.focus();
+            resetRegPageAndRender();
+        });
+    }
+    updateRegSearchClearBtn();
     filterSexe.addEventListener('change', resetRegPageAndRender);
     filterNiveau.addEventListener('change', resetRegPageAndRender);
     filterPoids.addEventListener('change', resetRegPageAndRender);
