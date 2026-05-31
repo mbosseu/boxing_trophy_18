@@ -10,6 +10,11 @@
     border-radius: 12px;
     border: 1px solid rgba(212, 175, 55, 0.2);
     overflow-x: auto;
+    overflow-y: visible;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    -webkit-overflow-scrolling: touch;
 }
 
 .gala-poster {
@@ -21,8 +26,10 @@
     --gala-texture: radial-gradient(ellipse at center, #1a1a1e 0%, #08080a 70%);
 
     font-family: 'Oswald', sans-serif;
+    width: 100%;
     max-width: 1100px;
     margin: 0 auto;
+    box-sizing: border-box;
     background: var(--gala-texture);
     color: #fff;
     padding: 28px 32px 36px;
@@ -665,9 +672,11 @@
 
 .gala-ufc-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr));
     gap: 10px;
     align-items: stretch;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .gala-bout {
