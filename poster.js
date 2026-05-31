@@ -435,8 +435,48 @@
         container.innerHTML = buildPosterHtml(matches, options);
     }
 
-    function preparePrintFit(container, matches, options) {
+    /** Zone imprimable A4 paysage (~96 dpi, marges 5 mm) */
+    function getPrintableBounds() {
+        return { w: 1030, h: 700 };
+    }
+
+    function clearPrintFit(container) {
         if (!container) return;
+        var poster = container.querySelector('.gala-poster');
+        if (poster) poster.classList.remove('gala-poster--printing');
+        container.classList.remove('gala-poster-wrap--print-fit');
+        container.style.removeProperty('--print-scale');
+        container.style.removeProperty('width');
+        container.style.removeProperty('height');
+    }
+
+    function measurePosterHeight(poster) {
+        var ph = Math.max(poster.scrollHeight, poster.offsetHeight, 1);
+        var footer = poster.querySelector('.gala-footer');
+        if (footer) {
+            ph = Math.max(ph, footer.offsetTop + footer.offsetHeight + 8);
+        }
+        return ph;
+    }
+
+    function measurePrintScale(container) {
+        var poster = container.querySelector('.gala-poster');
+        if (!poster) return 1;
+        var bounds = getPrintableBounds();
+        var pw = Math.max(poster.scrollWidth, poster.offsetWidth, 1);
+        var ph = measurePosterHeight(poster);
+        var scale = Math.min(1, bounds.w / pw, bounds.h / ph);
+        return Math.max(0.28, Math.round(scale * 1000) / 1000);
+    }
+
+    /**
+     * Prépare l'affiche pour l'impression (échelle auto). Appeler done() avant window.print().
+     */
+    function preparePrintFit(container, matches, options, done) {
+        if (!container) {
+            if (typeof done === 'function') done();
+            return;
+        }
         if (matches && matches.length) {
             renderPoster(container, matches, Object.assign({}, options || {}, {
                 forPrint: true,
@@ -444,20 +484,32 @@
                 interactive: false
             }));
         }
-        var poster = container.querySelector('.gala-poster');
-        if (!poster) return;
-        poster.classList.add('gala-poster--printing');
-        container.style.removeProperty('--print-scale');
-        var pageH = 700;
-        var h = poster.scrollHeight;
-        if (h > pageH) {
-            var scale = Math.max(0.32, pageH / h);
+        function applyScale() {
+            var poster = container.querySelector('.gala-poster');
+            if (!poster) {
+                if (typeof done === 'function') done();
+                return;
+            }
+            poster.classList.add('gala-poster--printing');
+            container.classList.add('gala-poster-wrap--print-fit');
+            var pw = Math.max(poster.scrollWidth, poster.offsetWidth, 1);
+            var ph = measurePosterHeight(poster);
+            var bounds = getPrintableBounds();
+            var scale = Math.min(1, bounds.w / pw, bounds.h / ph);
+            scale = Math.max(0.28, Math.round(scale * 1000) / 1000);
             container.style.setProperty('--print-scale', String(scale));
+            container.style.width = Math.ceil(pw * scale + 2) + 'px';
+            container.style.height = Math.ceil(ph * scale + 4) + 'px';
+            if (typeof done === 'function') done();
         }
+        requestAnimationFrame(function () {
+            requestAnimationFrame(applyScale);
+        });
     }
 
     function restoreScreenPoster(container, matches, options) {
         if (!container || !matches) return;
+        clearPrintFit(container);
         renderPoster(container, matches, Object.assign({}, options || {}, {
             forPrint: false,
             includeWaiting: true,
@@ -478,6 +530,7 @@
         buildPosterHtml: buildPosterHtml,
         renderPoster: renderPoster,
         preparePrintFit: preparePrintFit,
+        clearPrintFit: clearPrintFit,
         restoreScreenPoster: restoreScreenPoster,
         EVENT_VENUE: EVENT_VENUE,
         escapeHtml: escapeHtml,

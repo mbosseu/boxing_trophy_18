@@ -19,7 +19,7 @@ function initHomeCombats() {
     var pairs = matches.filter(function (m) {
       return m.type === 'pair' && m.fighter1 && m.fighter2;
     });
-    if (!pairs.length && !matches.some(function (m) { return m.type === 'waiting'; })) {
+    if (!pairs.length) {
       showEmpty();
       return;
     }
@@ -47,7 +47,7 @@ function initHomeCombats() {
       GalaPoster.renderPoster(wrap, matches, {
         interactive: false,
         showResults: hasWinners,
-        includeWaiting: true,
+        includeWaiting: false,
       });
     }
   }

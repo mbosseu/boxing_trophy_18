@@ -323,6 +323,9 @@
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
                         Publier sur le site
                     </button>
+                    <button type="button" id="unpublishSiteBtn" class="btn btn-outline btn-sm" hidden title="Retirer la carte du site public">
+                        Annuler la publication
+                    </button>
                 </div>
             </div>
 
@@ -331,7 +334,7 @@
             <div class="affiche-guide card">
                 <div class="affiche-guide-step"><span>1</span><p><strong>Cliquez sur un combat</strong> (n° ou VS) pour les infos, ou sur un <strong>boxeur</strong> pour sa fiche et le vainqueur.</p></div>
                 <div class="affiche-guide-step"><span>2</span><p>Quand la soirée avance, les vainqueurs s'affichent en <strong>or</strong> sur l'affiche (automatique).</p></div>
-                <div class="affiche-guide-step"><span>3</span><p><strong>Publier sur le site</strong> : affiche la carte sur la page d'accueil et « Carte des combats ». <strong>Enregistrer brouillon</strong> sauve sans publier.</p></div>
+                <div class="affiche-guide-step"><span>3</span><p><strong>Publier</strong> : carte sur l'accueil (combats confirmés uniquement, pas « en attente »). <strong>Annuler la publication</strong> retire la carte du site.</p></div>
             </div>
 
             <div id="afficheStatusBar" class="affiche-status-bar" hidden>
@@ -835,7 +838,7 @@ create policy "Accès public total" on match_metadata
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script src="cloudinary-config.js?v=3"></script>
-    <script src="poster.js?v=5"></script>
-    <script src="admin.js?v=18"></script>
+    <script src="poster.js?v=6"></script>
+    <script src="admin.js?v=19"></script>
 </body>
 </html>

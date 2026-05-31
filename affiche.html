@@ -52,7 +52,7 @@
   <script src="env-loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-config.js"></script>
-  <script src="poster.js?v=4"></script>
+  <script src="poster.js?v=6"></script>
   <script src="published-matches.js"></script>
   <script>
     (function () {
@@ -78,7 +78,7 @@
         var pairs = matches.filter(function (m) { return m.type === 'pair' && m.fighter1 && m.fighter2; });
         var waiting = matches.filter(function (m) { return m.type === 'waiting'; });
 
-        if (pairs.length === 0 && waiting.length === 0) {
+        if (pairs.length === 0) {
           document.getElementById('afficheLoading').hidden = true;
           document.getElementById('afficheEmpty').hidden = false;
           document.getElementById('afficheEmpty').textContent =
@@ -104,7 +104,7 @@
         GalaPoster.renderPoster(poster, matches, {
           interactive: false,
           showResults: hasWinners,
-          includeWaiting: true
+          includeWaiting: false
         });
         window.__afficheMatches = matches;
         window.__afficheHasWinners = hasWinners;
@@ -123,25 +123,30 @@
         });
       }
 
-      document.getElementById('printAfficheBtn').addEventListener('click', function () {
+      function runPrint() {
         var wrap = document.getElementById('affichePoster');
         var m = window.__afficheMatches || [];
         var opts = { showResults: !!window.__afficheHasWinners, interactive: false };
-        if (typeof GalaPoster !== 'undefined' && wrap) {
-          GalaPoster.preparePrintFit(wrap, m, opts);
-        }
+        document.documentElement.classList.add('printing-poster');
         document.body.classList.add('printing-poster');
-        window.print();
-        setTimeout(function () {
-          document.body.classList.remove('printing-poster');
-          if (wrap) {
-            wrap.style.removeProperty('--print-scale');
-            if (typeof GalaPoster.restoreScreenPoster === 'function') {
+        function doPrint() {
+          window.print();
+          setTimeout(function () {
+            document.documentElement.classList.remove('printing-poster');
+            document.body.classList.remove('printing-poster');
+            if (wrap && typeof GalaPoster.restoreScreenPoster === 'function') {
               GalaPoster.restoreScreenPoster(wrap, m, Object.assign({}, opts, { includeWaiting: true }));
             }
-          }
-        }, 600);
-      });
+          }, 800);
+        }
+        if (typeof GalaPoster !== 'undefined' && wrap) {
+          GalaPoster.preparePrintFit(wrap, m, opts, doPrint);
+        } else {
+          doPrint();
+        }
+      }
+
+      document.getElementById('printAfficheBtn').addEventListener('click', runPrint);
 
       poll().catch(function () {
         document.getElementById('afficheLoading').textContent = 'Impossible de charger la carte. Réessayez plus tard.';

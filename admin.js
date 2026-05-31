@@ -479,28 +479,35 @@
 
     function updatePublishStatusUI() {
         var badge = $('#publishStatusBadge');
-        if (!badge) return;
+        var publishBtn = $('#publishSiteBtn');
+        var unpublishBtn = $('#unpublishSiteBtn');
         var pairs = getPairMatches();
         if (!pairs.length) {
-            badge.hidden = true;
+            if (badge) badge.hidden = true;
+            if (publishBtn) publishBtn.hidden = false;
+            if (unpublishBtn) unpublishBtn.hidden = true;
             return;
         }
-        badge.hidden = false;
-        if (matchesPublished) {
-            badge.textContent = matchesPublishedAt
-                ? '✓ Publié sur le site · ' +
-                  new Date(matchesPublishedAt).toLocaleString('fr-FR', {
-                      day: 'numeric',
-                      month: 'short',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                  })
-                : '✓ Publié sur le site';
-            badge.className = 'publish-status-badge publish-status-badge--on';
-        } else {
-            badge.textContent = '⚠ Brouillon — non visible sur le site public';
-            badge.className = 'publish-status-badge publish-status-badge--draft';
+        if (badge) {
+            badge.hidden = false;
+            if (matchesPublished) {
+                badge.textContent = matchesPublishedAt
+                    ? '✓ Publié sur le site · ' +
+                      new Date(matchesPublishedAt).toLocaleString('fr-FR', {
+                          day: 'numeric',
+                          month: 'short',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                      })
+                    : '✓ Publié sur le site';
+                badge.className = 'publish-status-badge publish-status-badge--on';
+            } else {
+                badge.textContent = '⚠ Brouillon — non visible sur le site public';
+                badge.className = 'publish-status-badge publish-status-badge--draft';
+            }
         }
+        if (publishBtn) publishBtn.hidden = !!matchesPublished;
+        if (unpublishBtn) unpublishBtn.hidden = !matchesPublished;
     }
 
     async function loadMatches() {
@@ -2207,6 +2214,7 @@
     function initAfficheTab() {
         var saveDraftBtn = $('#saveDraftBtn');
         var publishSiteBtn = $('#publishSiteBtn');
+        var unpublishSiteBtn = $('#unpublishSiteBtn');
         var printPosterBtn = $('#printPosterBtn');
         var photoUrlInput = $('#fighterPhotoUrl');
         var photoUploadBtn = $('#fighterPhotoUploadBtn');
@@ -2261,6 +2269,28 @@
             });
         }
 
+        if (unpublishSiteBtn) {
+            unpublishSiteBtn.addEventListener('click', async function () {
+                if (
+                    !confirm(
+                        'Retirer la carte des combats du site public ?\nLes visiteurs ne verront plus les combats jusqu\'à une nouvelle publication.'
+                    )
+                ) {
+                    return;
+                }
+                unpublishSiteBtn.disabled = true;
+                try {
+                    await setMatchesPublished(false);
+                    showNotification('✅ Publication annulée — carte retirée du site public');
+                    updateAfficheStatusBar();
+                } catch (e) {
+                    showNotification('❌ Erreur lors de l\'annulation.');
+                } finally {
+                    unpublishSiteBtn.disabled = false;
+                }
+            });
+        }
+
         if (printPosterBtn) {
             printPosterBtn.addEventListener('click', function () {
                 var wrap = $('#posterPreview');
@@ -2270,22 +2300,27 @@
                     showResults: hasWinners,
                     includeWaiting: true
                 };
-                if (typeof GalaPoster !== 'undefined' && wrap) {
-                    GalaPoster.preparePrintFit(wrap, matches, screenOpts);
-                }
+                document.documentElement.classList.add('printing-poster');
                 document.body.classList.add('printing-poster');
-                window.print();
-                setTimeout(function () {
-                    document.body.classList.remove('printing-poster');
-                    if (wrap) {
-                        wrap.style.removeProperty('--print-scale');
-                        if (typeof GalaPoster.restoreScreenPoster === 'function') {
-                            GalaPoster.restoreScreenPoster(wrap, matches, screenOpts);
-                        } else {
-                            updatePosterPreview();
+                function doPrint() {
+                    window.print();
+                    setTimeout(function () {
+                        document.documentElement.classList.remove('printing-poster');
+                        document.body.classList.remove('printing-poster');
+                        if (wrap) {
+                            if (typeof GalaPoster.restoreScreenPoster === 'function') {
+                                GalaPoster.restoreScreenPoster(wrap, matches, screenOpts);
+                            } else {
+                                updatePosterPreview();
+                            }
                         }
-                    }
-                }, 600);
+                    }, 800);
+                }
+                if (typeof GalaPoster !== 'undefined' && wrap) {
+                    GalaPoster.preparePrintFit(wrap, matches, screenOpts, doPrint);
+                } else {
+                    doPrint();
+                }
             });
         }
 

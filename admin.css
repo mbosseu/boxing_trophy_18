@@ -2286,6 +2286,14 @@ button, .btn, .tab-btn, .swap-item, .modal-close {
     color: #e6b800;
 }
 
+#unpublishSiteBtn {
+    border-color: rgba(230, 57, 70, 0.45);
+    color: #e63946;
+}
+#unpublishSiteBtn:hover {
+    background: rgba(230, 57, 70, 0.12);
+}
+
 .visually-hidden {
     position: absolute;
     width: 1px;
