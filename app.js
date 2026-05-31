@@ -20,6 +20,7 @@ function migrateLocalStorage() {
 document.addEventListener('DOMContentLoaded', () => {
   migrateLocalStorage();
   initNavigation();
+  initAnchorScroll();
   initCountdown();
   initScrollReveal();
   initForm();
@@ -29,70 +30,87 @@ document.addEventListener('DOMContentLoaded', () => {
 /* ============================================
    NAVIGATION
    ============================================ */
+const NAV_SCROLL_OFFSET = 96;
+
+function revealInSection(section) {
+  if (!section) return;
+  section.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach((el) => {
+    el.classList.add('visible');
+  });
+}
+
+function scrollToSection(target) {
+  if (!target) return;
+  const top = target.getBoundingClientRect().top + window.scrollY - NAV_SCROLL_OFFSET;
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
 function initNavigation() {
   const nav = document.getElementById('navbar');
   const toggle = document.getElementById('navToggle');
   const links = document.getElementById('navLinks');
-  let lastScrollY = window.scrollY;
-  const SCROLL_TOLERANCE = 15;
+  if (!nav || !toggle || !links) return;
 
-  // Scroll effect with direction detection (Smart Scroll)
   window.addEventListener('scroll', () => {
-    const currentScrollY = window.scrollY;
-    const isMenuOpen = links.classList.contains('open');
-    const scrollDelta = currentScrollY - lastScrollY;
-
-    // Add scrolled class when page is scrolled down
-    if (currentScrollY > 60) {
+    if (window.scrollY > 60) {
       nav.classList.add('scrolled');
     } else {
       nav.classList.remove('scrolled');
     }
+    nav.classList.remove('nav-hidden', 'nav-visible');
+  }, { passive: true });
 
-    // Smart scroll hide/show trigger (15px tolerance avoids micro-scroll jitter)
-    if (currentScrollY > 100) {
-      if (!isMenuOpen) {
-        if (scrollDelta < -SCROLL_TOLERANCE) {
-          nav.classList.add('nav-visible');
-          nav.classList.remove('nav-hidden');
-          lastScrollY = currentScrollY;
-        } else if (scrollDelta > SCROLL_TOLERANCE) {
-          nav.classList.remove('nav-visible');
-          nav.classList.add('nav-hidden');
-          lastScrollY = currentScrollY;
-        }
-      }
-    } else {
-      nav.classList.remove('nav-hidden');
-      nav.classList.remove('nav-visible');
-      lastScrollY = currentScrollY;
-    }
-  });
-
-  // Mobile toggle
   toggle.addEventListener('click', () => {
     toggle.classList.toggle('active');
     links.classList.toggle('open');
     nav.classList.toggle('nav-open');
-    
-    // Ensure navbar remains visible when mobile menu is open
-    if (links.classList.contains('open')) {
-      nav.classList.add('nav-visible');
-      nav.classList.remove('nav-hidden');
-    }
-    
     document.body.style.overflow = links.classList.contains('open') ? 'hidden' : '';
   });
 
-  // Close mobile menu on link click
-  links.querySelectorAll('a').forEach(link => {
+  function closeMobileNav() {
+    toggle.classList.remove('active');
+    links.classList.remove('open');
+    nav.classList.remove('nav-open');
+    document.body.style.overflow = '';
+  }
+
+  links.querySelectorAll('a').forEach((link) => {
     link.addEventListener('click', () => {
-      toggle.classList.remove('active');
-      links.classList.remove('open');
-      nav.classList.remove('nav-open');
-      document.body.style.overflow = '';
+      closeMobileNav();
     });
   });
+}
+
+function initAnchorScroll() {
+  function goToHash(hash) {
+    if (!hash || hash === '#') return;
+    const target = document.querySelector(hash);
+    if (!target) return;
+    revealInSection(target);
+    requestAnimationFrame(() => scrollToSection(target));
+  }
+
+  document.querySelectorAll('a[href^="#"]').forEach((link) => {
+    const href = link.getAttribute('href');
+    if (!href || href === '#') return;
+    link.addEventListener('click', (e) => {
+      const target = document.querySelector(href);
+      if (!target) return;
+      e.preventDefault();
+      goToHash(href);
+      if (history.pushState) {
+        history.pushState(null, '', href);
+      } else {
+        window.location.hash = href;
+      }
+    });
+  });
+
+  if (window.location.hash) {
+    window.addEventListener('load', () => {
+      setTimeout(() => goToHash(window.location.hash), 80);
+    });
+  }
 }
 
 /* ============================================

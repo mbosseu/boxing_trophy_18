@@ -70,6 +70,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
   font-size: 16px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -156,20 +157,6 @@ ul, ol {
     box-shadow 0.4s var(--ease-out);
 }
 
-/* Hidden state triggered by JS scrolling down */
-.nav.nav-hidden {
-  transform: translateY(-150%) !important;
-  opacity: 0 !important;
-}
-
-/* Force visible state triggered by JS scrolling up */
-.nav.nav-visible {
-  transform: none !important;
-  opacity: 1 !important;
-  border-color: rgba(230, 57, 70, 0.25);
-  box-shadow: 0 20px 50px rgba(230, 57, 70, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-}
-
 /* Scrolled styling for mobile & desktop */
 .nav.scrolled {
   background: rgba(5, 5, 7, 0.9);
@@ -197,14 +184,6 @@ ul, ol {
     opacity: 1 !important;
     border-color: rgba(230, 57, 70, 0.25);
     box-shadow: 0 20px 50px rgba(230, 57, 70, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
-  }
-
-  .nav.nav-visible {
-    transform: translate(-50%, 0) !important;
-  }
-
-  .nav.nav-hidden {
-    transform: translate(-50%, -150%) !important;
   }
 
   .nav.scrolled {
@@ -3707,10 +3686,20 @@ select#categoriePoids {
 }
 
 /* ── Carte des combats (page d'accueil, après publication admin) ── */
+#carte-combats {
+  scroll-margin-top: 6rem;
+}
+
 .home-combats-section {
   background: linear-gradient(180deg, var(--black) 0%, var(--black-deep) 100%);
   border-top: 1px solid rgba(255, 215, 0, 0.12);
   border-bottom: 1px solid rgba(255, 215, 0, 0.12);
+}
+
+.home-combats-section .home-combats-soon,
+.home-combats-section .home-combats-soon * {
+  opacity: 1;
+  transform: none;
 }
 
 .home-poster-wrap {
