@@ -1,0 +1,6 @@
+node_modules
+.env
+.env.local
+schema.sql
+/bot/
+nyc-cookies-casablanca/

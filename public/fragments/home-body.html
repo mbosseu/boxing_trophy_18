@@ -1,0 +1,535 @@
+﻿
+
+  <!-- ===================== NAVIGATION ===================== -->
+  <div class="nav-trigger" id="navTrigger"></div>
+  <nav class="nav" id="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">BOXING <span>TROPHY</span></a>
+      <div class="nav-links" id="navLinks">
+        <a href="#event">L'Ã‰vÃ©nement</a>
+        <a href="#concept">Le Concept</a>
+        <a href="#inscription">Inscription</a>
+        <a href="/carte">Carte des combats</a>
+
+        <a href="#inscription" class="nav-cta">S'inscrire</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" id="hero">
+    <video class="hero-video-bg" autoplay muted loop playsinline>
+      <source src="/videos/mp_.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-overlay"></div>
+
+    <!-- Glowing ambient background orbs -->
+    <div class="hero-glow-orb orb-red"></div>
+    <div class="hero-glow-orb orb-blue"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge">ðŸ“ Boxing Center St Cyprien</div>
+      <h1 class="hero-title">
+        <span class="line1">Boxing</span>
+        <span class="line2">Trophy</span>
+        <span class="line3">18</span>
+      </h1>
+      <p class="hero-subtitle">L'Ã©vÃ©nement incontournable de boxe loisir. Montez sur le ring, vivez l'expÃ©rience.</p>
+      
+      <div class="hero-date">
+        <div class="ticket-left">
+          <span class="ticket-label">VIP ACCESS</span>
+          <span class="ticket-main">Vendredi <span>5 Juin 2026</span></span>
+        </div>
+        <div class="ticket-divider"></div>
+        <div class="ticket-right">
+          <span class="ticket-time">Ã€ partir de 19h</span>
+          <div class="ticket-barcode"></div>
+        </div>
+        <div class="hero-date-shine"></div>
+      </div>
+
+      <div class="countdown" id="countdown">
+        <div class="countdown-item">
+          <span class="countdown-value" id="cd-days">00</span>
+          <span class="countdown-label">Jours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="cd-hours">00</span>
+          <span class="countdown-label">Heures</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="cd-minutes">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="cd-seconds">00</span>
+          <span class="countdown-label">Secondes</span>
+        </div>
+        <div class="countdown-finished-msg">L'Ã©vÃ©nement a commencÃ© !</div>
+      </div>
+
+      <div class="hero-cta-group">
+        <a href="#inscription" class="btn btn-primary">
+          <span class="btn-icon">ðŸ¥Š</span> S'inscrire maintenant
+        </a>
+        <a href="#event" class="btn btn-secondary">
+          <span class="btn-icon">â–¶</span> DÃ©couvrir
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-scroll">
+      <span>Scroll</span>
+      <div class="hero-scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===================== EVENT PRESENTATION ===================== -->
+  <section class="section event-section" id="event">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Vendredi 5 Juin 2026</span>
+        <h2 class="section-title">L'Ã‰vÃ©nement <span>Boxing Trophy</span></h2>
+        <p class="section-desc">
+          Une soirÃ©e exceptionnelle dÃ©diÃ©e Ã  la boxe loisir, mÃªlant sport, spectacle et convivialitÃ© au cÅ“ur du Boxing Center St Cyprien.
+        </p>
+      </div>
+
+      <!-- Event editorial grid -->
+      <div class="event-grid reveal">
+        <div class="event-text">
+          <h3>Une expÃ©rience<br/>au-delÃ  du ring</h3>
+          <p class="event-lead">
+            Le <span class="highlight">Boxing Trophy 18</span> revient pour une nouvelle Ã©dition exceptionnelle. 
+            Bien plus qu'une simple compÃ©tition, c'est une vÃ©ritable expÃ©rience immersive qui plonge les participants 
+            et spectateurs dans l'univers de la boxe.
+          </p>
+          <div class="event-program-card">
+            <span class="program-tag">ðŸ¥Š Au programme</span>
+            <p>
+              Combats encadrÃ©s par des professionnels, animations tout au long de la soirÃ©e, 
+              stands partenaires, buvette et une ambiance Ã©lectrique garantie. Chaque participant bÃ©nÃ©ficie 
+              d'un accompagnement personnalisÃ© et d'une mise en lumiÃ¨re digne des plus grands Ã©vÃ©nements.
+            </p>
+          </div>
+        </div>
+        <div class="event-image-wrapper">
+          <img src="/image/image1.png" alt="Coaching ringside Boxing Trophy" loading="lazy" />
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-strip reveal">
+        <div class="stat-item">
+          <span class="stat-value" data-count="18">0</span>
+          <span class="stat-label">Ã‰ditions</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" data-count="200">0</span>
+          <span class="stat-label">Combattants</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" data-count="500">0</span>
+          <span class="stat-label">Spectateurs</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-value" data-count="1">0</span>
+          <span class="stat-label">SoirÃ©e Unique</span>
+        </div>
+      </div>
+
+      <!-- Photo Gallery -->
+      <div class="gallery-grid reveal">
+        <div class="gallery-item red-corner">
+          <img src="/image/image.png" alt="Combat fÃ©minin Boxing Trophy" loading="lazy" />
+          <div class="gallery-corner-tag">COIN ROUGE</div>
+          <span class="gallery-caption">Combat FÃ©minin</span>
+        </div>
+        <div class="gallery-item gold-corner">
+          <img src="/image/image4.png" alt="CÃ©rÃ©monie Boxing Trophy" loading="lazy" />
+          <div class="gallery-corner-tag">CHAMPION</div>
+          <span class="gallery-caption">CÃ©rÃ©monie</span>
+        </div>
+        <div class="gallery-item blue-corner">
+          <img src="/image/image1.png" alt="Coaching Boxing Trophy" loading="lazy" />
+          <div class="gallery-corner-tag">COIN BLEU</div>
+          <span class="gallery-caption">Encadrement Pro</span>
+        </div>
+        <div class="gallery-item dual-corner">
+          <img src="/image/image2/image3.png" alt="Combat Boxing Trophy" loading="lazy" />
+          <div class="gallery-corner-tag">L'AFFRONTEMENT</div>
+          <span class="gallery-caption">L'intensitÃ© du Ring</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FIGHT EVENT FOCUS ===================== -->
+  <section class="section event-concept-section" id="concept">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Le Concept</span>
+        <h2 class="section-title">Boxing <span>Trophy</span></h2>
+        <p class="section-desc">
+          Une expÃ©rience unique pour les boxeurs loisirs : montez sur le ring, vivez l'adrÃ©naline, repartez avec des souvenirs inoubliables.
+        </p>
+      </div>
+
+      <div class="event-concept-grid">
+        <div class="event-concept-poster reveal-left">
+          <img src="/image/affiche1.png" alt="Affiche officielle Boxing Trophy 18" />
+        </div>
+
+        <div class="event-concept-features reveal-right">
+          <div class="event-concept-feature feat-red feat-ring">
+            <div class="event-concept-feature-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="14.5 17.5 3 6 3 3 6 3 17.5 14.5"></polyline>
+                <line x1="13" y1="19" x2="19" y2="13"></line>
+                <line x1="16" y1="16" x2="20" y2="20"></line>
+                <line x1="19" y1="21" x2="21" y2="19"></line>
+                <polyline points="10 14 5 19 5 21 7 21 12 16"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h4>AccÃ¨s au Ring</h4>
+              <p>Montez sur un vrai ring de boxe professionnel, sous les projecteurs, avec une ambiance de gala. Une expÃ©rience que vous n'oublierez jamais.</p>
+            </div>
+          </div>
+
+          <div class="event-concept-feature feat-gold feat-coach">
+            <div class="event-concept-feature-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+            </div>
+            <div>
+              <h4>Encadrement Professionnel</h4>
+              <p>Chaque combat est supervisÃ© par des entraÃ®neurs certifiÃ©s et un arbitre expÃ©rimentÃ©. Votre sÃ©curitÃ© est notre prioritÃ© absolue.</p>
+            </div>
+          </div>
+
+          <div class="event-concept-feature feat-blue feat-match">
+            <div class="event-concept-feature-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"></path>
+              </svg>
+            </div>
+            <div>
+              <h4>Appariement Intelligent</h4>
+              <p>Notre system vous associe Ã  un adversaire de mÃªme sexe, poids et niveau. Des combats Ã©quilibrÃ©s pour des expÃ©riences mÃ©morables.</p>
+            </div>
+          </div>
+
+          <div class="event-concept-feature feat-red feat-light">
+            <div class="event-concept-feature-icon">
+              <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="14.31" y1="8" x2="20.05" y2="17.94"></line>
+                <line x1="9.69" y1="8" x2="21.17" y2="8"></line>
+                <line x1="7.38" y1="12" x2="13.12" y2="2.06"></line>
+                <line x1="9.69" y1="16" x2="3.95" y2="6.06"></line>
+                <line x1="14.31" y1="16" x2="2.83" y2="16"></line>
+                <line x1="16.62" y1="12" x2="10.88" y2="21.94"></line>
+              </svg>
+            </div>
+            <div>
+              <h4>Mise en LumiÃ¨re</h4>
+              <p>Photos professionnelles, vidÃ©os, entrÃ©e personnalisÃ©e â€” chaque participant est traitÃ© comme un champion, de l'Ã©chauffement au gong final.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== REGISTRATION FORM ===================== -->
+  <section class="section form-section" id="inscription">
+    <div class="form-bg-watermark">ENTER THE RING</div>
+    <!-- Glowing ambient background orbs for the form section -->
+    <div class="form-glow-orb orb-form-red"></div>
+    <div class="form-glow-orb orb-form-blue"></div>
+    <div class="form-glow-orb orb-form-gold"></div>
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-tag">Inscriptions Ouvertes</span>
+        <h2 class="section-title">Rejoins le <span>Ring</span></h2>
+        <p class="section-desc">
+          Remplis le formulaire ci-dessous pour t'inscrire au Boxing Trophy 18. Boxe Anglaise uniquement.
+        </p>
+      </div>
+
+      <div class="form-container reveal">
+        <!-- Step indicators -->
+        <div class="form-steps">
+          <div class="step-indicator active" data-step="1">
+            <div class="step-number">1</div>
+            <span class="step-label">IdentitÃ©</span>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="2">
+            <div class="step-number">2</div>
+            <span class="step-label">Sportif</span>
+          </div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="3">
+            <div class="step-number">3</div>
+            <span class="step-label">ComplÃ©mentaire</span>
+          </div>
+        </div>
+
+        <!-- Form card -->
+        <div class="form-card">
+          <form id="registrationForm" novalidate>
+            <!-- STEP 1: Identity -->
+            <div class="form-step active" data-step="1">
+              <h3 class="form-step-title">IdentitÃ©</h3>
+              <p class="form-step-desc">Vos informations personnelles</p>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="nom">Nom <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="nom" name="nom" placeholder="Votre nom" required />
+                  <div class="form-error" id="nom-error">Veuillez saisir votre nom</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prenom">PrÃ©nom <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Votre prÃ©nom" required />
+                  <div class="form-error" id="prenom-error">Veuillez saisir votre prÃ©nom</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="dateNaissance">Date de naissance <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" required />
+                  <div class="form-error" id="dateNaissance-error">Veuillez saisir votre date de naissance</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Sexe <span class="required">*</span></label>
+                  <div class="form-radio-group">
+                    <label class="form-radio-label male-corner">
+                      <input type="radio" name="sexe" value="Homme" required />
+                      <span class="radio-card-content">
+                        <span class="radio-card-title">Homme</span>
+                        <span class="radio-card-badge">Coin Rouge</span>
+                      </span>
+                    </label>
+                    <label class="form-radio-label female-corner">
+                      <input type="radio" name="sexe" value="Femme" required />
+                      <span class="radio-card-content">
+                        <span class="radio-card-title">Femme</span>
+                        <span class="radio-card-badge">Coin Bleu</span>
+                      </span>
+                    </label>
+                  </div>
+                  <div class="form-error" id="sexe-error">Veuillez sÃ©lectionner votre sexe</div>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="email">Adresse e-mail <span class="required">*</span></label>
+                  <input type="email" class="form-input" id="email" name="email" placeholder="exemple@mail.com" required />
+                  <div class="form-error" id="email-error">Veuillez saisir une adresse e-mail valide</div>
+                  <div class="form-error" id="email-duplicate-error">Cette adresse e-mail est dÃ©jÃ  inscrite</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="telephone">TÃ©lÃ©phone <span class="required">*</span></label>
+                  <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="06 12 34 56 78" required />
+                  <div class="form-error" id="telephone-error">Veuillez saisir un numÃ©ro de tÃ©lÃ©phone valide</div>
+                  <div class="form-error" id="telephone-duplicate-error">Ce numÃ©ro de tÃ©lÃ©phone est dÃ©jÃ  inscrit</div>
+                </div>
+              </div>
+
+              <div class="form-nav">
+                <div></div>
+                <button type="button" class="btn btn-next" data-next="2">Suivant â†’</button>
+              </div>
+            </div>
+
+            <!-- STEP 2: Sports Info -->
+            <div class="form-step" data-step="2">
+              <h3 class="form-step-title">Informations Sportives</h3>
+              <p class="form-step-desc">Votre profil de boxeur</p>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="niveau">Niveau <span class="required">*</span></label>
+                  <select class="form-select" id="niveau" name="niveau" required>
+                    <option value="">SÃ©lectionner</option>
+                    <option value="DÃ©butant">DÃ©butant</option>
+                    <option value="IntermÃ©diaire">IntermÃ©diaire</option>
+                  </select>
+                  <div class="form-error" id="niveau-error">Veuillez sÃ©lectionner votre niveau</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="discipline">Discipline</label>
+                  <input type="text" class="form-input form-input-readonly" id="discipline" name="discipline" value="Boxe Anglaise" readonly />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">LicenciÃ© FFB / FFKMDA <span class="required">*</span></label>
+                <div class="form-radio-group">
+                  <label class="form-radio-label yes-license">
+                    <input type="radio" name="licencie" value="Oui" required />
+                    <span class="radio-card-content">
+                      <span class="radio-card-title">Oui</span>
+                      <span class="radio-card-desc">LicenciÃ© actif</span>
+                    </span>
+                  </label>
+                  <label class="form-radio-label no-license">
+                    <input type="radio" name="licencie" value="Non" required />
+                    <span class="radio-card-content">
+                      <span class="radio-card-title">Non</span>
+                      <span class="radio-card-desc">Non licenciÃ©</span>
+                    </span>
+                  </label>
+                </div>
+                <div class="form-error" id="licencie-error">Veuillez indiquer si vous Ãªtes licenciÃ©</div>
+              </div>
+
+              <!-- Conditional: License Number -->
+              <div class="conditional-field" id="licenceField">
+                <div class="form-group">
+                  <label class="form-label" for="numeroLicence">NumÃ©ro de Licence <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="numeroLicence" name="numeroLicence" placeholder="Votre numÃ©ro de licence" />
+                  <div class="form-error" id="numeroLicence-error">Veuillez saisir votre numÃ©ro de licence</div>
+                </div>
+              </div>
+
+              <!-- Conditional: Engagement -->
+              <div class="conditional-field" id="engagementField">
+                <div class="form-group">
+                  <label class="form-checkbox-label">
+                    <input type="checkbox" name="engagementLicence" id="engagementLicence" />
+                    Je m'engage Ã  obtenir une licence loisir valide avant le 01/06/2026
+                  </label>
+                  <div class="form-error" id="engagementLicence-error">Vous devez vous engager Ã  obtenir une licence</div>
+                </div>
+              </div>
+
+              <div class="form-nav">
+                <button type="button" class="btn btn-prev" data-prev="1">â† Retour</button>
+                <button type="button" class="btn btn-next" data-next="3">Suivant â†’</button>
+              </div>
+            </div>
+
+            <!-- STEP 3: Additional Info -->
+            <div class="form-step" data-step="3">
+              <h3 class="form-step-title">Informations ComplÃ©mentaires</h3>
+              <p class="form-step-desc">DerniÃ¨res informations pour finaliser votre inscription</p>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="club">Club d'entraÃ®nement <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="club" name="club" placeholder="Nom de votre club" required />
+                  <div class="form-error" id="club-error">Veuillez saisir votre club</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="categoriePoids">CatÃ©gorie de poids <span class="required">*</span></label>
+                  <select class="form-select" id="categoriePoids" name="categoriePoids" required>
+                    <option value="">SÃ©lectionner</option>
+                    <option value="-60kg">Moins de 60 kg</option>
+                    <option value="-64kg">60 â€“ 64 kg</option>
+                    <option value="-69kg">64 â€“ 69 kg</option>
+                    <option value="-75kg">69 â€“ 75 kg</option>
+                    <option value="-81kg">75 â€“ 81 kg</option>
+                    <option value="-91kg">81 â€“ 91 kg</option>
+                    <option value="+91kg">Plus de 91 kg</option>
+                  </select>
+                  <div class="form-error" id="categoriePoids-error">Veuillez sÃ©lectionner une catÃ©gorie</div>
+                </div>
+              </div>
+
+              <div class="form-group form-group-photo-reg">
+                <label class="form-label">Photo de profil <span class="optional-label">(facultatif)</span></label>
+                <p class="form-hint-photo">Pour l'affiche officielle des combats. Formats : JPG, PNG.</p>
+                <div class="reg-photo-row">
+                  <div id="regPhotoPreview" class="reg-photo-preview" aria-hidden="true"></div>
+                  <div class="reg-photo-actions">
+                    <input type="file" id="regPhotoFile" accept="image/jpeg,image/png,image/webp" class="visually-hidden" />
+                    <input type="hidden" id="regPhotoUrl" name="regPhotoUrl" />
+                    <button type="button" id="regPhotoBtn" class="btn btn-secondary reg-photo-btn">Choisir une image</button>
+                    <button type="button" id="regPhotoClearBtn" class="btn btn-ghost reg-photo-clear" hidden>Retirer</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-checkbox-label">
+                  <input type="checkbox" name="consentementRGPD" id="consentementRGPD" required />
+                  J'accepte que mes donnÃ©es personnelles soient traitÃ©es dans le cadre de l'organisation du Boxing Trophy 18, conformÃ©ment au RGPD. Mes donnÃ©es ne seront pas partagÃ©es avec des tiers.
+                </label>
+                <div class="form-error" id="consentementRGPD-error">Vous devez accepter les conditions de traitement des donnÃ©es</div>
+              </div>
+
+              <div class="form-nav">
+                <button type="button" class="btn btn-prev" data-prev="2">â† Retour</button>
+                <button type="submit" class="btn btn-submit">ðŸ¥Š Valider l'inscription</button>
+              </div>
+            </div>
+          </form>
+
+          <!-- Success message -->
+          <div class="form-success" id="formSuccess">
+            <span class="form-success-icon">ðŸ†</span>
+            <h3>Inscription confirmÃ©e !</h3>
+            <p>
+              Merci pour votre inscription au Boxing Trophy 18.<br/>
+              Vous serez contactÃ©(e) prochainement avec les dÃ©tails de votre combat.<br/>
+              PrÃ©parez-vous, le ring vous attend !
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" id="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <h4>Boxing <span>Trophy</span> <span class="edition-badge">18</span></h4>
+        <p>
+          L'Ã©vÃ©nement de <span class="text-red">boxe loisir</span> incontournable au <span class="text-blue">Boxing Center St Cyprien</span>. 
+          Depuis <span class="text-gold">18 Ã©ditions</span>, nous offrons aux passionnÃ©s une expÃ©rience unique sur le <span class="text-red">ring</span>.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <a href="#event">L'Ã‰vÃ©nement</a>
+        <a href="#concept">Le Concept</a>
+        <a href="#inscription">Inscription</a>
+        <a href="/carte">Carte des combats</a>
+      </div>
+      <div class="footer-col">
+        <h5>Informations</h5>
+        <a href="#"><span class="text-blue">Boxing Center St Cyprien</span></a>
+        <a href="#"><span class="text-gold">Vendredi 5 Juin 2026</span></a>
+        <a href="#">Ã€ partir de <span class="text-white">19h</span></a>
+        <a href="#">EntrÃ©e : <span class="text-red">10â‚¬</span></a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>Â© 2026 <span class="text-gold">Boxing Trophy 18</span> â€” Tous droits rÃ©servÃ©s</p>
+      <a href="#">Politique de confidentialitÃ© & RGPD</a>
+    </div>
+  </footer>
+
+  <script src="env.sample.js"></script>
+  <script src="env-loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="cloudinary-config.js"></script>
+  <script src="supabase-config.js"></script>
+  <script src="app.js"></script>
+
+

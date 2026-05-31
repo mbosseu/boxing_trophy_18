@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Boxing Trophy 18 — Carte des combats</title>
+  <meta name="description" content="Carte officielle des combats du Boxing Trophy 18 — Boxing Center St Cyprien, 5 Juin 2026." />
+  <link rel="stylesheet" href="poster.css?v=5" />
+  <link rel="icon" type="image/png" href="image/affiche1.png" />
+  <link rel="apple-touch-icon" href="image/affiche1.png" />
+  <style>
+    body { margin: 0; min-height: 100vh; background: #050507; font-family: 'Oswald', sans-serif; }
+    .affiche-page-header { text-align: center; padding: 16px 20px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+    .affiche-page-header a { color: #d4af37; text-decoration: none; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
+    .affiche-loading, .affiche-empty { text-align: center; padding: 60px 20px; color: #8b8b9e; font-size: 15px; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+    .affiche-toolbar { display: flex; justify-content: center; align-items: center; gap: 12px; padding: 12px; flex-wrap: wrap; }
+    .affiche-toolbar button {
+      padding: 10px 20px; border: 1px solid rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.1);
+      color: #d4af37; font-family: inherit; font-size: 13px; font-weight: 600; letter-spacing: 1px;
+      text-transform: uppercase; cursor: pointer; border-radius: 6px;
+    }
+    .affiche-sync-note { font-size: 11px; color: #6b6b7a; letter-spacing: 0.5px; }
+    #afficheContainer { padding: 16px 12px 48px; max-width: 100%; overflow-x: hidden; }
+    .affiche-public-note { text-align: center; font-size: 12px; color: #8b8b9e; letter-spacing: 1px; margin-bottom: 8px; padding: 0 12px; }
+    @media (max-width: 600px) {
+      .affiche-toolbar button { width: 100%; max-width: 280px; }
+      .affiche-page-header a { font-size: 11px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="affiche-page-header">
+    <a href="index.html">← Retour au Boxing Trophy 18</a>
+  </header>
+
+  <p class="affiche-public-note" id="affichePublicNote" hidden></p>
+
+  <div class="affiche-toolbar" id="afficheToolbar" hidden>
+    <button type="button" id="printAfficheBtn">Imprimer l'affiche complète</button>
+    <span class="affiche-sync-note" id="afficheSyncNote"></span>
+  </div>
+
+  <div id="afficheContainer">
+    <p class="affiche-loading" id="afficheLoading">Chargement de la carte des combats…</p>
+    <p class="affiche-empty" id="afficheEmpty" hidden>La carte des combats sera publiée prochainement par l'organisation.</p>
+    <div class="gala-poster-wrap" id="affichePoster" hidden></div>
+  </div>
+
+  <script src="env-loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="poster.js?v=4"></script>
+  <script>
+    (function () {
+      var MATCH_KEY = 'boxingtrophy18_matches';
+      var POLL_MS = 3 * 60 * 1000;
+      var lastSnapshot = '';
+
+      function loadMatches() {
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+          return supabaseClient.from('matches').select('*').order('sort_order', { ascending: true })
+            .then(function (res) {
+              if (res.error) throw res.error;
+              var data = res.data || [];
+              if (typeof GalaPoster !== 'undefined') {
+                GalaPoster.normalizeMatches(data);
+                GalaPoster.assignMatchMeta(data);
+              }
+              return data;
+            });
+        }
+        try { return Promise.resolve(JSON.parse(localStorage.getItem(MATCH_KEY)) || []); }
+        catch (e) { return Promise.resolve([]); }
+      }
+
+      function updateSyncNote() {
+        var el = document.getElementById('afficheSyncNote');
+        if (!el) return;
+        el.textContent = 'Mise à jour auto · toutes les 3 min · ' +
+          new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
+      }
+
+      function render(matches) {
+        var poster = document.getElementById('affichePoster');
+        var pairs = matches.filter(function (m) { return m.type === 'pair' && m.fighter1 && m.fighter2; });
+        var waiting = matches.filter(function (m) { return m.type === 'waiting'; });
+
+        if (pairs.length === 0 && waiting.length === 0) {
+          document.getElementById('afficheLoading').hidden = true;
+          document.getElementById('afficheEmpty').hidden = false;
+          document.getElementById('afficheToolbar').hidden = true;
+          return;
+        }
+
+        document.getElementById('afficheLoading').hidden = true;
+        document.getElementById('afficheEmpty').hidden = true;
+        document.getElementById('afficheToolbar').hidden = false;
+        poster.hidden = false;
+
+        var hasWinners = typeof GalaPoster !== 'undefined' && GalaPoster.hasWinners(matches);
+        var note = document.getElementById('affichePublicNote');
+        if (note) {
+          note.hidden = false;
+          note.textContent = hasWinners
+            ? '★ Résultats officiels — mise à jour après la soirée ★'
+            : 'Carte officielle — tous les combattants';
+        }
+
+        GalaPoster.renderPoster(poster, matches, {
+          interactive: false,
+          showResults: hasWinners,
+          includeWaiting: true
+        });
+        window.__afficheMatches = matches;
+        window.__afficheHasWinners = hasWinners;
+        updateSyncNote();
+      }
+
+      function poll() {
+        return loadMatches().then(function (data) {
+          var snap = JSON.stringify(data);
+          if (snap !== lastSnapshot) {
+            lastSnapshot = snap;
+            render(data);
+          } else {
+            updateSyncNote();
+          }
+        });
+      }
+
+      document.getElementById('printAfficheBtn').addEventListener('click', function () {
+        var wrap = document.getElementById('affichePoster');
+        var m = window.__afficheMatches || [];
+        var opts = { showResults: !!window.__afficheHasWinners, interactive: false };
+        if (typeof GalaPoster !== 'undefined' && wrap) {
+          GalaPoster.preparePrintFit(wrap, m, opts);
+        }
+        document.body.classList.add('printing-poster');
+        window.print();
+        setTimeout(function () {
+          document.body.classList.remove('printing-poster');
+          if (wrap) {
+            wrap.style.removeProperty('--print-scale');
+            if (typeof GalaPoster.restoreScreenPoster === 'function') {
+              GalaPoster.restoreScreenPoster(wrap, m, Object.assign({}, opts, { includeWaiting: true }));
+            }
+          }
+        }, 600);
+      });
+
+      poll().catch(function () {
+        document.getElementById('afficheLoading').textContent = 'Impossible de charger la carte. Réessayez plus tard.';
+      });
+
+      setInterval(poll, POLL_MS);
+
+      document.addEventListener('visibilitychange', function () {
+        if (!document.hidden) poll();
+      });
+    })();
+  </script>
+</body>
+</html>

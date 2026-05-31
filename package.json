@@ -1,0 +1,14 @@
+{
+  "name": "boxing-trophy-18",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "npx --yes serve . -p 3000",
+    "build": "node scripts/generate-env.js",
+    "config": "node scripts/generate-env.js",
+    "test:bot-apis": "node scripts/test-bot-apis.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.8"
+  }
+}

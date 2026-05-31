@@ -1,0 +1,629 @@
+﻿
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• LOGIN SCREEN â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-card">
+            <div class="login-logo">
+                <span class="logo-icon">ðŸ¥Š</span>
+                <h1>BOXING TROPHY <span class="gold">18</span></h1>
+                <p class="login-subtitle">Panneau d'administration</p>
+            </div>
+            <form id="loginForm" autocomplete="off">
+                <div class="input-group" style="position: relative;">
+                    <label for="loginPassword">Mot de passe</label>
+                    <div style="position: relative; display: flex; align-items: center; width: 100%;">
+                        <input type="password" id="loginPassword" placeholder="Entrez le mot de passe" required style="padding-right: 44px; width: 100%;">
+                        <button type="button" id="togglePasswordBtn" class="btn-ghost" style="position: absolute; right: 0; border: none; background: transparent; color: var(--text-dim); cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center; height: 100%; width: 44px; border-radius: var(--radius-xs); z-index: 2;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                <circle cx="12" cy="12" r="3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span>Se connecter</span>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+                <p id="loginError" class="login-error" hidden>Mot de passe incorrect.</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• ADMIN PANEL â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• -->
+    <div id="adminPanel" class="admin-panel" hidden>
+
+        <!-- HEADER -->
+        <header class="admin-header">
+            <div class="header-left">
+                <h1 class="header-title">ðŸ¥Š BOXING TROPHY <span class="gold">18</span> <span class="header-badge">ADMIN</span></h1>
+            </div>
+            <div class="header-right">
+                <button id="refreshBtn" class="btn btn-outline btn-sm" title="Actualiser les donnÃ©es">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="refreshBtnIcon"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                    Actualiser
+                </button>
+                <a href="/" class="btn btn-outline btn-sm">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                    Page d'accueil
+                </a>
+                <button id="logoutBtn" class="btn btn-outline btn-sm btn-danger-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                    DÃ©connexion
+                </button>
+            </div>
+        </header>
+
+        <!-- TABS NAV -->
+        <nav class="tabs-nav">
+            <button class="tab-btn active" data-tab="dashboard">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                <span>Tableau de bord</span>
+            </button>
+            <button class="tab-btn" data-tab="registrations">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                <span>Inscriptions</span>
+            </button>
+            <button class="tab-btn" data-tab="matching">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4-4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+                <span>Appariement</span>
+            </button>
+            <button class="tab-btn" data-tab="affiche">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h10M7 12h10M7 17h6"/></svg>
+                <span>Affiche & RÃ©sultats</span>
+            </button>
+            <button class="tab-btn" data-tab="settings">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+                <span>ParamÃ¨tres</span>
+            </button>
+        </nav>
+
+        <!-- â•â•â•â•â•â•â• TAB: DASHBOARD â•â•â•â•â•â•â• -->
+        <section id="tab-dashboard" class="tab-content active">
+            <div class="section-header">
+                <h2>Tableau de bord</h2>
+                <p class="section-desc">Vue d'ensemble des inscriptions au Boxing Trophy 18</p>
+            </div>
+
+            <!-- Stat cards row -->
+            <div class="stats-grid" id="statsGrid">
+                <!-- Dynamically filled -->
+            </div>
+
+            <!-- Breakdown cards -->
+            <div class="breakdown-grid">
+                <div class="card breakdown-card">
+                    <h3>RÃ©partition par sexe</h3>
+                    <div id="breakdownSexe" class="breakdown-list"></div>
+                </div>
+                <div class="card breakdown-card">
+                    <h3>RÃ©partition par niveau</h3>
+                    <div id="breakdownNiveau" class="breakdown-list"></div>
+                </div>
+                <div class="card breakdown-card">
+                    <h3>RÃ©partition par catÃ©gorie de poids</h3>
+                    <div id="breakdownPoids" class="breakdown-list"></div>
+                </div>
+
+            </div>
+
+            <!-- Vue rapide: 5 derniÃ¨res inscriptions -->
+            <div class="dashboard-recent-section card" style="margin-top:28px;">
+                <div class="recent-header" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
+                    <h3 style="font-size:15px; font-weight:600;">5 derniÃ¨res inscriptions</h3>
+                    <span class="badge badge-success" style="font-size:10px; padding:2px 8px; animation: pulse 2s infinite;">Live</span>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table" id="recentRegistrationsTable">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>PrÃ©nom</th>
+                                <th>Sexe</th>
+                                <th>Niveau</th>
+                                <th>Cat. Poids</th>
+                                <th>Club</th>
+                                <th>Date inscription</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRegistrationsBody">
+                            <!-- Dynamically filled -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- â•â•â•â•â•â•â• TAB: REGISTRATIONS â•â•â•â•â•â•â• -->
+        <section id="tab-registrations" class="tab-content">
+            <div class="section-header">
+                <h2>Liste des inscriptions</h2>
+                <div class="section-actions">
+                    <button id="exportCsvBtn" class="btn btn-accent btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Exporter CSV
+                    </button>
+                    <button id="exportPdfBtn" class="btn btn-outline btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
+                        Exporter PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters bar -->
+            <div class="filters-bar">
+                <div class="filter-group">
+                    <label for="filterSearch">Rechercher</label>
+                    <input type="text" id="filterSearch" placeholder="Nom ou prÃ©nomâ€¦">
+                </div>
+                <div class="filter-group">
+                    <label for="filterSexe">Sexe</label>
+                    <select id="filterSexe">
+                        <option value="">Tous</option>
+                        <option value="Homme">Homme</option>
+                        <option value="Femme">Femme</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterNiveau">Niveau</label>
+                    <select id="filterNiveau">
+                        <option value="">Tous</option>
+                        <option value="DÃ©butant">DÃ©butant</option>
+                        <option value="IntermÃ©diaire">IntermÃ©diaire</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterPoids">CatÃ©gorie de poids</label>
+                    <select id="filterPoids">
+                         <option value="">Toutes</option>
+                         <option value="-60kg">Moins de 60 kg</option>
+                         <option value="-64kg">60 â€“ 64 kg</option>
+                         <option value="-69kg">64 â€“ 69 kg</option>
+                         <option value="-75kg">69 â€“ 75 kg</option>
+                         <option value="-81kg">75 â€“ 81 kg</option>
+                         <option value="-91kg">81 â€“ 91 kg</option>
+                         <option value="+91kg">Plus de 91 kg</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filterLicence">LicenciÃ©</label>
+                    <select id="filterLicence">
+                        <option value="">Tous</option>
+                        <option value="Oui">Oui</option>
+                        <option value="Non">Non</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Registrations count -->
+            <div class="table-info">
+                <span id="filteredCount">0 inscription(s) affichÃ©e(s)</span>
+            </div>
+
+            <!-- Registrations table -->
+            <div class="table-wrapper">
+                <table class="data-table" id="registrationsTable">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="nom" style="cursor:pointer;">Nom <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="prenom" style="cursor:pointer;">PrÃ©nom <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="dateNaissance" style="cursor:pointer;">Naissance <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="sexe" style="cursor:pointer;">Sexe <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="email" style="cursor:pointer;">E-mail <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="telephone" style="cursor:pointer;">TÃ©lÃ©phone <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="niveau" style="cursor:pointer;">Niveau <span class="sort-direction"></span></th>
+                            <th>Discipline</th>
+                            <th class="sortable" data-sort="licencie" style="cursor:pointer;">LicenciÃ© <span class="sort-direction"></span></th>
+                            <th>NÂ° Licence</th>
+                            <th class="sortable" data-sort="club" style="cursor:pointer;">Club <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="categoriePoids" style="cursor:pointer;">Poids <span class="sort-direction"></span></th>
+                            <th class="sortable" data-sort="dateInscription" style="cursor:pointer;">Inscription <span class="sort-direction"></span></th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registrationsBody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="noRegistrations" class="empty-state" hidden>
+                <span class="empty-icon">ðŸ“‹</span>
+                <p>Aucune inscription trouvÃ©e.</p>
+            </div>
+        </section>
+
+        <!-- â•â•â•â•â•â•â• TAB: MATCHING â•â•â•â•â•â•â• -->
+        <section id="tab-matching" class="tab-content">
+            <div class="section-header">
+                <h2>Appariement des combattants</h2>
+                <div class="section-actions">
+                    <span id="matchTimestamp" class="match-timestamp"></span>
+                    <button id="exportMatchesCsvBtn" class="btn btn-outline btn-sm" title="Exporter au format CSV">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        CSV combats
+                    </button>
+                    <button id="exportMatchesPdfBtn" class="btn btn-outline btn-sm" title="Imprimer la feuille des combats">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
+                        PDF combats
+                    </button>
+                    <button id="generateMatchesBtn" class="btn btn-primary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 11-2.12-9.36L23 10"/></svg>
+                        GÃ©nÃ©rer les combats
+                    </button>
+                </div>
+            </div>
+
+            <div id="matchingContent">
+                <div id="noMatches" class="empty-state">
+                    <span class="empty-icon">ðŸ¥Š</span>
+                    <p>Aucun appariement gÃ©nÃ©rÃ©. Cliquez sur Â« GÃ©nÃ©rer les appariements Â» pour commencer.</p>
+                </div>
+                <div id="matchesContainer" hidden></div>
+            </div>
+        </section>
+
+        <!-- â•â•â•â•â•â•â• TAB: AFFICHE & RÃ‰SULTATS â•â•â•â•â•â•â• -->
+        <section id="tab-affiche" class="tab-content">
+            <div class="section-header">
+                <h2>Affiche du gala</h2>
+                <div class="section-actions">
+                    <button id="printPosterBtn" class="btn btn-outline btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
+                        Imprimer tout
+                    </button>
+                    <a href="/carte" target="_blank" id="viewPublicPosterLink" class="btn btn-outline btn-sm">Voir le site</a>
+                    <button id="saveResultsBtn" class="btn btn-primary btn-sm">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 01-2-2V5a2 2 0 012-2h11l5 5v11a2 2 0 01-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        Enregistrer et publier
+                    </button>
+                </div>
+            </div>
+
+            <div class="affiche-guide card">
+                <div class="affiche-guide-step"><span>1</span><p><strong>Cliquez sur un boxeur</strong> sur la carte â†’ photo, fiche, et boutons Â« Coin Rouge / Bleu Â» pour le vainqueur.</p></div>
+                <div class="affiche-guide-step"><span>2</span><p>Quand la soirÃ©e avance, les vainqueurs s'affichent en <strong>or</strong> sur l'affiche (automatique).</p></div>
+                <div class="affiche-guide-step"><span>3</span><p><strong>Enregistrer et publier</strong> : une seule action pour mettre Ã  jour le site public. Puis Â« Imprimer tout Â» si besoin.</p></div>
+            </div>
+
+            <div id="afficheStatusBar" class="affiche-status-bar" hidden>
+                <span id="resultsProgress"></span>
+                <span id="afficheModeHint" class="affiche-mode-hint"></span>
+            </div>
+
+            <div id="noPosterMatches" class="empty-state" hidden>
+                <span class="empty-icon">ðŸ“‹</span>
+                <p>Aucun combat confirmÃ©. Allez dans <strong>Appariement</strong> puis cliquez sur Â« GÃ©nÃ©rer les combats Â».</p>
+            </div>
+
+            <div id="afficheContent" class="affiche-content-full" hidden>
+                <p class="affiche-hint">ðŸ‘† Cliquez sur un nom ou une photo sur l'affiche</p>
+                <div class="gala-poster-wrap gala-poster-wrap--admin" id="posterPreview"></div>
+            </div>
+        </section>
+
+        <!-- â•â•â•â•â•â•â• TAB: SETTINGS â•â•â•â•â•â•â• -->
+        <section id="tab-settings" class="tab-content">
+            <div class="section-header">
+                <h2>ParamÃ¨tres de connexion</h2>
+                <p class="section-desc">Configurez la base de donnÃ©es Supabase</p>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+                <div class="card">
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span>ðŸ”Œ</span> Connexion Supabase
+                    </h3>
+                    <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 16px; line-height: 1.5;">
+                        En configurant Supabase, les donnÃ©es d'inscriptions et de combats seront stockÃ©es dans le cloud et partagÃ©es en temps rÃ©el entre tous les utilisateurs et administrateurs.
+                    </p>
+                    
+                    <div class="supabase-status-banner warning" id="supabaseStatusBanner" style="padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+                        <span class="status-indicator-dot active" style="width: 8px; height: 8px; border-radius: 50%; background-color: var(--gold); box-shadow: 0 0 8px var(--gold);"></span>
+                        <span id="supabaseStatusText">VÃ©rification de la connexion...</span>
+                    </div>
+
+                    <form id="supabaseConfigForm" style="display: flex; flex-direction: column; gap: 14px;">
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="form-label" for="supabaseUrlInput" style="font-size: 12px; font-weight: 600; color: var(--text-dim); text-transform: uppercase;">URL Supabase</label>
+                            <input type="text" class="form-input" id="supabaseUrlInput" placeholder="https://xxxxxx.supabase.co" style="width: 100%; padding: 10px 14px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); outline: none;" required>
+                        </div>
+                        <div class="form-group" style="display: flex; flex-direction: column; gap: 6px;">
+                            <label class="form-label" for="supabaseKeyInput" style="font-size: 12px; font-weight: 600; color: var(--text-dim); text-transform: uppercase;">ClÃ© Anon Key Supabase</label>
+                            <input type="password" class="form-input" id="supabaseKeyInput" placeholder="eyJhbGciOi..." style="width: 100%; padding: 10px 14px; background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); outline: none;" required>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 8px;">
+                            <button type="submit" class="btn btn-primary btn-sm" style="flex: 1; justify-content: center;">
+                                Enregistrer
+                            </button>
+                            <button type="button" id="clearSupabaseConfigBtn" class="btn btn-outline btn-sm btn-danger-outline">
+                                RÃ©initialiser
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">ðŸ“· Photos Cloudinary</h3>
+                    <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.5;">
+                        Pour envoyer les photos des boxeurs depuis l'affiche. CrÃ©ez un <strong>upload preset non signÃ©</strong> sur cloudinary.com.
+                    </p>
+                    <form id="cloudinaryConfigForm" style="display:flex;flex-direction:column;gap:12px;">
+                        <div class="form-group">
+                            <label class="form-label" for="cloudinaryCloudInput">Nom du cloud</label>
+                            <input type="text" class="form-input" id="cloudinaryCloudInput" placeholder="votre-cloud" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cloudinaryPresetInput">Upload preset</label>
+                            <input type="text" class="form-input" id="cloudinaryPresetInput" placeholder="bt18_unsigned" />
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-sm">Enregistrer Cloudinary</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                        <span>ðŸ“‹</span> Script SQL de base de donnÃ©es
+                    </h3>
+                    <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 12px; line-height: 1.5;">
+                        ExÃ©cutez ce script dans le <strong>SQL Editor</strong> de votre projet Supabase (https://database.new) pour configurer les tables :
+                    </p>
+                    <div style="position: relative;">
+                        <textarea class="form-input" readonly style="font-family: monospace; font-size: 11px; height: 160px; width: 100%; resize: none; background: rgba(0,0,0,0.2); padding: 10px; border: 1px solid var(--border); border-radius: 6px; color: var(--text-dim); line-height: 1.4;" id="sqlCodeSnippet">-- CrÃ©er la table des inscriptions
+create table registrations (
+  id text primary key,
+  nom text not null,
+  prenom text not null,
+  "dateNaissance" text,
+  sexe text,
+  email text,
+  telephone text,
+  niveau text,
+  discipline text,
+  licencie text,
+  "numeroLicence" text,
+  "engagementLicence" boolean default false,
+  club text,
+  "categoriePoids" text,
+  "consentementRGPD" boolean default false,
+  "dateInscription" text
+);
+
+-- Activer Row Level Security (RLS)
+alter table registrations enable row level security;
+
+-- CrÃ©er une politique d'accÃ¨s public en lecture et Ã©criture
+create policy "AccÃ¨s public total" on registrations
+  for all using (true) with check (true);
+
+-- CrÃ©er la table des combats (matches)
+create table matches (
+  id bigint generated by default as identity primary key,
+  type text,
+  sexe text,
+  "categoriePoids" text,
+  niveau text,
+  fighter1 jsonb,
+  fighter2 jsonb,
+  sort_order integer,
+  match_number integer,
+  tier text,
+  winner text
+);
+
+-- Activer RLS pour les combats
+alter table matches enable row level security;
+
+-- CrÃ©er une politique d'accÃ¨s public pour les combats
+create policy "AccÃ¨s public total" on matches
+  for all using (true) with check (true);
+
+-- CrÃ©er la table de mÃ©tadonnÃ©es
+create table match_metadata (
+  key text primary key,
+  value text
+);
+
+-- Activer RLS pour les mÃ©tadonnÃ©es
+alter table match_metadata enable row level security;
+
+-- CrÃ©er une politique d'accÃ¨s public pour les mÃ©tadonnÃ©es
+create policy "AccÃ¨s public total" on match_metadata
+  for all using (true) with check (true);</textarea>
+                        <button type="button" class="btn btn-outline btn-sm" id="copySqlBtn" style="position: absolute; right: 10px; bottom: 10px; font-size: 11px; padding: 4px 8px; background: rgba(10, 10, 15, 0.9);">Copier le SQL</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- â•â•â•â•â•â•â• SWAP MODAL â•â•â•â•â•â•â• -->
+    <div id="swapModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Modifier l'appariement</h3>
+                <button id="closeSwapModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc">SÃ©lectionnez un combattant Ã  Ã©changer avec :</p>
+                <div class="swap-fighter-info" id="swapFighterInfo"></div>
+                <div class="swap-search">
+                    <input type="text" id="swapSearch" placeholder="Rechercher un combattantâ€¦">
+                </div>
+                <div class="swap-list" id="swapList"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- â•â•â•â•â•â•â• CONFIRM DELETE MODAL â•â•â•â•â•â•â• -->
+    <div id="deleteModal" class="modal-overlay">
+        <div class="modal-card modal-sm">
+            <div class="modal-header">
+                <h3>Confirmer la suppression</h3>
+                <button id="closeDeleteModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="deleteModalText">ÃŠtes-vous sÃ»r de vouloir supprimer cette inscription ?</p>
+                <div class="modal-actions">
+                    <button id="cancelDeleteBtn" class="btn btn-outline btn-sm">Annuler</button>
+                    <button id="confirmDeleteBtn" class="btn btn-danger btn-sm">Supprimer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- â•â•â•â•â•â•â• EDIT MODAL â•â•â•â•â•â•â• -->
+    <div id="editModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Modifier l'inscription</h3>
+                <button id="closeEditModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" novalidate>
+                    <input type="hidden" id="editId">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editNom">Nom</label>
+                            <input type="text" class="form-input" id="editNom" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editPrenom">PrÃ©nom</label>
+                            <input type="text" class="form-input" id="editPrenom" required />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editDateNaissance">Date de naissance</label>
+                            <input type="date" class="form-input" id="editDateNaissance" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editSexe">Sexe</label>
+                            <select class="form-select" id="editSexe" required>
+                                <option value="Homme">Homme</option>
+                                <option value="Femme">Femme</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editNiveau">Niveau</label>
+                            <select class="form-select" id="editNiveau" required>
+                                <option value="DÃ©butant">DÃ©butant</option>
+                                <option value="IntermÃ©diaire">IntermÃ©diaire</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editCategoriePoids">CatÃ©gorie de poids</label>
+                            <select class="form-select" id="editCategoriePoids" required>
+                                <option value="-60kg">Moins de 60 kg</option>
+                                <option value="-64kg">60 â€“ 64 kg</option>
+                                <option value="-69kg">64 â€“ 69 kg</option>
+                                <option value="-75kg">69 â€“ 75 kg</option>
+                                <option value="-81kg">75 â€“ 81 kg</option>
+                                <option value="-91kg">81 â€“ 91 kg</option>
+                                <option value="+91kg">Plus de 91 kg</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editLicencie">LicenciÃ©</label>
+                            <select class="form-select" id="editLicencie" required>
+                                <option value="Oui">Oui</option>
+                                <option value="Non">Non</option>
+                            </select>
+                        </div>
+                        <div class="form-group" id="editLicenceNumberGroup">
+                            <label class="form-label" for="editNumeroLicence">NÂ° Licence</label>
+                            <input type="text" class="form-input" id="editNumeroLicence" />
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="editEmail">Adresse e-mail</label>
+                            <input type="email" class="form-input" id="editEmail" required />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editTelephone">TÃ©lÃ©phone</label>
+                            <input type="tel" class="form-input" id="editTelephone" required />
+                        </div>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label class="form-label" for="editClub">Club</label>
+                        <input type="text" class="form-input" id="editClub" required />
+                    </div>
+                    <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 8px;">
+                        <button type="button" id="cancelEditBtn" class="btn btn-outline btn-sm">Annuler</button>
+                        <button type="submit" class="btn btn-primary btn-sm">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- â•â•â•â•â•â•â• FIGHTER DETAIL MODAL (affiche) â•â•â•â•â•â•â• -->
+    <div id="fighterDetailModal" class="modal-overlay">
+        <div class="modal-card modal-fighter-detail">
+            <div class="modal-header">
+                <h3 id="fighterDetailTitle">Combattant</h3>
+                <button id="closeFighterDetailModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="fighterWinnerActions" class="fighter-winner-actions">
+                    <p class="fighter-winner-label">Qui a gagnÃ© ce combat ?</p>
+                    <div class="fighter-winner-btns">
+                        <button type="button" id="setWinnerRedBtn" class="btn-winner btn-winner-red">ðŸ† Coin Rouge</button>
+                        <button type="button" id="setWinnerBlueBtn" class="btn-winner btn-winner-blue">ðŸ† Coin Bleu</button>
+                        <button type="button" id="clearWinnerBtn" class="btn-winner btn-winner-clear">Pas encore de vainqueur</button>
+                    </div>
+                </div>
+                <div class="fighter-detail-layout">
+                    <div class="fighter-detail-photo-block">
+                        <div id="fighterDetailPhotoPreview" class="fighter-detail-photo-preview"></div>
+                        <input type="file" id="fighterPhotoFile" accept="image/jpeg,image/png,image/webp" class="visually-hidden" />
+                        <input type="hidden" id="fighterPhotoUrl" />
+                        <button type="button" id="fighterPhotoUploadBtn" class="btn btn-primary btn-sm btn-full">
+                            Choisir une image
+                        </button>
+                        <p class="fighter-photo-help">Photo visible sur l'affiche aprÃ¨s Â« Enregistrer ce boxeur Â».</p>
+                    </div>
+                    <div class="fighter-detail-info" id="fighterDetailInfo"></div>
+                </div>
+                <div class="modal-actions fighter-modal-actions">
+                    <button type="button" id="cancelFighterDetailBtn" class="btn btn-outline btn-sm">Fermer</button>
+                    <button type="button" id="saveFighterDetailBtn" class="btn btn-primary btn-sm">Enregistrer ce boxeur</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- â•â•â•â•â•â•â• MANUAL MATCH MODAL â•â•â•â•â•â•â• -->
+    <div id="manualMatchModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Associer un adversaire</h3>
+                <button id="closeManualMatchModal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-desc" style="color:var(--text-dim);font-size:13px;margin-bottom:8px;">SÃ©lectionnez un combattant Ã  associer avec :</p>
+                <div class="swap-fighter-info" id="manualMatchFighterInfo" style="margin-bottom: 16px; font-weight: 700; color: var(--gold); background:rgba(255,215,0,0.08); padding:10px; border-radius:6px; border:1px solid rgba(255,215,0,0.15);"></div>
+                
+                <div class="filter-group" style="margin-bottom: 12px; display:flex; flex-direction:column; gap:6px;">
+                    <label for="manualMatchSearch" style="font-size: 11px; color: var(--text-dim); text-transform: uppercase; font-weight:600; letter-spacing:0.5px;">Rechercher</label>
+                    <input type="text" id="manualMatchSearch" class="form-input" placeholder="Rechercher par nom ou club..." style="padding:10px 14px; font-size:13px;">
+                </div>
+
+                <div class="swap-list" id="manualMatchList" style="max-height: 250px; overflow-y: auto; margin-top:8px; border:1px solid var(--border); border-radius:6px;">
+                    <!-- Dynamically filled with eligible unmatched fighters -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js?v=2"></script>
+    <script src="env.sample.js"></script>
+    <script src="env-loader.js"></script>
+    <script src="cloudinary-config.js?v=3"></script>
+    <script src="poster.js?v=4"></script>
+    
