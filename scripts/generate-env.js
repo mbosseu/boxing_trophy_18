@@ -18,6 +18,7 @@ const KEYS = [
   'ADMIN_PASSWORD',
   'WHATSAPP_BOT_URL',
   'SITE_URL',
+  'CONTACT_EMAIL',
 ];
 
 function parseEnvFile(content) {
