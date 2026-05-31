@@ -15,6 +15,35 @@
     .affiche-page-header { text-align: center; padding: 16px 20px; border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
     .affiche-page-header a { color: #d4af37; text-decoration: none; font-size: 13px; letter-spacing: 2px; text-transform: uppercase; }
     .affiche-loading, .affiche-empty { text-align: center; padding: 60px 20px; color: #8b8b9e; font-size: 15px; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+    .affiche-soon {
+      text-align: center;
+      padding: 48px 24px 64px;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .affiche-soon-icon { font-size: 3rem; display: block; margin-bottom: 16px; opacity: 0.9; }
+    .affiche-soon h1 {
+      font-size: clamp(1.5rem, 5vw, 2rem);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #d4af37;
+      margin: 0 0 12px;
+      font-weight: 600;
+    }
+    .affiche-soon p { color: #a8a8b8; font-size: 15px; line-height: 1.65; margin: 0 0 24px; font-family: 'Inter', sans-serif; }
+    .affiche-soon .affiche-soon-back {
+      display: inline-block;
+      padding: 12px 24px;
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: #d4af37;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      border-radius: 6px;
+    }
+    .affiche-soon .affiche-soon-back:hover { background: rgba(212, 175, 55, 0.12); }
     .affiche-toolbar { display: flex; justify-content: center; align-items: center; gap: 12px; padding: 12px; flex-wrap: wrap; }
     .affiche-toolbar button {
       padding: 10px 20px; border: 1px solid rgba(212, 175, 55, 0.4); background: rgba(212, 175, 55, 0.1);
@@ -45,7 +74,16 @@
 
   <div id="afficheContainer">
     <p class="affiche-loading" id="afficheLoading">Chargement de la carte des combats…</p>
-    <p class="affiche-empty" id="afficheEmpty" hidden>La carte des combats sera publiée prochainement par l'organisation.</p>
+    <div class="affiche-soon" id="afficheSoon" hidden>
+      <span class="affiche-soon-icon" aria-hidden="true">🥊</span>
+      <h1>Bientôt disponible</h1>
+      <p>
+        La carte officielle des combats n’est pas encore publiée.
+        Revenez prochainement pour découvrir tous les affrontements du Boxing Trophy 18.
+      </p>
+      <a href="index.html#carte-combats" class="affiche-soon-back">Retour à l’accueil</a>
+    </div>
+    <p class="affiche-empty" id="afficheEmpty" hidden>La carte est en cours de finalisation.</p>
     <div class="gala-poster-wrap" id="affichePoster" hidden></div>
   </div>
 
@@ -59,11 +97,18 @@
       var POLL_MS = 3 * 60 * 1000;
       var lastSnapshot = '';
 
-      function loadMatches() {
-        return BT18PublishedMatches.loadPublishedMatches().then(function (result) {
-          if (!result.published) return [];
-          return result.matches;
-        });
+      function showComingSoon() {
+        document.getElementById('afficheLoading').hidden = true;
+        document.getElementById('afficheSoon').hidden = false;
+        document.getElementById('afficheEmpty').hidden = true;
+        document.getElementById('affichePoster').hidden = true;
+        document.getElementById('afficheToolbar').hidden = true;
+        document.getElementById('affichePublicNote').hidden = true;
+        window.__afficheMatches = [];
+      }
+
+      function loadPublished() {
+        return BT18PublishedMatches.loadPublishedMatches();
       }
 
       function updateSyncNote() {
@@ -73,20 +118,19 @@
           new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
       }
 
-      function render(matches) {
+      function renderPublished(matches) {
         var poster = document.getElementById('affichePoster');
         var pairs = matches.filter(function (m) { return m.type === 'pair' && m.fighter1 && m.fighter2; });
-        var waiting = matches.filter(function (m) { return m.type === 'waiting'; });
 
         if (pairs.length === 0) {
           document.getElementById('afficheLoading').hidden = true;
+          document.getElementById('afficheSoon').hidden = true;
           document.getElementById('afficheEmpty').hidden = false;
-          document.getElementById('afficheEmpty').textContent =
-            'La carte des combats sera publiée prochainement par l\'organisation.';
           document.getElementById('afficheToolbar').hidden = true;
           return;
         }
 
+        document.getElementById('afficheSoon').hidden = true;
         document.getElementById('afficheLoading').hidden = true;
         document.getElementById('afficheEmpty').hidden = true;
         document.getElementById('afficheToolbar').hidden = false;
@@ -111,12 +155,23 @@
         updateSyncNote();
       }
 
+      function applyResult(result) {
+        if (!result.published) {
+          showComingSoon();
+          return;
+        }
+        renderPublished(result.matches);
+      }
+
       function poll() {
-        return loadMatches().then(function (data) {
-          var snap = JSON.stringify(data);
+        return loadPublished().then(function (result) {
+          var snap = JSON.stringify({
+            published: result.published,
+            matches: result.matches,
+          });
           if (snap !== lastSnapshot) {
             lastSnapshot = snap;
-            render(data);
+            applyResult(result);
           } else {
             updateSyncNote();
           }
@@ -148,9 +203,12 @@
 
       document.getElementById('printAfficheBtn').addEventListener('click', runPrint);
 
-      poll().catch(function () {
-        document.getElementById('afficheLoading').textContent = 'Impossible de charger la carte. Réessayez plus tard.';
-      });
+      loadPublished()
+        .then(applyResult)
+        .catch(function () {
+          document.getElementById('afficheLoading').hidden = true;
+          showComingSoon();
+        });
 
       setInterval(poll, POLL_MS);
 

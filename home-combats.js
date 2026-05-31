@@ -3,30 +3,33 @@
  */
 function initHomeCombats() {
   var section = document.getElementById('carte-combats');
+  var soon = document.getElementById('homeCombatsSoon');
+  var publishedBlock = document.getElementById('homeCombatsPublished');
   var wrap = document.getElementById('homePosterWrap');
-  var empty = document.getElementById('homeCombatsEmpty');
   var desc = document.getElementById('homeCombatsDesc');
-  var navLink = document.getElementById('navCarteCombats');
 
   if (!section || typeof BT18PublishedMatches === 'undefined') return;
 
-  function showEmpty() {
-    section.hidden = true;
-    if (empty) empty.hidden = false;
+  function showSoon() {
+    if (soon) soon.hidden = false;
+    if (publishedBlock) publishedBlock.hidden = true;
+    if (desc) {
+      desc.textContent =
+        'La carte des combats sera affichée ici dès sa publication par l’organisation.';
+    }
   }
 
-  function render(matches, publishedAt) {
+  function showPublished(matches, publishedAt) {
     var pairs = matches.filter(function (m) {
       return m.type === 'pair' && m.fighter1 && m.fighter2;
     });
     if (!pairs.length) {
-      showEmpty();
+      showSoon();
       return;
     }
 
-    section.hidden = false;
-    if (empty) empty.hidden = true;
-    if (navLink) navLink.classList.remove('nav-link--hidden');
+    if (soon) soon.hidden = true;
+    if (publishedBlock) publishedBlock.hidden = false;
 
     if (desc && publishedAt) {
       try {
@@ -55,13 +58,13 @@ function initHomeCombats() {
   BT18PublishedMatches.loadPublishedMatches()
     .then(function (result) {
       if (!result.published) {
-        showEmpty();
+        showSoon();
         return;
       }
-      render(result.matches, result.publishedAt);
+      showPublished(result.matches, result.publishedAt);
     })
     .catch(function () {
-      showEmpty();
+      showSoon();
     });
 }
 
