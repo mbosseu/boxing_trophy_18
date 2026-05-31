@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Boxing Trophy 18 — Administration</title>
+    <link rel="canonical" href="https://boxing-trophy-18.vercel.app/admin" />
+    <meta property="og:url" content="https://boxing-trophy-18.vercel.app/admin" />
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -486,6 +488,14 @@
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm">Enregistrer Cloudinary</button>
                     </form>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">🌐 Site public</h3>
+                    <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 10px; line-height: 1.5;">
+                        URL du site (variable <code>SITE_URL</code> sur Vercel, générée dans <code>env.js</code>).
+                    </p>
+                    <p style="font-size: 14px; font-family: monospace; word-break: break-all;" id="settingsSiteUrlDisplay">—</p>
                 </div>
 
                 <div class="card">

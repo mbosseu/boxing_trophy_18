@@ -3,7 +3,7 @@
  * Usage : node scripts/test-bot-apis.js [SITE_URL]
  */
 const SECRET = process.env.SITE_API_SECRET || 'bt18-api-secret-2026';
-const SITE = (process.argv[2] || process.env.SITE_URL || 'https://boxing-center-trophy.vercel.app').replace(/\/$/, '');
+const SITE = (process.argv[2] || process.env.SITE_URL || 'https://boxing-trophy-18.vercel.app').replace(/\/$/, '');
 const BOT = (process.env.WHATSAPP_BOT_URL || 'http://51.75.118.169:20305').replace(/\/$/, '');
 
 function mockRes() {

@@ -2260,6 +2260,7 @@
     //  SETTINGS TAB & SUPABASE CONNECTIVITY
     // ═══════════════════════════════════════════════════════
     async function initSettingsTab() {
+        updateSiteUrlDisplays();
         const urlInput = $('#supabaseUrlInput');
         const keyInput = $('#supabaseKeyInput');
         const configForm = $('#supabaseConfigForm');
@@ -2418,6 +2419,25 @@
             return String(window.__ENV__[key]).trim();
         }
         return '';
+    }
+
+    function getSiteUrl() {
+        const fromEnv = envGetWa('SITE_URL').replace(/\/$/, '');
+        if (fromEnv) return fromEnv;
+        if (typeof window !== 'undefined' && window.location?.origin?.startsWith('http')) {
+            return window.location.origin.replace(/\/$/, '');
+        }
+        return 'https://boxing-trophy-18.vercel.app';
+    }
+
+    function updateSiteUrlDisplays() {
+        const url = getSiteUrl();
+        const settingsEl = $('#settingsSiteUrlDisplay');
+        if (settingsEl) settingsEl.textContent = url;
+        const waEl = $('#waSiteUrl');
+        if (waEl && (!waEl.textContent || waEl.textContent === '—')) {
+            waEl.textContent = url;
+        }
     }
 
     function getWhatsAppBotBase() {
@@ -2598,7 +2618,7 @@
                 : '<li class="wa-muted">—</li>';
         }
 
-        if (siteUrl) siteUrl.textContent = data.siteUrl || '—';
+        if (siteUrl) siteUrl.textContent = data.siteUrl || getSiteUrl();
     }
 
     async function waSetAuthorizedPhone(phone, add) {
@@ -2662,6 +2682,7 @@
     }
 
     function initWhatsAppTab() {
+        updateSiteUrlDisplays();
         updateWaBotUrlDisplay();
 
         var closeQr = $('#waCloseQrBtn');

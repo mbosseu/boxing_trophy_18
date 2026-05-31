@@ -5,5 +5,6 @@ window.__ENV__ = {
   CLOUDINARY_CLOUD_NAME: "",
   CLOUDINARY_UPLOAD_PRESET: "",
   ADMIN_PASSWORD: "",
-  WHATSAPP_BOT_URL: ""
+  WHATSAPP_BOT_URL: "",
+  SITE_URL: "https://boxing-trophy-18.vercel.app"
 };

@@ -16,7 +16,8 @@ const KEYS = [
   'CLOUDINARY_CLOUD_NAME',
   'CLOUDINARY_UPLOAD_PRESET',
   'ADMIN_PASSWORD',
-  'WHATSAPP_BOT_URL'
+  'WHATSAPP_BOT_URL',
+  'SITE_URL',
 ];
 
 function parseEnvFile(content) {
