@@ -52,7 +52,7 @@ function buildMessage(reg, missing) {
     '\n\n';
 
   msg +=
-    'Pour nous transmettre les informations manquantes, envoyez-les par e-mail à :\n' +
+    'Pour nous transmettre les informations manquantes, envoyez-les *uniquement par e-mail* (pas sur WhatsApp) à :\n' +
     '📧 *' +
     CONTACT_EMAIL +
     '*\n\n';
