@@ -62,6 +62,7 @@ CREATE POLICY "Public matches policy" ON matches
 
 -- 3. Create match_metadata table (timestamps + publication site public)
 -- Clés utilisées : matches_timestamp, matches_published (true/false), matches_published_at (ISO)
+-- registrations_open (true/false), registrations_closed_at (ISO)
 CREATE TABLE IF NOT EXISTS match_metadata (
   key TEXT PRIMARY KEY,
   value TEXT

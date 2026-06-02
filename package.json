@@ -6,7 +6,9 @@
     "dev": "npx --yes serve . -p 3000",
     "build": "node scripts/generate-env.js",
     "config": "node scripts/generate-env.js",
-    "test:bot-apis": "node scripts/test-bot-apis.js"
+    "test:bot-apis": "node scripts/test-bot-apis.js",
+    "registrations:close": "node scripts/set-registrations-open.js false",
+    "registrations:open": "node scripts/set-registrations-open.js true"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8"

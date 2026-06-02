@@ -39,6 +39,9 @@
     const MATCH_PUBLISHED_KEY = 'matches_published';
     const MATCH_PUBLISHED_AT_KEY = 'matches_published_at';
     const LOCAL_PUBLISHED_KEY = 'boxingtrophy18_matches_published';
+    const REG_OPEN_KEY = 'registrations_open';
+    const REG_CLOSED_AT_KEY = 'registrations_closed_at';
+    const LOCAL_REG_OPEN_KEY = 'boxingtrophy18_registrations_open';
 
     // ── DOM References ────────────────────────────────────
     const $ = (s) => document.querySelector(s);
@@ -97,6 +100,8 @@
     let matches = [];
     let matchesPublished = false;
     let matchesPublishedAt = null;
+    let registrationsOpen = true;
+    let registrationsClosedAt = null;
     let pendingDeleteId = null;
     let swapSourceFighterId = null;
     let swapSourceMatchIndex = null;
@@ -137,8 +142,10 @@
         adminPanel.hidden = false;
         closeAllModals();
         await loadData();
+        await loadRegistrationsOpenState();
         enrichMatchesFromRegistrations();
         renderDashboard();
+        updateRegistrationsGateUI();
         renderRegistrations();
         await loadMatches();
         renderRecentRegistrations();
@@ -149,6 +156,7 @@
             initMatchDetailModal();
             await initSettingsTab();
             initWhatsAppTab();
+            initRegistrationsGateHandlers();
             isInitialized = true;
         }
         renderAfficheTab();
@@ -508,6 +516,119 @@
         }
         if (publishBtn) publishBtn.hidden = !!matchesPublished;
         if (unpublishBtn) unpublishBtn.hidden = !matchesPublished;
+    }
+
+    async function loadRegistrationsOpenState() {
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('match_metadata')
+                    .select('key, value')
+                    .in('key', [REG_OPEN_KEY, REG_CLOSED_AT_KEY]);
+                if (error) throw error;
+                registrationsOpen = false;
+                registrationsClosedAt = null;
+                var hasOpenKey = false;
+                (data || []).forEach(function (row) {
+                    if (row.key === REG_OPEN_KEY) {
+                        hasOpenKey = true;
+                        registrationsOpen = row.value === 'true';
+                    }
+                    if (row.key === REG_CLOSED_AT_KEY) registrationsClosedAt = row.value || null;
+                });
+                if (!hasOpenKey) registrationsOpen = false;
+                return;
+            } catch (e) {
+                console.warn('loadRegistrationsOpenState:', e);
+            }
+        }
+        var local = localStorage.getItem(LOCAL_REG_OPEN_KEY);
+        registrationsOpen = local === 'true';
+        registrationsClosedAt = localStorage.getItem(LOCAL_REG_OPEN_KEY + '_closed_at');
+    }
+
+    async function setRegistrationsOpen(open) {
+        var ts = open ? '' : new Date().toISOString();
+        if (typeof supabaseClient !== 'undefined' && supabaseClient) {
+            const { error } = await supabaseClient.from('match_metadata').upsert([
+                { key: REG_OPEN_KEY, value: open ? 'true' : 'false' },
+                { key: REG_CLOSED_AT_KEY, value: ts },
+            ]);
+            if (error) throw error;
+        }
+        if (open) {
+            localStorage.setItem(LOCAL_REG_OPEN_KEY, 'true');
+            localStorage.removeItem(LOCAL_REG_OPEN_KEY + '_closed_at');
+        } else {
+            localStorage.setItem(LOCAL_REG_OPEN_KEY, 'false');
+            if (ts) localStorage.setItem(LOCAL_REG_OPEN_KEY + '_closed_at', ts);
+        }
+        registrationsOpen = open;
+        registrationsClosedAt = open ? null : ts;
+        updateRegistrationsGateUI();
+    }
+
+    function updateRegistrationsGateUI() {
+        var status = $('#registrationsGateStatus');
+        var openBtn = $('#openRegistrationsBtn');
+        var closeBtn = $('#closeRegistrationsBtn');
+        if (!status) return;
+        if (registrationsOpen) {
+            status.textContent = 'Le formulaire public est ouvert — les visiteurs peuvent s\'inscrire.';
+            status.style.color = 'var(--success, #4ade80)';
+        } else {
+            status.textContent = registrationsClosedAt
+                ? 'Inscriptions fermées depuis le ' +
+                  new Date(registrationsClosedAt).toLocaleString('fr-FR', {
+                      day: 'numeric',
+                      month: 'long',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                  }) +
+                  '.'
+                : 'Inscriptions fermées — le formulaire public est masqué.';
+            status.style.color = 'var(--text-dim)';
+        }
+        if (openBtn) openBtn.hidden = !!registrationsOpen;
+        if (closeBtn) closeBtn.hidden = !registrationsOpen;
+    }
+
+    function initRegistrationsGateHandlers() {
+        var openBtn = $('#openRegistrationsBtn');
+        var closeBtn = $('#closeRegistrationsBtn');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', async function () {
+                if (
+                    !confirm(
+                        'Fermer les inscriptions en ligne ? Le formulaire public sera masqué immédiatement.'
+                    )
+                ) {
+                    return;
+                }
+                closeBtn.disabled = true;
+                try {
+                    await setRegistrationsOpen(false);
+                } catch (e) {
+                    alert('Erreur : ' + (e.message || e));
+                } finally {
+                    closeBtn.disabled = false;
+                }
+            });
+        }
+        if (openBtn) {
+            openBtn.addEventListener('click', async function () {
+                if (!confirm('Rouvrir les inscriptions en ligne sur le site public ?')) return;
+                openBtn.disabled = true;
+                try {
+                    await setRegistrationsOpen(true);
+                } catch (e) {
+                    alert('Erreur : ' + (e.message || e));
+                } finally {
+                    openBtn.disabled = false;
+                }
+            });
+        }
     }
 
     async function loadMatches() {

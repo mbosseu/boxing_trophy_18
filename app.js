@@ -17,12 +17,19 @@ function migrateLocalStorage() {
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   migrateLocalStorage();
   initNavigation();
   initAnchorScroll();
   initCountdown();
   initScrollReveal();
+  if (typeof BT18RegistrationGate !== 'undefined') {
+    try {
+      await BT18RegistrationGate.applyRegistrationGateUI();
+    } catch (e) {
+      console.warn('registration gate:', e);
+    }
+  }
   initForm();
   initStatCounters();
 });
@@ -262,6 +269,7 @@ function animateCounter(el) {
    ============================================ */
 function initForm() {
   const form = document.getElementById('registrationForm');
+  if (!form || form.hidden) return;
   let currentStep = 1;
 
   // Step navigation
@@ -529,6 +537,12 @@ function initForm() {
   }
 
   async function submitForm() {
+    if (
+      typeof BT18RegistrationGate !== 'undefined' &&
+      !BT18RegistrationGate.isRegistrationOpen()
+    ) {
+      return;
+    }
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : '';
     if (submitBtn) {

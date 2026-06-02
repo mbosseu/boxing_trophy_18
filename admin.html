@@ -110,6 +110,19 @@
                 <p class="section-desc">Vue d'ensemble des inscriptions au Boxing Trophy 18</p>
             </div>
 
+            <div class="card" id="registrationsGateCard" style="margin-bottom: 20px;">
+                <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;">
+                    <div>
+                        <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">Inscriptions en ligne</h3>
+                        <p id="registrationsGateStatus" style="font-size: 13px; color: var(--text-dim); margin: 0;">Chargement…</p>
+                    </div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" id="openRegistrationsBtn" class="btn btn-primary btn-sm" hidden>Ouvrir les inscriptions</button>
+                        <button type="button" id="closeRegistrationsBtn" class="btn btn-outline btn-sm btn-danger-outline" hidden>Fermer les inscriptions</button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Stat cards row -->
             <div class="stats-grid" id="statsGrid">
                 <!-- Dynamically filled -->
