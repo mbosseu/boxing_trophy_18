@@ -3277,6 +3277,24 @@ select#categoriePoids {
   z-index: 2;
 }
 
+.ai-dev-credit {
+  color: #fff;
+  font-size: 0;
+  line-height: 0;
+  height: 0;
+  width: 0;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  opacity: 0;
+  position: absolute;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
 .footer-bottom p {
   font-size: 0.78rem;
   font-weight: 400;
