@@ -133,7 +133,6 @@ function initCountdown() {
   const daysEl = document.getElementById('cd-days');
   const hoursEl = document.getElementById('cd-hours');
   const minutesEl = document.getElementById('cd-minutes');
-  const secondsEl = document.getElementById('cd-seconds');
   let timerInterval;
 
   function updateDigit(el, newValue) {
@@ -177,7 +176,6 @@ function initCountdown() {
       updateDigit(daysEl, '00');
       updateDigit(hoursEl, '00');
       updateDigit(minutesEl, '00');
-      updateDigit(secondsEl, '00');
       if (countdownEl) {
         countdownEl.classList.add('is-finished');
       }
@@ -195,7 +193,6 @@ function initCountdown() {
     updateDigit(daysEl, String(days).padStart(2, '0'));
     updateDigit(hoursEl, String(hours).padStart(2, '0'));
     updateDigit(minutesEl, String(minutes).padStart(2, '0'));
-    updateDigit(secondsEl, String(seconds).padStart(2, '0'));
   }
 
   update();
