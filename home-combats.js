@@ -41,7 +41,7 @@ function initHomeCombats() {
           d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) +
           '.';
       } catch (e) {
-        desc.textContent = 'Les affrontements officiels du Boxing Trophy 18.';
+        desc.textContent = 'Les affrontements officiels du Boxing Trophy 19.';
       }
     }
 

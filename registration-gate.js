@@ -60,7 +60,7 @@
     var desc = section.querySelector('.section-desc');
     if (desc) {
       desc.textContent =
-        'Les inscriptions au Boxing Trophy 18 sont closes. Rendez-vous sur place le vendredi 5 juin 2026 à partir de 19h.';
+        'Les inscriptions au Boxing Trophy 19 sont closes. Rendez-vous sur place à la date officielle.';
     }
 
     var steps = section.querySelector('.form-steps');
@@ -90,7 +90,7 @@
     var desc = section.querySelector('.section-desc');
     if (desc) {
       desc.textContent =
-        'Remplis le formulaire ci-dessous pour t\'inscrire au Boxing Trophy 18. Boxe Anglaise uniquement.';
+        'Remplis le formulaire ci-dessous pour t\'inscrire au Boxing Trophy 19. Boxe Anglaise &amp; Pied-Poing.';
     }
 
     var steps = section.querySelector('.form-steps');

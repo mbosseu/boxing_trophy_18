@@ -58,7 +58,11 @@ function initNavigation() {
   const links = document.getElementById('navLinks');
   if (!nav || !toggle || !links) return;
 
+  // Show nav after short delay on load, then keep it visible on scroll
+  setTimeout(() => nav.classList.add('visible'), 400);
+
   window.addEventListener('scroll', () => {
+    nav.classList.add('visible');
     if (window.scrollY > 60) {
       nav.classList.add('scrolled');
     } else {
@@ -124,7 +128,7 @@ function initAnchorScroll() {
    COUNTDOWN — Target: 5 June 2026, 19:00 CET
    ============================================ */
 function initCountdown() {
-  const targetDate = new Date('2026-06-05T19:00:00+02:00').getTime();
+  const targetDate = new Date('2026-11-13T19:00:00+01:00').getTime(); // Boxing Trophy 19 — 13 Novembre, Portet-sur-Garonne
   const countdownEl = document.getElementById('countdown');
   const daysEl = document.getElementById('cd-days');
   const hoursEl = document.getElementById('cd-hours');
@@ -381,6 +385,7 @@ function initForm() {
 
     if (step === 2) {
       valid = validateField('niveau') && valid;
+      valid = validateField('discipline') && valid;
       valid = validateRadio('licencie', 'licencie-error') && valid;
 
       const licencie = document.querySelector('input[name="licencie"]:checked');
@@ -590,7 +595,7 @@ function initForm() {
       dateNaissance: getValue('dateNaissance'),
       sexe: getRadioValue('sexe'),
       niveau: getValue('niveau'),
-      discipline: 'Boxe Anglaise',
+      discipline: getValue('discipline'),
       licencie: getRadioValue('licencie'),
       numeroLicence: getValue('numeroLicence') || '',
       engagementLicence: document.getElementById('engagementLicence').checked,
