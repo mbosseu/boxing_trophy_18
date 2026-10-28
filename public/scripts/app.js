@@ -545,7 +545,7 @@ function initForm() {
       dateNaissance: getValue('dateNaissance'),
       sexe: getRadioValue('sexe'),
       niveau: getValue('niveau'),
-      discipline: 'Boxe Anglaise',
+      discipline: getValue('discipline'),
       licencie: getRadioValue('licencie'),
       numeroLicence: getValue('numeroLicence') || '',
       engagementLicence: document.getElementById('engagementLicence').checked,

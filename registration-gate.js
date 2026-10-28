@@ -90,7 +90,7 @@
     var desc = section.querySelector('.section-desc');
     if (desc) {
       desc.textContent =
-        'Remplis le formulaire ci-dessous pour t\'inscrire au Boxing Trophy 19. Boxe Anglaise &amp; Pied-Poing.';
+        'Remplis le formulaire ci-dessous pour t\'inscrire au Boxing Trophy 19. Boxe Anglaise & Pied-Poing.';
     }
 
     var steps = section.querySelector('.form-steps');
