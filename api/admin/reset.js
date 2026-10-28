@@ -1,10 +1,8 @@
 /**
- * Reset BT19 — vide les tables registrations + matches et réinitialise les flags.
- * Auth : header x-admin-password (même mot de passe que l'admin).
+ * Reset BT19 — vide registrations + matches et remet les flags à false.
+ * Auth : header x-admin-password
  * DELETE /api/admin/reset
  */
-const { createClient } = require('@supabase/supabase-js');
-
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'DELETE, OPTIONS');
@@ -19,39 +17,53 @@ module.exports = async function handler(req, res) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 
-  const url = process.env.SUPABASE_URL || '';
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
+  const SUPA_URL = (process.env.SUPABASE_URL || '').replace(/\/$/, '');
+  const SUPA_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY || '';
 
-  if (!url || !key) {
-    return res.status(500).json({ error: 'Supabase non configuré' });
+  if (!SUPA_URL || !SUPA_KEY) {
+    return res.status(500).json({ error: 'Supabase non configuré (SUPABASE_URL + clé)' });
   }
 
-  const supabase = createClient(url, key);
+  const headers = {
+    'apikey': SUPA_KEY,
+    'Authorization': `Bearer ${SUPA_KEY}`,
+    'Content-Type': 'application/json',
+    'Prefer': 'return=minimal'
+  };
+
   const results = {};
 
-  // 1. Delete all registrations
-  const { error: e1, count: c1 } = await supabase
-    .from('registrations')
-    .delete({ count: 'exact' })
-    .neq('id', '');
-  results.registrations = e1 ? { error: e1.message } : { deleted: c1 };
+  try {
+    // Delete all registrations
+    const r1 = await fetch(`${SUPA_URL}/rest/v1/registrations?id=neq.`, { method: 'DELETE', headers });
+    results.registrations = { status: r1.status, ok: r1.ok };
+  } catch (e) {
+    results.registrations = { error: e.message };
+  }
 
-  // 2. Delete all matches
-  const { error: e2, count: c2 } = await supabase
-    .from('matches')
-    .delete({ count: 'exact' })
-    .gte('id', 0);
-  results.matches = e2 ? { error: e2.message } : { deleted: c2 };
+  try {
+    // Delete all matches
+    const r2 = await fetch(`${SUPA_URL}/rest/v1/matches?id=gte.0`, { method: 'DELETE', headers });
+    results.matches = { status: r2.status, ok: r2.ok };
+  } catch (e) {
+    results.matches = { error: e.message };
+  }
 
-  // 3. Reset metadata flags
-  const { error: e3 } = await supabase
-    .from('match_metadata')
-    .upsert([
-      { key: 'registrations_open', value: 'false' },
-      { key: 'matches_published', value: 'false' }
-    ]);
-  results.metadata = e3 ? { error: e3.message } : { reset: true };
+  try {
+    // Reset metadata flags
+    const r3 = await fetch(`${SUPA_URL}/rest/v1/match_metadata`, {
+      method: 'POST',
+      headers: { ...headers, 'Prefer': 'resolution=merge-duplicates,return=minimal' },
+      body: JSON.stringify([
+        { key: 'registrations_open', value: 'false' },
+        { key: 'matches_published', value: 'false' }
+      ])
+    });
+    results.metadata = { status: r3.status, ok: r3.ok };
+  } catch (e) {
+    results.metadata = { error: e.message };
+  }
 
-  const hasError = Object.values(results).some(r => r.error);
-  return res.status(hasError ? 500 : 200).json({ ok: !hasError, results });
+  const hasError = Object.values(results).some(r => r.error || !r.ok);
+  return res.status(hasError ? 500 : 200).json({ ok: !hasError, results, url_used: SUPA_URL });
 };
