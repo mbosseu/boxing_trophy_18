@@ -1,9 +1,9 @@
-/* Configuration Cloudinary — priorité : .env → admin localStorage */
+﻿/* Configuration Cloudinary — priorité : .env → admin localStorage */
 (function (global) {
     'use strict';
 
-    var CLOUD_KEY = 'bt18_cloudinary_cloud';
-    var PRESET_KEY = 'bt18_cloudinary_preset';
+    var CLOUD_KEY = 'bt19_cloudinary_cloud';
+    var PRESET_KEY = 'bt19_cloudinary_preset';
 
     function envGet(key) {
         if (typeof global !== 'undefined' && global.__ENV__ && global.__ENV__[key]) {
@@ -164,7 +164,7 @@
         }
     }
 
-    global.BT18Cloudinary = {
+    global.BT19Cloudinary = {
         getCloudinaryConfig: getCloudinaryConfig,
         saveCloudinaryConfig: saveCloudinaryConfig,
         clearCloudinaryConfig: clearCloudinaryConfig,

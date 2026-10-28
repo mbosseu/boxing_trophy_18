@@ -1,15 +1,15 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Boxing Trophy 18 — Administration</title>
-    <link rel="canonical" href="https://boxing-trophy-18.vercel.app/admin" />
-    <meta property="og:url" content="https://boxing-trophy-18.vercel.app/admin" />
+    <title>Boxing Trophy 19 — Administration</title>
+    <link rel="canonical" href="https://boxing-trophy-19.vercel.app/admin" />
+    <meta property="og:url" content="https://boxing-trophy-19.vercel.app/admin" />
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="BT18 Admin">
+    <meta name="apple-mobile-web-app-title" content="BT19 Admin">
     <link rel="icon" type="image/png" href="image/affiche1.png" />
     <link rel="apple-touch-icon" href="image/image2/affiche1.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,7 +25,7 @@
         <div class="login-card">
             <div class="login-logo">
                 <span class="logo-icon">🥊</span>
-                <h1>BOXING TROPHY <span class="gold">18</span></h1>
+                <h1>BOXING TROPHY <span class="gold">19</span></h1>
                 <p class="login-subtitle">Panneau d'administration</p>
             </div>
             <form id="loginForm" autocomplete="off">
@@ -56,7 +56,7 @@
         <!-- HEADER -->
         <header class="admin-header">
             <div class="header-left">
-                <h1 class="header-title">🥊 BOXING TROPHY <span class="gold">18</span> <span class="header-badge">ADMIN</span></h1>
+                <h1 class="header-title">🥊 BOXING TROPHY <span class="gold">19</span> <span class="header-badge">ADMIN</span></h1>
             </div>
             <div class="header-right">
                 <span id="autoSyncStatus" class="auto-sync-status" title="Actualisation automatique toutes les 3 minutes">Sync · 3 min</span>
@@ -107,7 +107,7 @@
         <section id="tab-dashboard" class="tab-content active">
             <div class="section-header">
                 <h2>Tableau de bord</h2>
-                <p class="section-desc">Vue d'ensemble des inscriptions au Boxing Trophy 18</p>
+                <p class="section-desc">Vue d'ensemble des inscriptions au Boxing Trophy 19</p>
             </div>
 
             <div class="card" id="registrationsGateCard" style="margin-bottom: 20px;">
@@ -496,13 +496,13 @@
                     <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 12px;">📷 Photos Cloudinary</h3>
                     <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.5;">
                         Cloud <strong>dhbh6wcak</strong>. Pour l’inscription publique : preset <strong>non signé</strong>
-                        (ex. <code>bt18_unsigned</code>). L’admin peut aussi utiliser <code>ml_default</code> (signé) si
+                        (ex. <code>bt19_unsigned</code>). L’admin peut aussi utiliser <code>ml_default</code> (signé) si
                         <code>CLOUDINARY_URL</code> est défini sur Vercel.
                     </p>
                     <ol style="font-size: 12px; color: var(--text-dim); margin: 0 0 14px 18px; line-height: 1.55;">
                         <li>Cloudinary → Settings → Upload → <strong>Add Upload Preset</strong></li>
-                        <li>Nom : <code>bt18_unsigned</code> — Signing mode : <strong>Unsigned</strong></li>
-                        <li>Ici : cloud <code>dhbh6wcak</code>, preset <code>bt18_unsigned</code> puis Enregistrer</li>
+                        <li>Nom : <code>bt19_unsigned</code> — Signing mode : <strong>Unsigned</strong></li>
+                        <li>Ici : cloud <code>dhbh6wcak</code>, preset <code>bt19_unsigned</code> puis Enregistrer</li>
                     </ol>
                     <form id="cloudinaryConfigForm" style="display:flex;flex-direction:column;gap:12px;">
                         <div class="form-group">
@@ -511,7 +511,7 @@
                         </div>
                         <div class="form-group">
                             <label class="form-label" for="cloudinaryPresetInput">Upload preset</label>
-                            <input type="text" class="form-input" id="cloudinaryPresetInput" placeholder="bt18_unsigned" />
+                            <input type="text" class="form-input" id="cloudinaryPresetInput" placeholder="bt19_unsigned" />
                         </div>
                         <button type="submit" class="btn btn-primary btn-sm">Enregistrer Cloudinary</button>
                     </form>

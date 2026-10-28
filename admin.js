@@ -1,5 +1,5 @@
-/* ═══════════════════════════════════════════════════════════
-   Boxing Trophy 18 — Admin Panel Logic
+﻿/* ═══════════════════════════════════════════════════════════
+   Boxing Trophy 19 — Admin Panel Logic
    Handles auth, registrations, filtering, matching, export
    ═══════════════════════════════════════════════════════════ */
 
@@ -9,11 +9,11 @@
     // ── Migration ──────────────────────────────────────────
     function migrateLocalStorage() {
         const migrations = [
-            { old: 'fightevent18_registrations', newKey: 'boxingtrophy18_registrations' },
-            { old: 'fightevent18_matches', newKey: 'boxingtrophy18_matches' },
-            { old: 'fightevent18_matches_timestamp', newKey: 'boxingtrophy18_matches_timestamp' },
-            { old: 'fightevent18_unmatched', newKey: 'boxingtrophy18_unmatched' },
-            { old: 'fightevent18_lastMatching', newKey: 'boxingtrophy18_lastMatching' }
+            { old: 'fightevent18_registrations', newKey: 'boxingtrophy19_registrations' },
+            { old: 'fightevent18_matches', newKey: 'boxingtrophy19_matches' },
+            { old: 'fightevent18_matches_timestamp', newKey: 'boxingtrophy19_matches_timestamp' },
+            { old: 'fightevent18_unmatched', newKey: 'boxingtrophy19_unmatched' },
+            { old: 'fightevent18_lastMatching', newKey: 'boxingtrophy19_lastMatching' }
         ];
         migrations.forEach(m => {
             const oldVal = localStorage.getItem(m.old);
@@ -23,25 +23,25 @@
         });
 
         const oldAuth = sessionStorage.getItem('fightevent18_admin_auth');
-        if (oldAuth !== null && sessionStorage.getItem('boxingtrophy18_admin_auth') === null) {
-            sessionStorage.setItem('boxingtrophy18_admin_auth', oldAuth);
+        if (oldAuth !== null && sessionStorage.getItem('boxingtrophy19_admin_auth') === null) {
+            sessionStorage.setItem('boxingtrophy19_admin_auth', oldAuth);
         }
     }
     migrateLocalStorage();
 
     // ── Constants ──────────────────────────────────────────
     const ADMIN_PASSWORD = (typeof getAdminPasswordFromEnv === 'function' && getAdminPasswordFromEnv())
-        || 'boxingtrophy18admin';
-    const AUTH_KEY = 'boxingtrophy18_admin_auth';
-    const REG_KEY = 'boxingtrophy18_registrations';
-    const MATCH_KEY = 'boxingtrophy18_matches';
-    const MATCH_TS_KEY = 'boxingtrophy18_matches_timestamp';
+        || 'boxingtrophy19admin';
+    const AUTH_KEY = 'boxingtrophy19_admin_auth';
+    const REG_KEY = 'boxingtrophy19_registrations';
+    const MATCH_KEY = 'boxingtrophy19_matches';
+    const MATCH_TS_KEY = 'boxingtrophy19_matches_timestamp';
     const MATCH_PUBLISHED_KEY = 'matches_published';
     const MATCH_PUBLISHED_AT_KEY = 'matches_published_at';
-    const LOCAL_PUBLISHED_KEY = 'boxingtrophy18_matches_published';
+    const LOCAL_PUBLISHED_KEY = 'boxingtrophy19_matches_published';
     const REG_OPEN_KEY = 'registrations_open';
     const REG_CLOSED_AT_KEY = 'registrations_closed_at';
-    const LOCAL_REG_OPEN_KEY = 'boxingtrophy18_registrations_open';
+    const LOCAL_REG_OPEN_KEY = 'boxingtrophy19_registrations_open';
 
     // ── DOM References ────────────────────────────────────
     const $ = (s) => document.querySelector(s);
@@ -225,7 +225,7 @@
                 enrichMatchesFromRegistrations();
                 await loadMatches();
             } else {
-                var adminPw = sessionStorage.getItem('bt18_admin_pw') || '';
+                var adminPw = sessionStorage.getItem('bt19_admin_pw') || '';
                 var res = await fetch('/api/admin/sync', {
                     cache: 'no-store',
                     headers: { 'x-admin-password': adminPw }
@@ -283,9 +283,9 @@
 
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (loginPassword.value === ADMIN_PASSWORD || loginPassword.value === 'fightevent18admin') {
+        if (loginPassword.value === ADMIN_PASSWORD || loginPassword.value === 'fightevent19admin') {
             sessionStorage.setItem(AUTH_KEY, 'true');
-            sessionStorage.setItem('bt18_admin_pw', loginPassword.value);
+            sessionStorage.setItem('bt19_admin_pw', loginPassword.value);
             loginError.hidden = true;
             showAdmin();
         } else {
@@ -298,7 +298,7 @@
     logoutBtn.addEventListener('click', function () {
         stopDataAutoSync();
         sessionStorage.removeItem(AUTH_KEY);
-        sessionStorage.removeItem('bt18_admin_pw');
+        sessionStorage.removeItem('bt19_admin_pw');
         showLogin();
         loginPassword.value = '';
     });
@@ -1144,11 +1144,11 @@
             editPhotoUploadBtn.disabled = true;
             editPhotoUploadBtn.textContent = 'Envoi…';
             try {
-                if (typeof BT18Cloudinary === 'undefined' || !BT18Cloudinary.getCloudinaryConfig().isConfigured()) {
+                if (typeof BT19Cloudinary === 'undefined' || !BT19Cloudinary.getCloudinaryConfig().isConfigured()) {
                     throw new Error('Cloudinary non configuré (Paramètres)');
                 }
-                var adminPw = sessionStorage.getItem('bt18_admin_pw') || '';
-                var url = await BT18Cloudinary.uploadFile(file, { adminPassword: adminPw });
+                var adminPw = sessionStorage.getItem('bt19_admin_pw') || '';
+                var url = await BT19Cloudinary.uploadFile(file, { adminPassword: adminPw });
                 updateEditPhotoPreview(url);
                 showNotification('✅ Photo prête — enregistrez le candidat');
             } catch (err) {
@@ -1547,7 +1547,7 @@
         }
 
         $('#exportPdfBtn').addEventListener('click', () => {
-            printPage("Boxing Trophy 18 — Liste des inscriptions", `${registrations.length} inscriptions enregistrées`);
+            printPage("Boxing Trophy 19 — Liste des inscriptions", `${registrations.length} inscriptions enregistrées`);
         });
 
         $('#exportMatchesCsvBtn').addEventListener('click', () => {
@@ -1579,7 +1579,7 @@
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = 'boxingtrophy18_combats_' + dateStamp() + '.csv';
+            a.download = 'boxingtrophy19_combats_' + dateStamp() + '.csv';
             a.click();
             URL.revokeObjectURL(url);
         });
@@ -1619,7 +1619,7 @@
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'boxingtrophy18_inscriptions_' + dateStamp() + '.csv';
+        a.download = 'boxingtrophy19_inscriptions_' + dateStamp() + '.csv';
         a.click();
         URL.revokeObjectURL(url);
     });
@@ -2469,9 +2469,9 @@
                 photoUploadBtn.textContent = 'Envoi…';
                 try {
                     var url;
-                    if (typeof BT18Cloudinary !== 'undefined' && BT18Cloudinary.getCloudinaryConfig().isConfigured()) {
-                        var adminPw = sessionStorage.getItem('bt18_admin_pw') || '';
-                        url = await BT18Cloudinary.uploadFile(file, { adminPassword: adminPw });
+                    if (typeof BT19Cloudinary !== 'undefined' && BT19Cloudinary.getCloudinaryConfig().isConfigured()) {
+                        var adminPw = sessionStorage.getItem('bt19_admin_pw') || '';
+                        url = await BT19Cloudinary.uploadFile(file, { adminPassword: adminPw });
                     } else {
                         throw new Error(
                             'Cloudinary non configuré : Paramètres → Photos (cloud dhbh6wcak + preset).'
@@ -2688,13 +2688,13 @@
 
         // Cloudinary settings
         var cloudinaryForm = $('#cloudinaryConfigForm');
-        if (cloudinaryForm && typeof BT18Cloudinary !== 'undefined') {
-            var cConf = BT18Cloudinary.getCloudinaryConfig();
+        if (cloudinaryForm && typeof BT19Cloudinary !== 'undefined') {
+            var cConf = BT19Cloudinary.getCloudinaryConfig();
             $('#cloudinaryCloudInput').value = cConf.cloudName || '';
             $('#cloudinaryPresetInput').value = cConf.uploadPreset || '';
             cloudinaryForm.addEventListener('submit', function (e) {
                 e.preventDefault();
-                BT18Cloudinary.saveCloudinaryConfig(
+                BT19Cloudinary.saveCloudinaryConfig(
                     $('#cloudinaryCloudInput').value,
                     $('#cloudinaryPresetInput').value
                 );
@@ -2731,7 +2731,7 @@
     // ═══════════════════════════════════════════════════════
     //  WHATSAPP BOT TAB
     // ═══════════════════════════════════════════════════════
-    const WA_BOT_URL_KEY = 'bt18_bot_url';
+    const WA_BOT_URL_KEY = 'bt19_bot_url';
     let waPollTimer = null;
     let waUserDismissedQr = false;
     let waUserDismissedPairCode = false;
@@ -2749,7 +2749,7 @@
         if (typeof window !== 'undefined' && window.location?.origin?.startsWith('http')) {
             return window.location.origin.replace(/\/$/, '');
         }
-        return 'https://boxing-trophy-18.vercel.app';
+        return 'https://boxing-trophy-19.vercel.app';
     }
 
     function updateSiteUrlDisplays() {
