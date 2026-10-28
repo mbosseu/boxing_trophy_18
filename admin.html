@@ -612,6 +612,27 @@ create policy "Accès public total" on match_metadata
                         <button type="button" class="btn btn-outline btn-sm" id="copySqlBtn" style="position: absolute; right: 10px; bottom: 10px; font-size: 11px; padding: 4px 8px; background: rgba(10, 10, 15, 0.9);">Copier le SQL</button>
                     </div>
                 </div>
+
+                <!-- ═══ NOUVELLE ÉDITION ═══ -->
+                <div class="card" style="border: 1px solid rgba(220,60,60,0.35); background: rgba(220,60,60,0.05);">
+                    <h3 style="font-size: 15px; font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; color: var(--danger);">
+                        <span>🔄</span> Démarrer une nouvelle édition
+                    </h3>
+                    <p style="font-size: 13px; color: var(--text-dim); margin-bottom: 14px; line-height: 1.5;">
+                        Exporte toutes les données de l'édition en cours (inscriptions + combats) en fichiers de sauvegarde, puis remet les tables à zéro pour repartir à neuf.
+                    </p>
+                    <ul style="font-size: 12px; color: var(--text-dim); margin: 0 0 16px 18px; line-height: 1.7;">
+                        <li>Télécharge un backup JSON des inscriptions</li>
+                        <li>Télécharge un backup JSON des combats</li>
+                        <li>Supprime toutes les inscriptions de Supabase</li>
+                        <li>Supprime tous les combats de Supabase</li>
+                        <li>Réinitialise les flags (inscriptions fermées, combats dépubliés)</li>
+                    </ul>
+                    <button type="button" id="resetEditionBtn" class="btn btn-outline btn-sm btn-danger-outline" style="width:100%; justify-content:center;">
+                        ⚠️ Archiver &amp; réinitialiser pour nouvelle édition
+                    </button>
+                </div>
+
             </div>
         </section>
 

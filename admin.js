@@ -2716,6 +2716,87 @@
             });
         }
 
+        // Reset edition
+        var resetEditionBtn = $('#resetEditionBtn');
+        if (resetEditionBtn) {
+            resetEditionBtn.addEventListener('click', async function () {
+                const confirmed = window.confirm(
+                    '⚠️ ATTENTION\n\n' +
+                    'Cette action va :\n' +
+                    '• Télécharger un backup des inscriptions et combats\n' +
+                    '• Supprimer TOUTES les inscriptions de Supabase\n' +
+                    '• Supprimer TOUS les combats de Supabase\n' +
+                    '• Réinitialiser les flags\n\n' +
+                    'Cette action est irréversible. Continuer ?'
+                );
+                if (!confirmed) return;
+
+                resetEditionBtn.disabled = true;
+                resetEditionBtn.textContent = '⏳ Archivage en cours...';
+
+                try {
+                    // 1. Export registrations backup
+                    const regs = allRegistrations.length ? allRegistrations : [];
+                    const regsBlob = new Blob([JSON.stringify(regs, null, 2)], { type: 'application/json' });
+                    const regsUrl = URL.createObjectURL(regsBlob);
+                    const regsLink = document.createElement('a');
+                    regsLink.href = regsUrl;
+                    regsLink.download = 'backup_bt19_inscriptions_' + new Date().toISOString().slice(0, 10) + '.json';
+                    regsLink.click();
+
+                    // 2. Export matches backup
+                    const matchesBak = allMatches.length ? allMatches : [];
+                    const matchesBlob = new Blob([JSON.stringify(matchesBak, null, 2)], { type: 'application/json' });
+                    const matchesUrl = URL.createObjectURL(matchesBlob);
+                    const matchesLink = document.createElement('a');
+                    matchesLink.href = matchesUrl;
+                    matchesLink.download = 'backup_bt19_combats_' + new Date().toISOString().slice(0, 10) + '.json';
+                    matchesLink.click();
+
+                    await new Promise(r => setTimeout(r, 800));
+
+                    // 3. Clear Supabase tables
+                    if (supabaseClient) {
+                        const { error: e1 } = await supabaseClient.from('registrations').delete().neq('id', '');
+                        if (e1) throw new Error('Erreur suppression inscriptions : ' + e1.message);
+
+                        const { error: e2 } = await supabaseClient.from('matches').delete().gte('id', 0);
+                        if (e2) throw new Error('Erreur suppression combats : ' + e2.message);
+
+                        // 4. Reset metadata flags
+                        await supabaseClient.from('match_metadata').upsert([
+                            { key: 'registrations_open', value: 'false' },
+                            { key: 'matches_published', value: 'false' }
+                        ]);
+                    }
+
+                    // 5. Clear local caches
+                    localStorage.removeItem(REG_KEY);
+                    localStorage.removeItem(MATCH_KEY);
+                    localStorage.removeItem(MATCH_TS_KEY);
+                    localStorage.removeItem(LOCAL_PUBLISHED_KEY);
+                    localStorage.removeItem(LOCAL_REG_OPEN_KEY);
+
+                    // 6. Reload
+                    allRegistrations = [];
+                    allMatches = [];
+                    await loadData();
+                    renderDashboard();
+                    renderRegistrations();
+                    await loadMatches();
+                    renderRecentRegistrations();
+
+                    showNotification('✅ Nouvelle édition prête ! Backups téléchargés.');
+                } catch (err) {
+                    showNotification('❌ Erreur : ' + err.message);
+                    console.error(err);
+                } finally {
+                    resetEditionBtn.disabled = false;
+                    resetEditionBtn.textContent = '⚠️ Archiver & réinitialiser pour nouvelle édition';
+                }
+            });
+        }
+
         // Handle Copy SQL
         copySqlBtn.addEventListener('click', () => {
             sqlSnippet.select();
