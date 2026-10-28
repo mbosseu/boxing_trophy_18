@@ -855,12 +855,14 @@
 
     function getFilteredRegistrations() {
         var search = filterSearch ? filterSearch.value.trim() : '';
+        var discipline = $('#filterDiscipline') ? $('#filterDiscipline').value : '';
         var sexe = filterSexe.value;
         var niveau = filterNiveau.value;
         var poids = filterPoids.value;
         var licence = $('#filterLicence') ? $('#filterLicence').value : '';
 
         const filtered = registrations.filter(function (r) {
+            if (discipline && r.discipline !== discipline) return false;
             if (sexe && r.sexe !== sexe) return false;
             if (niveau && r.niveau !== niveau) return false;
             if (poids && r.categoriePoids !== poids) return false;
@@ -1053,6 +1055,9 @@
         });
     }
     updateRegSearchClearBtn();
+    if ($('#filterDiscipline')) {
+        $('#filterDiscipline').addEventListener('change', resetRegPageAndRender);
+    }
     filterSexe.addEventListener('change', resetRegPageAndRender);
     filterNiveau.addEventListener('change', resetRegPageAndRender);
     filterPoids.addEventListener('change', resetRegPageAndRender);
@@ -1648,48 +1653,55 @@
     function generateMatches() {
         matches = [];
 
-        // Step 1: Group by sexe
-        var bySexe = groupBy(registrations, 'sexe');
+        // Step 1: Group by discipline
+        var byDiscipline = groupBy(registrations, 'discipline');
 
-        Object.keys(bySexe).forEach(function (sexe) {
-            // Step 2: Within each sex, group by categoriePoids
-            var byPoids = groupBy(bySexe[sexe], 'categoriePoids');
+        Object.keys(byDiscipline).forEach(function (discipline) {
+            // Step 2: Group by sexe
+            var bySexe = groupBy(byDiscipline[discipline], 'sexe');
 
-            Object.keys(byPoids).forEach(function (poids) {
-                // Step 3: Within each weight, group by niveau
-                var byNiveau = groupBy(byPoids[poids], 'niveau');
+            Object.keys(bySexe).forEach(function (sexe) {
+                // Step 3: Within each sex, group by categoriePoids
+                var byPoids = groupBy(bySexe[sexe], 'categoriePoids');
 
-                Object.keys(byNiveau).forEach(function (niveau) {
-                    var fighters = byNiveau[niveau].slice();
-                    // Shuffle for randomness
-                    shuffleArray(fighters);
+                Object.keys(byPoids).forEach(function (poids) {
+                    // Step 4: Within each weight, group by niveau
+                    var byNiveau = groupBy(byPoids[poids], 'niveau');
 
-                    // Step 4: Form pairs
-                    while (fighters.length >= 2) {
-                        var f1 = fighters.shift();
-                        var f2 = fighters.shift();
-                        matches.push({
-                            type: 'pair',
-                            sexe: sexe,
-                            categoriePoids: poids,
-                            niveau: niveau,
-                            fighter1: fighterSnapshot(f1),
-                            fighter2: fighterSnapshot(f2)
-                        });
-                    }
+                    Object.keys(byNiveau).forEach(function (niveau) {
+                        var fighters = byNiveau[niveau].slice();
+                        // Shuffle for randomness
+                        shuffleArray(fighters);
 
-                    // Step 5: Unpaired
-                    if (fighters.length === 1) {
-                        var f = fighters[0];
-                        matches.push({
-                            type: 'waiting',
-                            sexe: sexe,
-                            categoriePoids: poids,
-                            niveau: niveau,
-                            fighter1: fighterSnapshot(f),
-                            fighter2: null
-                        });
-                    }
+                        // Step 5: Form pairs
+                        while (fighters.length >= 2) {
+                            var f1 = fighters.shift();
+                            var f2 = fighters.shift();
+                            matches.push({
+                                type: 'pair',
+                                sexe: sexe,
+                                discipline: discipline,
+                                categoriePoids: poids,
+                                niveau: niveau,
+                                fighter1: fighterSnapshot(f1),
+                                fighter2: fighterSnapshot(f2)
+                            });
+                        }
+
+                        // Step 6: Unpaired
+                        if (fighters.length === 1) {
+                            var f = fighters[0];
+                            matches.push({
+                                type: 'waiting',
+                                sexe: sexe,
+                                discipline: discipline,
+                                categoriePoids: poids,
+                                niveau: niveau,
+                                fighter1: fighterSnapshot(f),
+                                fighter2: null
+                            });
+                        }
+                    });
                 });
             });
         });
@@ -1716,12 +1728,13 @@
         matchesContainer.hidden = false;
         matchesContainer.innerHTML = '';
 
-        // Group matches by sexe > poids > niveau for display
+        // Group matches by discipline > sexe > poids > niveau for display
         var grouped = {};
         matches.forEach(function (m, idx) {
-            var key = m.sexe + '||' + m.categoriePoids + '||' + m.niveau;
+            var disc = m.discipline || 'Boxe Anglaise';
+            var key = disc + '||' + m.sexe + '||' + m.categoriePoids + '||' + m.niveau;
             if (!grouped[key]) {
-                grouped[key] = { sexe: m.sexe, poids: m.categoriePoids, niveau: m.niveau, items: [] };
+                grouped[key] = { discipline: disc, sexe: m.sexe, poids: m.categoriePoids, niveau: m.niveau, items: [] };
             }
             grouped[key].items.push({ match: m, index: idx });
         });
@@ -1731,9 +1744,14 @@
             var section = document.createElement('div');
             section.className = 'match-group';
 
+            var discTag = g.discipline === 'Pied-Poing'
+                ? '<span class="tag" style="background:rgba(160,200,232,0.15);color:var(--volt);">🦵 Pied-Poing</span>'
+                : '<span class="tag" style="background:rgba(90,144,204,0.15);color:var(--fire);">🥊 Boxe Anglaise</span>';
+
             section.innerHTML =
                 '<div class="match-group-header">' +
-                    '<h3>' + escapeHtml(g.sexe) + ' — ' + escapeHtml(g.poids || 'N/A') + ' — ' + escapeHtml(g.niveau || 'N/A') + '</h3>' +
+                    '<h3>' + escapeHtml(g.discipline) + ' — ' + escapeHtml(g.sexe) + ' — ' + escapeHtml(g.poids || 'N/A') + ' — ' + escapeHtml(g.niveau || 'N/A') + '</h3>' +
+                    discTag +
                     '<span class="tag tag-sexe">' + escapeHtml(g.sexe) + '</span>' +
                     '<span class="tag tag-poids">' + escapeHtml(g.poids || '—') + '</span>' +
                     '<span class="tag tag-niveau">' + escapeHtml(g.niveau || '—') + '</span>' +
