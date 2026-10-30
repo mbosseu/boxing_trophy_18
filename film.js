@@ -1,5 +1,5 @@
 /* ============================================
-   Boxing Trophy 19 — Lecteur « En coulisses »
+   Boxing Trophy 19 — Lecteur « Édition 18 »
    Les séquences s'enchaînent comme un seul film.
    Lecture quand le lecteur est à l'écran, pause dès que l'attention part
    (défilement, autre onglet, autre fenêtre).
@@ -21,7 +21,10 @@
   var toggleBtn = root.querySelector('[data-film-toggle]');
   var totalEl = document.querySelector('[data-film-total]');
   var soundBtn = document.querySelector('[data-film-sound]');
-  var soundLabel = document.querySelector('[data-film-sound-label]');
+  var section = root.closest('section');
+  var ambient = section ? section.querySelector('.film-ambient') : null;
+  var ambientCtx = ambient ? ambient.getContext('2d') : null;
+  var lastAmbient = 0;
 
   var durations = clips.map(function () { return 0; });
   var current = 0;
@@ -73,8 +76,23 @@
     if (timeEl) timeEl.textContent = fmt(elapsed);
   }
 
+  // Lumière d'ambiance : une miniature de l'image, floutée en CSS derrière la section
+  function paintAmbient(force) {
+    if (!ambientCtx || active.readyState < 2) return;
+    var now = performance.now();
+    if (!force && now - lastAmbient < 120) return;
+    lastAmbient = now;
+    try {
+      ambientCtx.drawImage(active, 0, 0, ambient.width, ambient.height);
+      section.classList.add('is-lit');
+    } catch (e) {
+      ambientCtx = null;
+    }
+  }
+
   function tick() {
     renderProgress();
+    paintAmbient(false);
     rafId = active.paused ? null : requestAnimationFrame(tick);
   }
 
@@ -138,6 +156,9 @@
   }
 
   videos.forEach(function (v) {
+    v.addEventListener('loadeddata', function () {
+      if (v === active) paintAmbient(true);
+    });
     v.addEventListener('ended', function () {
       if (v !== active) return;
       goTo(current + 1, shouldPlay());
@@ -232,7 +253,7 @@
       soundBtn.setAttribute('aria-pressed', String(!value));
       soundBtn.classList.toggle('is-on', !value);
     }
-    if (soundLabel) soundLabel.textContent = value ? 'Activer le son' : 'Couper le son';
+    if (soundBtn) soundBtn.setAttribute('aria-label', value ? 'Activer le son' : 'Couper le son');
   }
 
   if (soundBtn) {
@@ -244,5 +265,69 @@
         sync();
       }
     });
+  }
+
+  /* ---------- Mise en scène : texte défilant, entrée 3D, inclinaison ---------- */
+  var stage = section && section.querySelector('.film-stage');
+  var tilt = root.querySelector('.film-tilt');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!stage || !tilt || reduceMotion) return;
+
+  var rows = Array.prototype.slice.call(stage.querySelectorAll('[data-marquee]')).map(function (el) {
+    return { el: el, dir: Number(el.getAttribute('data-marquee')) || 1, offset: 0 };
+  });
+  var finePointer = window.matchMedia('(pointer: fine)').matches;
+  var target = { rx: 0, ry: 0 };
+  var tiltNow = { rx: 0, ry: 0 };
+  var lastY = window.scrollY;
+  var boost = 0;
+  var lastT = 0;
+  var stageVisible = false;
+  var loopId = null;
+
+  function frame(t) {
+    var dt = lastT ? Math.min(64, t - lastT) / 1000 : 0;
+    lastT = t;
+
+    // Le défilement de la page accélère le texte
+    var y = window.scrollY;
+    boost = Math.min(900, boost * 0.92 + Math.abs(y - lastY) * 6);
+    lastY = y;
+    var speed = 50 + boost;
+    rows.forEach(function (r) {
+      var w = r.el.firstElementChild.offsetWidth || 1;
+      r.offset = (r.offset + speed * dt) % w;
+      var x = r.dir < 0 ? -r.offset : r.offset - w;
+      r.el.style.transform = 'translate3d(' + x + 'px,0,0)';
+    });
+
+    // Entrée : le lecteur se redresse en arrivant à l'écran
+    var rect = stage.getBoundingClientRect();
+    var p = Math.max(0, Math.min(1, (window.innerHeight - rect.top) / (window.innerHeight * 0.75)));
+    var eased = 1 - Math.pow(1 - p, 3);
+
+    tiltNow.rx += (target.rx - tiltNow.rx) * 0.08;
+    tiltNow.ry += (target.ry - tiltNow.ry) * 0.08;
+    tilt.style.setProperty('--p', eased.toFixed(3));
+    tilt.style.setProperty('--rx', tiltNow.rx.toFixed(2) + 'deg');
+    tilt.style.setProperty('--ry', tiltNow.ry.toFixed(2) + 'deg');
+
+    loopId = stageVisible ? requestAnimationFrame(frame) : null;
+  }
+
+  new IntersectionObserver(function (entries) {
+    stageVisible = entries[0].isIntersecting;
+    if (stageVisible && !loopId) { lastT = 0; loopId = requestAnimationFrame(frame); }
+  }).observe(section);
+
+  if (finePointer) {
+    stage.addEventListener('pointermove', function (e) {
+      var r = tilt.getBoundingClientRect();
+      var x = (e.clientX - (r.left + r.width / 2)) / window.innerWidth;
+      var y = (e.clientY - (r.top + r.height / 2)) / window.innerHeight;
+      target.ry = Math.max(-1, Math.min(1, x * 2)) * 9;
+      target.rx = Math.max(-1, Math.min(1, -y * 2)) * 7;
+    });
+    stage.addEventListener('pointerleave', function () { target.rx = 0; target.ry = 0; });
   }
 })();

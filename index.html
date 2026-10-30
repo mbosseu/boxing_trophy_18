@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10" />
+  <link rel="stylesheet" href="style.css?v=12" />
   <link rel="stylesheet" href="poster.css?v=7" />
   <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
@@ -204,46 +204,64 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════ EN COULISSES (VIDÉO) ═══════════════════════ -->
-    <section class="section reels" id="coulisses">
-      <div class="container film-layout">
-        <div class="film-text reveal">
-          <span class="section-kicker">En coulisses</span>
-          <h2 class="section-title">La préparation, <em>en mouvement</em></h2>
-          <p class="section-desc">
-            Une séance de sparring sur le ring, de bout en bout. La vidéo se lance quand
-            vous vous arrêtez dessus et se met en pause dès que vous passez à autre chose.
-          </p>
-          <div class="film-meta">
-            <div><span class="film-meta-label">Durée</span><span class="film-meta-val" data-film-total>1:28</span></div>
-            <div><span class="film-meta-label">Lieu</span><span class="film-meta-val">Le ring</span></div>
+    <!-- ═══════════════════════ ÉDITION 18 (VIDÉO) ═══════════════════════ -->
+    <section class="film-section" id="edition-18">
+      <canvas class="film-ambient" width="36" height="64" aria-hidden="true"></canvas>
+
+      <div class="film-head container reveal">
+        <span class="section-kicker">Édition 18 · En images</span>
+        <h2 class="section-title">Revivez <em>le Trophy 18</em></h2>
+      </div>
+
+      <div class="film-stage">
+        <div class="film-marquee" aria-hidden="true">
+          <div class="fm-row fm-row-a" data-marquee="-1">
+            <span>Trophy 18 — St Cyprien — 5 juin 2026 — Boxe anglaise — </span><span>Trophy 18 — St Cyprien — 5 juin 2026 — Boxe anglaise — </span>
           </div>
-          <button class="btn btn-outline btn-sm film-sound" type="button" data-film-sound aria-pressed="false">
-            <span class="film-sound-icon" aria-hidden="true"></span>
-            <span data-film-sound-label>Activer le son</span>
-          </button>
+          <div class="fm-row fm-row-b" data-marquee="1">
+            <span>Salle comble — Combats engagés — Ambiance électrique — </span><span>Salle comble — Combats engagés — Ambiance électrique — </span>
+          </div>
         </div>
 
-        <div class="film reveal" data-film
-             data-clips="videos/gala/clip-1.mp4,videos/gala/clip-2.mp4,videos/gala/clip-3.mp4,videos/gala/clip-4.mp4,videos/gala/clip-5.mp4,videos/gala/clip-6.mp4">
-          <div class="film-frame">
-            <video class="film-video is-active" muted playsinline preload="metadata" aria-label="Séance de sparring en coulisses"></video>
-            <video class="film-video" muted playsinline preload="none" aria-hidden="true"></video>
-            <div class="film-shade" aria-hidden="true"></div>
-            <div class="film-progress" data-film-progress aria-hidden="true"></div>
-            <div class="film-badge" aria-hidden="true">
-              <span class="film-dot"></span>
-              <span data-film-time>0:00</span>
+        <figure class="film" data-film
+                data-clips="videos/gala/clip-1.mp4,videos/gala/clip-2.mp4,videos/gala/clip-3.mp4,videos/gala/clip-4.mp4,videos/gala/clip-5.mp4,videos/gala/clip-6.mp4">
+          <div class="film-tilt">
+            <div class="film-frame">
+              <video class="film-video is-active" muted playsinline preload="metadata" aria-label="Images de la soirée du Boxing Trophy 18"></video>
+              <video class="film-video" muted playsinline preload="none" aria-hidden="true"></video>
+              <div class="film-shade" aria-hidden="true"></div>
+
+              <div class="film-top" aria-hidden="true">
+                <span class="film-tag"><span class="film-dot"></span>Trophy 18</span>
+                <span class="film-time"><span data-film-time>0:00</span><span class="film-time-sep">/</span><span data-film-total>1:27</span></span>
+              </div>
+
+              <button class="film-toggle" type="button" data-film-toggle aria-label="Lire la vidéo">
+                <span class="film-toggle-icon" aria-hidden="true"></span>
+              </button>
+
+              <div class="film-bottom">
+                <div class="film-progress" data-film-progress aria-hidden="true"></div>
+                <button class="film-mute" type="button" data-film-sound aria-pressed="false" aria-label="Activer le son">
+                  <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6" fill="none"/></svg>
+                  <svg class="icon-sound" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
+                </button>
+              </div>
             </div>
-            <button class="film-toggle" type="button" data-film-toggle aria-label="Lire la vidéo">
-              <span class="film-toggle-icon" aria-hidden="true"></span>
-            </button>
-            <span class="film-corner film-corner-tl" aria-hidden="true"></span>
-            <span class="film-corner film-corner-tr" aria-hidden="true"></span>
-            <span class="film-corner film-corner-bl" aria-hidden="true"></span>
-            <span class="film-corner film-corner-br" aria-hidden="true"></span>
           </div>
-        </div>
+
+          <span class="film-chip film-chip-1"><small>Date</small>5 juin 2026</span>
+          <span class="film-chip film-chip-2"><small>Lieu</small>Boxing Center St Cyprien</span>
+          <span class="film-chip film-chip-3"><small>Discipline</small>Boxe anglaise</span>
+        </figure>
+      </div>
+
+      <div class="film-foot container reveal">
+        <p class="lead">
+          Une salle pleine, debout autour du ring, des combats engagés&nbsp;: l'édition 18 a placé la barre très haut.
+          Le 13 novembre, le Trophy écrit la suite à Portet-sur-Garonne.
+        </p>
+        <a href="#inscription" class="btn btn-primary nav-cta">Participer à l'édition 19</a>
       </div>
     </section>
 
@@ -642,6 +660,6 @@
   <script src="home-combats.js"></script>
   <script src="app.js?v=4"></script>
   <script src="gallery.js?v=2"></script>
-  <script src="film.js?v=1"></script>
+  <script src="film.js?v=3"></script>
 </body>
 </html>
