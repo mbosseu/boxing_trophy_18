@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=8" />
+  <link rel="stylesheet" href="style.css?v=10" />
   <link rel="stylesheet" href="poster.css?v=7" />
   <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
@@ -204,42 +204,46 @@
       </div>
     </section>
 
-    <!-- ═══════════════════════ EN COULISSES (VIDÉOS) ═══════════════════════ -->
+    <!-- ═══════════════════════ EN COULISSES (VIDÉO) ═══════════════════════ -->
     <section class="section reels" id="coulisses">
-      <div class="container">
-        <div class="section-head section-head-split reveal">
-          <div>
-            <span class="section-kicker">En coulisses</span>
-            <h2 class="section-title">La préparation, <em>en mouvement</em></h2>
+      <div class="container film-layout">
+        <div class="film-text reveal">
+          <span class="section-kicker">En coulisses</span>
+          <h2 class="section-title">La préparation, <em>en mouvement</em></h2>
+          <p class="section-desc">
+            Une séance de sparring sur le ring, de bout en bout. La vidéo se lance quand
+            vous vous arrêtez dessus et se met en pause dès que vous passez à autre chose.
+          </p>
+          <div class="film-meta">
+            <div><span class="film-meta-label">Durée</span><span class="film-meta-val" data-film-total>1:28</span></div>
+            <div><span class="film-meta-label">Lieu</span><span class="film-meta-val">Le ring</span></div>
           </div>
-          <p class="section-desc">Sparring et séances de préparation sur le ring. Touchez une vidéo pour la voir avec le son.</p>
+          <button class="btn btn-outline btn-sm film-sound" type="button" data-film-sound aria-pressed="false">
+            <span class="film-sound-icon" aria-hidden="true"></span>
+            <span data-film-sound-label>Activer le son</span>
+          </button>
         </div>
-      </div>
-      <div class="reel-track" data-reels>
-        <button class="reel" type="button" data-video="videos/gala/clip-1.mp4" aria-label="Lire la vidéo 1">
-          <video src="videos/gala/clip-1.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
-          <span class="reel-play" aria-hidden="true"></span>
-        </button>
-        <button class="reel" type="button" data-video="videos/gala/clip-2.mp4" aria-label="Lire la vidéo 2">
-          <video src="videos/gala/clip-2.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
-          <span class="reel-play" aria-hidden="true"></span>
-        </button>
-        <button class="reel" type="button" data-video="videos/gala/clip-3.mp4" aria-label="Lire la vidéo 3">
-          <video src="videos/gala/clip-3.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
-          <span class="reel-play" aria-hidden="true"></span>
-        </button>
-        <button class="reel" type="button" data-video="videos/gala/clip-4.mp4" aria-label="Lire la vidéo 4">
-          <video src="videos/gala/clip-4.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
-          <span class="reel-play" aria-hidden="true"></span>
-        </button>
-        <button class="reel" type="button" data-video="videos/gala/clip-5.mp4" aria-label="Lire la vidéo 5">
-          <video src="videos/gala/clip-5.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
-          <span class="reel-play" aria-hidden="true"></span>
-        </button>
-        <button class="reel" type="button" data-video="videos/gala/clip-6.mp4" aria-label="Lire la vidéo 6">
-          <video src="videos/gala/clip-6.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
-          <span class="reel-play" aria-hidden="true"></span>
-        </button>
+
+        <div class="film reveal" data-film
+             data-clips="videos/gala/clip-1.mp4,videos/gala/clip-2.mp4,videos/gala/clip-3.mp4,videos/gala/clip-4.mp4,videos/gala/clip-5.mp4,videos/gala/clip-6.mp4">
+          <div class="film-frame">
+            <video class="film-video is-active" muted playsinline preload="metadata" aria-label="Séance de sparring en coulisses"></video>
+            <video class="film-video" muted playsinline preload="none" aria-hidden="true"></video>
+            <div class="film-shade" aria-hidden="true"></div>
+            <div class="film-progress" data-film-progress aria-hidden="true"></div>
+            <div class="film-badge" aria-hidden="true">
+              <span class="film-dot"></span>
+              <span data-film-time>0:00</span>
+            </div>
+            <button class="film-toggle" type="button" data-film-toggle aria-label="Lire la vidéo">
+              <span class="film-toggle-icon" aria-hidden="true"></span>
+            </button>
+            <span class="film-corner film-corner-tl" aria-hidden="true"></span>
+            <span class="film-corner film-corner-tr" aria-hidden="true"></span>
+            <span class="film-corner film-corner-bl" aria-hidden="true"></span>
+            <span class="film-corner film-corner-br" aria-hidden="true"></span>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -594,7 +598,7 @@
           <span class="nl-edition">Trophy <strong>19</strong></span>
         </div>
         <p>L'ouverture de la nouvelle salle à <strong>Portet-sur-Garonne</strong>. Boxe anglaise &amp; pied-poing. 13 novembre, 19h.</p>
-        <a href="#inscription" class="btn btn-primary btn-sm footer-cta">S'inscrire</a>
+        <a href="#inscription" class="btn btn-primary btn-sm footer-cta nav-cta">S'inscrire</a>
       </div>
       <div class="footer-col">
         <h5>Navigation</h5>
@@ -637,6 +641,7 @@
   <script src="registration-gate.js"></script>
   <script src="home-combats.js"></script>
   <script src="app.js?v=4"></script>
-  <script src="gallery.js?v=1"></script>
+  <script src="gallery.js?v=2"></script>
+  <script src="film.js?v=1"></script>
 </body>
 </html>

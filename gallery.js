@@ -1,5 +1,5 @@
 /* ============================================
-   Boxing Trophy 19 — Galerie photos & vidéos (lightbox)
+   Boxing Trophy 19 — Galerie photos & affiche (lightbox)
    ============================================ */
 (function () {
   'use strict';
@@ -17,40 +17,22 @@
   var index = 0;
   var lastFocus = null;
 
-  function collect(selector, type) {
+  function collect(selector, attr) {
     return Array.prototype.map.call(document.querySelectorAll(selector), function (el) {
       var img = el.querySelector('img');
-      return {
-        type: type,
-        src: type === 'image' ? el.dataset.full : el.dataset.video,
-        alt: img ? img.alt : '',
-        trigger: el,
-      };
+      return { src: el.getAttribute(attr), alt: img ? img.alt : '', trigger: el };
     });
   }
 
-  var photos = collect('[data-gallery] [data-full]', 'image');
-  var videos = collect('[data-reels] [data-video]', 'video');
-  var posters = Array.prototype.map.call(document.querySelectorAll('[data-poster]'), function (el) {
-    var img = el.querySelector('img');
-    return { type: 'image', src: el.dataset.poster, alt: img ? img.alt : '', trigger: el };
-  });
+  var photos = collect('[data-gallery] [data-full]', 'data-full');
+  var posters = collect('[data-poster]', 'data-poster');
 
   function render() {
     var item = items[index];
     stage.innerHTML = '';
-    var node;
-    if (item.type === 'image') {
-      node = document.createElement('img');
-      node.src = item.src;
-      node.alt = item.alt;
-    } else {
-      node = document.createElement('video');
-      node.src = item.src;
-      node.controls = true;
-      node.autoplay = true;
-      node.playsInline = true;
-    }
+    var node = document.createElement('img');
+    node.src = item.src;
+    node.alt = item.alt;
     stage.appendChild(node);
     var many = items.length > 1;
     prevBtn.hidden = !many;
@@ -62,10 +44,10 @@
     items = list;
     index = i;
     lastFocus = document.activeElement;
-    pauseReels();
     render();
     lightbox.hidden = false;
     document.body.style.overflow = 'hidden';
+    document.dispatchEvent(new CustomEvent('bt19:lightbox', { detail: { open: true } }));
     closeBtn.focus();
   }
 
@@ -73,8 +55,8 @@
     lightbox.hidden = true;
     stage.innerHTML = '';
     document.body.style.overflow = '';
+    document.dispatchEvent(new CustomEvent('bt19:lightbox', { detail: { open: false } }));
     if (lastFocus) lastFocus.focus();
-    resumeVisibleReels();
   }
 
   function step(delta) {
@@ -84,9 +66,6 @@
 
   photos.forEach(function (p, i) {
     p.trigger.addEventListener('click', function () { open(photos, i); });
-  });
-  videos.forEach(function (v, i) {
-    v.trigger.addEventListener('click', function () { open(videos, i); });
   });
   posters.forEach(function (p) {
     p.trigger.addEventListener('click', function () { open([p], 0); });
@@ -107,7 +86,7 @@
     else if (e.key === 'Tab') {
       // garder le focus dans la visionneuse
       var focusables = Array.prototype.filter.call(
-        lightbox.querySelectorAll('button, video'),
+        lightbox.querySelectorAll('button'),
         function (el) { return !el.hidden; }
       );
       var first = focusables[0];
@@ -126,42 +105,4 @@
     if (Math.abs(dx) > 50) step(dx < 0 ? 1 : -1);
     touchX = null;
   });
-
-  /* Aperçus vidéo : lecture muette uniquement quand la vignette est visible */
-  var reelVideos = Array.prototype.slice.call(document.querySelectorAll('[data-reels] video'));
-  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var saveData = navigator.connection && navigator.connection.saveData;
-  var autoplayReels = !reduceMotion && !saveData && 'IntersectionObserver' in window;
-  var visible = new Set();
-
-  function pauseReels() {
-    reelVideos.forEach(function (v) { v.pause(); });
-  }
-
-  function resumeVisibleReels() {
-    if (!autoplayReels) return;
-    visible.forEach(function (v) {
-      var p = v.play();
-      if (p && p.catch) p.catch(function () {});
-    });
-  }
-
-  if (autoplayReels) {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        var v = entry.target;
-        if (entry.isIntersecting) {
-          visible.add(v);
-          if (lightbox.hidden) {
-            var p = v.play();
-            if (p && p.catch) p.catch(function () {});
-          }
-        } else {
-          visible.delete(v);
-          v.pause();
-        }
-      });
-    }, { threshold: 0.6 });
-    reelVideos.forEach(function (v) { io.observe(v); });
-  }
 })();
