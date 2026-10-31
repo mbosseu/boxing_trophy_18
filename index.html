@@ -4,606 +4,629 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Boxing Trophy 19 · 13 Novembre · Portet-sur-Garonne</title>
-  <meta name="description" content="Boxing Trophy 19 — Célébrez l'ouverture de la nouvelle salle. 13 Novembre, 19h, Portet-sur-Garonne. Boxe Anglaise & Pied-Poing." />
+  <meta name="description" content="Boxing Trophy 19 — Soirée de gala pour l'ouverture de la nouvelle salle du Boxing Center. 13 novembre, 19h, Portet-sur-Garonne. Boxe anglaise & pied-poing." />
+  <meta name="theme-color" content="#0b0a09" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Boxing Trophy 19 · 13 Novembre · Portet-sur-Garonne" />
+  <meta property="og:description" content="Soirée de gala pour l'ouverture de la nouvelle salle. Boxe anglaise & pied-poing. Entrée 10 €." />
+  <meta property="og:image" content="https://boxing-trophy-19.vercel.app/image/gala/affiche-trophy-19.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=8" />
   <link rel="stylesheet" href="poster.css?v=7" />
-  <link rel="icon" type="image/png" href="image/affiche1.png" />
+  <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
 <body>
 
   <!-- NAV -->
-  <div class="nav-trigger" id="navTrigger"></div>
   <nav class="nav" id="navbar">
     <div class="nav-inner">
-      <a href="#" class="nav-logo">
+      <a href="#" class="nav-logo" aria-label="Boxing Trophy 19 — accueil">
         <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" />
-        <span class="nl-edition">Trophy&nbsp;<strong>19</strong></span>
+        <span class="nl-divider" aria-hidden="true"></span>
+        <span class="nl-edition">Trophy <strong>19</strong></span>
       </a>
       <div class="nav-links" id="navLinks">
-        <a href="#event">Événement</a>
-        <a href="#nouvelle-salle">Nouvelle Salle</a>
+        <a href="#event">L'événement</a>
         <a href="#disciplines">Disciplines</a>
-        <a href="#inscription">Inscription</a>
+        <a href="#galerie">Galerie</a>
         <a href="#carte-combats" id="navCarteCombats">Programme</a>
+        <a href="#infos">Infos pratiques</a>
         <a href="#inscription" class="nav-cta">S'inscrire</a>
       </div>
-      <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">
         <span></span><span></span><span></span>
       </button>
     </div>
   </nav>
 
   <!-- ═══════════════════════ HERO ═══════════════════════ -->
-  <section class="hero" id="hero">
-    <video class="hero-video-bg" autoplay muted loop playsinline>
+  <header class="hero" id="hero">
+    <video class="hero-video" autoplay muted loop playsinline poster="image/gala/victoire.jpg" aria-hidden="true">
       <source src="videos/mp_.mp4" type="video/mp4" />
     </video>
-    <div class="hero-overlay"></div>
-    <div class="hero-bg-num" aria-hidden="true">19</div>
+    <div class="hero-shade" aria-hidden="true"></div>
 
-    <div class="hero-content">
-      <div class="hero-eyebrow">
-        <span class="he-pill">19<sup>e</sup> Édition</span>
-        <span class="he-sep" aria-hidden="true">×</span>
-        <span class="he-loc">📍 Portet-sur-Garonne</span>
-      </div>
+    <div class="hero-content container">
+      <p class="hero-eyebrow">
+        <span class="eyebrow-line" aria-hidden="true"></span>
+        <span>19<sup>e</sup> édition · Inauguration de la nouvelle salle</span>
+      </p>
 
       <h1 class="hero-title">
-        <span class="ht-top">BOXING</span>
-        <span class="ht-bot">TROPHY</span>
+        <span class="ht-line">Boxing</span>
+        <span class="ht-line">Trophy <em class="ht-num">19</em></span>
       </h1>
 
-      <div class="hero-date-block">
-        <div class="hdb-main">
-          <span class="hdb-num">13</span>
-          <div class="hdb-right">
-            <span class="hdb-month">NOVEMBRE</span>
-            <span class="hdb-time">19 H 00</span>
-          </div>
-        </div>
-        <div class="hdb-special">
-          <span class="hdb-star">★</span>
-          <span>Ouverture de la <strong>Nouvelle Salle</strong></span>
-        </div>
-      </div>
+      <p class="hero-lead">
+        Une soirée de gala pour ouvrir le nouveau Boxing Center de
+        Portet-sur-Garonne. Boxe anglaise et pied-poing, sous les projecteurs.
+      </p>
 
-      <div class="hero-discs">
-        <span class="hd-chip">Boxe Anglaise</span>
-        <span class="hd-plus" aria-hidden="true">+</span>
-        <span class="hd-chip hd-chip-new">Pied-Poing <mark>nouveau</mark></span>
-      </div>
-
-      <div id="countdown" class="countdown">
-        <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
-        <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
-        <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
-        <div class="countdown-finished-msg">L'événement a commencé !</div>
-      </div>
-
-      <div class="hero-cta">
-        <a href="#inscription" class="btn-fire">S'inscrire maintenant</a>
-        <a href="#nouvelle-salle" class="btn-outline-white">Découvrir ↓</a>
+      <div class="hero-cta hero-cta-group">
+        <a href="#inscription" class="btn btn-primary">S'inscrire au combat</a>
+        <a href="#event" class="btn btn-ghost-light">Découvrir l'événement</a>
       </div>
     </div>
 
-    <div class="hero-ticker" aria-hidden="true">
-      <div class="ticker-track">
-        <span>BOXING TROPHY 19</span><span class="td">◆</span>
-        <span>13 NOVEMBRE</span><span class="td">◆</span>
-        <span>PORTET-SUR-GARONNE</span><span class="td">◆</span>
-        <span>BOXE ANGLAISE</span><span class="td">+</span>
-        <span>PIED-POING</span><span class="td">◆</span>
-        <span>NOUVELLE SALLE</span><span class="td">◆</span>
-        <span>BOXING TROPHY 19</span><span class="td">◆</span>
-        <span>13 NOVEMBRE</span><span class="td">◆</span>
-        <span>PORTET-SUR-GARONNE</span><span class="td">◆</span>
-        <span>BOXE ANGLAISE</span><span class="td">+</span>
-        <span>PIED-POING</span><span class="td">◆</span>
-        <span>NOUVELLE SALLE</span><span class="td">◆</span>
+    <div class="hero-bar">
+      <div class="container hero-bar-inner">
+        <dl class="hero-facts">
+          <div><dt>Date</dt><dd>Vendredi 13 nov. 2026</dd></div>
+          <div><dt>Ouverture</dt><dd>19h00</dd></div>
+          <div><dt>Lieu</dt><dd>Portet-sur-Garonne</dd></div>
+          <div><dt>Entrée</dt><dd>10 €</dd></div>
+        </dl>
+        <div id="countdown" class="countdown" aria-label="Compte à rebours avant l'événement">
+          <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
+          <div class="countdown-finished-msg">L'événement a commencé&nbsp;!</div>
+        </div>
       </div>
     </div>
-  </section>
+  </header>
 
-  <!-- ═══════════════════════ NOUVELLE SALLE ═══════════════════════ -->
-  <section class="nouvelle-salle" id="nouvelle-salle">
-    <div class="ns-volt-stripe" aria-hidden="true"></div>
-    <div class="ns-bg-word" aria-hidden="true">SALLE</div>
-    <div class="container">
-      <div class="ns-grid">
-        <div class="ns-text reveal">
-          <span class="ns-kicker">Événement Exceptionnel</span>
-          <h2 class="ns-title">Célébrons<br/><em>l'Ouverture</em></h2>
-          <p class="ns-lead">
-            Le Boxing Trophy 19 marque l'inauguration de notre
-            <strong>nouvelle salle à Portet-sur-Garonne</strong> —
-            un espace conçu pour faire éclore des champions.
-            Une soirée de gala, deux disciplines, une ambiance électrique.
+  <main>
+
+    <!-- ═══════════════════════ L'ÉVÉNEMENT ═══════════════════════ -->
+    <section class="section intro" id="event">
+      <div class="container intro-grid">
+        <div class="intro-text reveal">
+          <span class="section-kicker">L'événement</span>
+          <h2 class="section-title">Célébrons <em>l'ouverture</em> de la nouvelle salle</h2>
+          <p class="lead">
+            Pour sa 19<sup>e</sup> édition, le Boxing Trophy pose ses cordes à
+            <strong>Portet-sur-Garonne</strong> et inaugure la nouvelle salle du Boxing Center&nbsp;:
+            un espace pensé pour faire grandir les combattants de demain.
           </p>
-          <div class="ns-facts">
-            <div class="ns-fact">
-              <span class="ns-fact-val">13.11</span>
-              <span class="ns-fact-lbl">Novembre 2026</span>
-            </div>
-            <div class="ns-fact">
-              <span class="ns-fact-val">19h</span>
-              <span class="ns-fact-lbl">Coup d'envoi</span>
-            </div>
-            <div class="ns-fact ns-fact-volt">
-              <span class="ns-fact-val">2</span>
-              <span class="ns-fact-lbl">Disciplines</span>
-            </div>
-          </div>
-          <a href="#inscription" class="btn-volt">Rejoindre la fête →</a>
-        </div>
-        <div class="ns-photos reveal">
-          <div class="ns-photo-main">
-            <img src="image/sparring.png" alt="Nouvelle salle Boxing Center" />
-            <div class="ns-photo-badge">NOUVELLE SALLE</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ DISCIPLINES ═══════════════════════ -->
-  <section class="disciplines-section" id="disciplines">
-    <div class="container">
-      <div class="disc-header reveal">
-        <span class="section-kicker">Les disciplines</span>
-        <h2 class="section-title-xl">Deux <em>arts</em><br/>de combat</h2>
-      </div>
-    </div>
-    <div class="disc-cards">
-      <div class="disc-card dc-ba reveal-left">
-        <div class="dc-img">
-          <img src="image/boxeuse_ring.png" alt="Boxe Anglaise" />
-          <div class="dc-img-overlay"></div>
-        </div>
-        <div class="dc-body">
-          <span class="dc-num">01</span>
-          <h3>Boxe<br/>Anglaise</h3>
-          <p>Le noble art. Technique, puissance, stratégie. L'affrontement pur dans les règles classiques.</p>
-          <div class="dc-tags">
-            <span>Tradition</span>
-            <span>Ring</span>
-          </div>
-        </div>
-      </div>
-      <div class="disc-card dc-pp reveal-right">
-        <div class="dc-img">
-          <img src="image/pied_poing.png" alt="Pied-Poing" />
-          <div class="dc-img-overlay"></div>
-        </div>
-        <div class="dc-body">
-          <span class="dc-num">02</span>
-          <h3>Pied-<br/>Poing</h3>
-          <p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p>
-          <div class="dc-tags">
-            <span class="tag-new-badge">Nouveau</span>
-            <span>Dynamisme</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ EVENT ═══════════════════════ -->
-  <section class="event-section" id="event">
-    <div class="container">
-      <div class="event-header reveal">
-        <span class="section-kicker">L'Événement</span>
-        <h2 class="section-title-xl">Boxing<br/><em>Trophy 19</em></h2>
-      </div>
-      <div class="event-layout">
-        <div class="event-photo reveal">
-          <div class="event-photo-frame">
-            <img src="image/coaching19.png" alt="Coaching Boxing Trophy 19" />
-          </div>
-        </div>
-
-        <div class="event-text-block reveal">
-          <div class="event-facts-grid">
-            <div class="ef-item">
-              <span class="ef-label">Lieu</span>
-              <span class="ef-val">Boxing Center, <strong>Portet-sur-Garonne</strong></span>
-            </div>
-            <div class="ef-item">
-              <span class="ef-label">Date</span>
-              <span class="ef-val"><strong>13 Novembre</strong> · 19h</span>
-            </div>
-            <div class="ef-item">
-              <span class="ef-label">Entrée</span>
-              <span class="ef-val"><strong>10 €</strong> · Spectateurs bienvenus</span>
-            </div>
-            <div class="ef-item">
-              <span class="ef-label">Occasion</span>
-              <span class="ef-val"><strong>Inauguration</strong> de la nouvelle salle</span>
-            </div>
-          </div>
-          <p class="etb-lead">
-            Pour sa 19<sup>e</sup> édition, le Boxing Trophy se réinvente à Portet-sur-Garonne.
-            Une soirée de gala pour inaugurer la nouvelle salle, avec deux disciplines au programme.
+          <p>
+            Une soirée de gala, deux disciplines, un vrai ring sous les projecteurs —
+            et une salle comble pour porter chaque combattant.
           </p>
-          <div class="etb-program">
-            <h4>Au programme</h4>
-            <ul>
-              <li>Combats de <strong>Boxe Anglaise</strong></li>
-              <li>Combats de <strong>Pied-Poing</strong> <span class="tag-new-badge">nouveau</span></li>
-              <li>Inauguration officielle de la nouvelle salle</li>
-              <li>Animations, buvette &amp; stands partenaires</li>
-              <li>Photos &amp; vidéos professionnelles</li>
-            </ul>
-          </div>
-          <div class="stats-row">
-            <div class="stat-block">
+
+          <ul class="stats-row">
+            <li class="stat-block">
               <span class="stat-value" data-count="19">0</span>
               <span class="stat-label">Éditions</span>
-            </div>
-            <div class="stat-block">
+            </li>
+            <li class="stat-block">
               <span class="stat-value" data-count="200">0</span>
               <span class="stat-label">Combattants</span>
-            </div>
-            <div class="stat-block">
+            </li>
+            <li class="stat-block">
               <span class="stat-value" data-count="500">0</span>
               <span class="stat-label">Spectateurs</span>
+            </li>
+          </ul>
+        </div>
+
+        <figure class="intro-media reveal">
+          <img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur au centre du ring" loading="lazy" width="1280" height="846" />
+          <figcaption>Le verdict, au centre du ring.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════ DISCIPLINES ═══════════════════════ -->
+    <section class="section disciplines" id="disciplines">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="section-kicker">Les disciplines</span>
+          <h2 class="section-title">Deux arts, <em>un seul ring</em></h2>
+        </div>
+
+        <div class="disc-grid">
+          <article class="disc-card reveal">
+            <div class="disc-media">
+              <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy" width="1280" height="970" />
             </div>
-          </div>
+            <div class="disc-body">
+              <span class="disc-num">01</span>
+              <h3>Boxe anglaise</h3>
+              <p>Le noble art. Technique, puissance et stratégie&nbsp;: l'affrontement pur, dans les règles classiques.</p>
+              <ul class="disc-tags"><li>Tradition</li><li>Poings uniquement</li></ul>
+            </div>
+          </article>
+
+          <article class="disc-card reveal">
+            <div class="disc-media">
+              <img src="image/gala/pied-poing.jpg" alt="Combattant de pied-poing portant un high kick" loading="lazy" width="1400" height="934" />
+            </div>
+            <div class="disc-body">
+              <span class="disc-num">02</span>
+              <h3>Pied-poing <span class="badge">Nouveau</span></h3>
+              <p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p>
+              <ul class="disc-tags"><li>Première au Trophy</li><li>Pieds &amp; poings</li></ul>
+            </div>
+          </article>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ═══════════════════════ GALLERY ═══════════════════════ -->
-  <section class="gallery-raw">
-    <div class="gr-item gr-tall">
-      <img src="image/image.png" alt="Combat de gala" loading="lazy" />
-      <div class="gr-tag">COMBAT GALA</div>
-    </div>
-    <div class="gr-item">
-      <img src="image/image2/image3.png" alt="Échange au ring" loading="lazy" />
-      <div class="gr-tag">ÉCHANGE</div>
-    </div>
-    <div class="gr-item">
-      <img src="image/image1.png" alt="Entre les rounds" loading="lazy" />
-      <div class="gr-tag">CORNER</div>
-    </div>
-    <div class="gr-item gr-wide">
-      <img src="image/image4.png" alt="Champion Boxing Trophy" loading="lazy" />
-      <div class="gr-tag">CHAMPION</div>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════ CONCEPT ═══════════════════════ -->
-  <section class="concept-section" id="concept">
-    <div class="container">
-      <div class="concept-header reveal">
-        <span class="section-kicker">Le Concept</span>
-        <h2 class="section-title-xl">L'expérience<br/><em>complète</em></h2>
-      </div>
-      <div class="concept-editorial">
-        <div class="ce-poster reveal-left">
-          <img src="image/affiche1.png" alt="Affiche officielle Boxing Trophy 19" />
+    <!-- ═══════════════════════ GALERIE ═══════════════════════ -->
+    <section class="section gallery" id="galerie">
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <span class="section-kicker">Galerie</span>
+            <h2 class="section-title">L'intensité, <em>en images</em></h2>
+          </div>
+          <p class="section-desc">Gardes hautes, échanges, verdict&nbsp;: quelques instants capturés au Boxing Center.</p>
         </div>
-        <div class="ce-features reveal-right">
-          <div class="ce-item">
-            <span class="ce-num">01</span>
-            <div class="ce-content">
-              <h4>Ring Professionnel</h4>
-              <p>Montez sur un vrai ring sous les projecteurs. Une expérience unique, digne des grands galas.</p>
-            </div>
+
+        <div class="gallery-grid" data-gallery>
+          <button class="g-item g-hero" type="button" data-full="image/gala/victoire.jpg" aria-label="Agrandir : la victoire">
+            <img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur" loading="lazy" />
+          </button>
+          <button class="g-item g-side" type="button" data-full="image/gala/garde-casque-rouge.jpg" aria-label="Agrandir : garde haute, casque rouge">
+            <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy" />
+          </button>
+          <button class="g-item g-side" type="button" data-full="image/gala/direct.jpg" aria-label="Agrandir : le direct">
+            <img src="image/gala/direct.jpg" alt="Boxeur au casque rouge lançant un direct" loading="lazy" />
+          </button>
+          <button class="g-item" type="button" data-full="image/gala/esquive-arbitre.jpg" aria-label="Agrandir : esquive sous l'œil de l'arbitre">
+            <img src="image/gala/esquive-arbitre.jpg" alt="Boxeur esquivant un coup sous l'œil de l'arbitre" loading="lazy" />
+          </button>
+          <button class="g-item" type="button" data-full="image/gala/garde-casque-bleu.jpg" aria-label="Agrandir : garde, casque bleu">
+            <img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy" />
+          </button>
+          <button class="g-item" type="button" data-full="image/gala/accolade.jpg" aria-label="Agrandir : l'accolade">
+            <img src="image/gala/accolade.jpg" alt="Deux combattants se donnent l'accolade sur le ring" loading="lazy" />
+          </button>
+          <button class="g-item g-band" type="button" data-full="image/gala/echange-union-jack.jpg" aria-label="Agrandir : l'échange">
+            <img src="image/gala/echange-union-jack.jpg" alt="Échange sur le ring devant un drapeau britannique" loading="lazy" />
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════ EN COULISSES (VIDÉOS) ═══════════════════════ -->
+    <section class="section reels" id="coulisses">
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <span class="section-kicker">En coulisses</span>
+            <h2 class="section-title">La préparation, <em>en mouvement</em></h2>
           </div>
-          <div class="ce-item">
-            <span class="ce-num">02</span>
-            <div class="ce-content">
-              <h4>Encadrement Pro</h4>
-              <p>Entraîneurs certifiés et arbitre expérimenté. Votre sécurité est notre priorité absolue.</p>
-            </div>
-          </div>
-          <div class="ce-item">
-            <span class="ce-num">03</span>
-            <div class="ce-content">
-              <h4>Appariement Juste</h4>
+          <p class="section-desc">Sparring et séances de préparation sur le ring. Touchez une vidéo pour la voir avec le son.</p>
+        </div>
+      </div>
+      <div class="reel-track" data-reels>
+        <button class="reel" type="button" data-video="videos/gala/clip-1.mp4" aria-label="Lire la vidéo 1">
+          <video src="videos/gala/clip-1.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
+          <span class="reel-play" aria-hidden="true"></span>
+        </button>
+        <button class="reel" type="button" data-video="videos/gala/clip-2.mp4" aria-label="Lire la vidéo 2">
+          <video src="videos/gala/clip-2.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
+          <span class="reel-play" aria-hidden="true"></span>
+        </button>
+        <button class="reel" type="button" data-video="videos/gala/clip-3.mp4" aria-label="Lire la vidéo 3">
+          <video src="videos/gala/clip-3.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
+          <span class="reel-play" aria-hidden="true"></span>
+        </button>
+        <button class="reel" type="button" data-video="videos/gala/clip-4.mp4" aria-label="Lire la vidéo 4">
+          <video src="videos/gala/clip-4.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
+          <span class="reel-play" aria-hidden="true"></span>
+        </button>
+        <button class="reel" type="button" data-video="videos/gala/clip-5.mp4" aria-label="Lire la vidéo 5">
+          <video src="videos/gala/clip-5.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
+          <span class="reel-play" aria-hidden="true"></span>
+        </button>
+        <button class="reel" type="button" data-video="videos/gala/clip-6.mp4" aria-label="Lire la vidéo 6">
+          <video src="videos/gala/clip-6.mp4#t=0.8" muted loop playsinline preload="metadata"></video>
+          <span class="reel-play" aria-hidden="true"></span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════ L'EXPÉRIENCE ═══════════════════════ -->
+    <section class="section experience" id="concept">
+      <div class="container exp-grid">
+        <figure class="exp-media reveal">
+          <img src="image/gala/esquive-arbitre.jpg" alt="Combat encadré par un arbitre expérimenté" loading="lazy" width="1280" height="800" />
+        </figure>
+        <div class="exp-text reveal">
+          <span class="section-kicker">L'expérience combattant</span>
+          <h2 class="section-title">Traité comme <em>un champion</em></h2>
+          <ol class="exp-list">
+            <li>
+              <h3>Ring professionnel</h3>
+              <p>Un vrai ring sous les projecteurs, digne des grands galas.</p>
+            </li>
+            <li>
+              <h3>Encadrement pro</h3>
+              <p>Entraîneurs certifiés et arbitre expérimenté&nbsp;: votre sécurité passe avant tout.</p>
+            </li>
+            <li>
+              <h3>Appariement juste</h3>
               <p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p>
-            </div>
-          </div>
-          <div class="ce-item">
-            <span class="ce-num">04</span>
-            <div class="ce-content">
-              <h4>Mise en Lumière</h4>
-              <p>Photos pro, vidéos, entrée personnalisée — chaque participant est traité comme un champion.</p>
-            </div>
-          </div>
+            </li>
+            <li>
+              <h3>Mise en lumière</h3>
+              <p>Photos et vidéos professionnelles, entrée personnalisée sur la carte officielle.</p>
+            </li>
+          </ol>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ═══════════════════════ CARTE DES COMBATS ═══════════════════════ -->
-  <section class="section home-combats-section" id="carte-combats">
-    <div class="container">
-      <div class="section-header reveal">
-        <span class="section-kicker">Programme Officiel</span>
-        <h2 class="section-title-xl">Carte des<br/><em>combats</em></h2>
-        <p class="section-desc" id="homeCombatsDesc">
-          Les affrontements du Boxing Trophy 19 — Portet-sur-Garonne.
-        </p>
+    <!-- ═══════════════════════ CARTE DES COMBATS ═══════════════════════ -->
+    <section class="section home-combats-section" id="carte-combats">
+      <div class="container">
+        <div class="section-head section-head-center reveal">
+          <span class="section-kicker">Programme officiel</span>
+          <h2 class="section-title">La carte <em>des combats</em></h2>
+          <p class="section-desc" id="homeCombatsDesc">
+            Les affrontements du Boxing Trophy 19 — Portet-sur-Garonne.
+          </p>
+        </div>
+        <div class="home-combats-soon" id="homeCombatsSoon">
+          <span class="soon-mark" aria-hidden="true">19</span>
+          <h3 class="home-combats-soon-title">Bientôt dévoilée</h3>
+          <p class="home-combats-soon-text">La carte officielle sera publiée ici dès la fin des appariements.</p>
+          <a href="affiche.html" class="btn btn-outline btn-sm">Page programme</a>
+        </div>
+        <div id="homeCombatsPublished" hidden>
+          <div class="home-poster-wrap gala-poster-wrap reveal" id="homePosterWrap"></div>
+          <p class="home-combats-cta reveal">
+            <a href="affiche.html" class="btn btn-outline">Voir en plein écran</a>
+          </p>
+        </div>
       </div>
-      <div class="home-combats-soon" id="homeCombatsSoon">
-        <span class="home-combats-soon-icon" aria-hidden="true">🥊</span>
-        <h3 class="home-combats-soon-title">Bientôt disponible</h3>
-        <p class="home-combats-soon-text">La carte officielle sera publiée prochainement.</p>
-        <a href="affiche.html" class="btn btn-outline btn-sm">Page programme</a>
-      </div>
-      <div id="homeCombatsPublished" hidden>
-        <div class="home-poster-wrap gala-poster-wrap reveal" id="homePosterWrap"></div>
-        <p class="home-combats-cta reveal">
-          <a href="affiche.html" class="btn btn-outline">Voir en plein écran</a>
-        </p>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ═══════════════════════ INSCRIPTION ═══════════════════════ -->
-  <section class="form-section" id="inscription">
-    <div class="form-bg-watermark">ENTER THE RING</div>
-    <div class="form-glow-orb orb-form-red"></div>
-    <div class="form-glow-orb orb-form-blue"></div>
-    <div class="container">
-      <div class="form-header reveal">
-        <span class="section-kicker">Inscriptions Ouvertes</span>
-        <h2 class="section-title-xl">Rejoins<br/><em>le Ring</em></h2>
-        <p class="section-desc">
-          Inscris-toi au Boxing Trophy 19 · Boxe Anglaise &amp; Pied-Poing<br/>
-          Portet-sur-Garonne · 13 Novembre · 19h
-        </p>
-      </div>
-
-      <div class="form-container reveal">
-        <div class="form-steps">
-          <div class="step-indicator active" data-step="1">
-            <div class="step-number">1</div>
-            <span class="step-label">Identité</span>
+    <!-- ═══════════════════════ INFOS PRATIQUES ═══════════════════════ -->
+    <section class="section infos" id="infos">
+      <div class="container">
+        <div class="infos-layout">
+        <figure class="poster-frame reveal">
+          <button class="poster-btn" type="button" data-poster="image/gala/affiche-trophy-19.jpg" aria-label="Agrandir l'affiche officielle">
+            <img src="image/gala/affiche-trophy-19.jpg" alt="Affiche officielle du Boxing Trophy 19 — vendredi 13 novembre 2026 dès 19h, Boxing Center Portet-sur-Garonne" loading="lazy" width="1280" height="1600" />
+          </button>
+          <figcaption>
+            <span>L'affiche officielle</span>
+            <a href="image/gala/affiche-trophy-19.jpg" download="affiche-boxing-trophy-19.jpg">Télécharger</a>
+          </figcaption>
+        </figure>
+        <div class="infos-main">
+        <div class="section-head reveal">
+          <span class="section-kicker">Infos pratiques</span>
+          <h2 class="section-title">Le rendez-vous <em>du 13 novembre</em></h2>
+          <p class="section-desc infos-tagline">Une nouvelle salle. Un nouveau round.</p>
+        </div>
+        <div class="infos-grid reveal">
+          <div class="info-card">
+            <span class="info-label">Date</span>
+            <span class="info-val">13 novembre 2026</span>
+            <span class="info-sub">Vendredi soir</span>
           </div>
-          <div class="step-connector"></div>
-          <div class="step-indicator" data-step="2">
-            <div class="step-number">2</div>
-            <span class="step-label">Sportif</span>
+          <div class="info-card">
+            <span class="info-label">Horaire</span>
+            <span class="info-val">19h00</span>
+            <span class="info-sub">Ouverture des portes</span>
           </div>
-          <div class="step-connector"></div>
-          <div class="step-indicator" data-step="3">
-            <div class="step-number">3</div>
-            <span class="step-label">Complémentaire</span>
+          <div class="info-card">
+            <span class="info-label">Lieu</span>
+            <span class="info-val">Boxing Center</span>
+            <span class="info-sub">Portet-sur-Garonne</span>
+          </div>
+          <div class="info-card">
+            <span class="info-label">Entrée</span>
+            <span class="info-val">10 €</span>
+            <span class="info-sub">Spectateurs bienvenus</span>
           </div>
         </div>
+        <div class="program reveal">
+          <h3 class="program-title">Au programme de la soirée</h3>
+          <ul class="program-list">
+            <li><span>Combats de boxe anglaise</span></li>
+            <li><span>Combats de pied-poing</span> <span class="badge">Nouveau</span></li>
+            <li><span>Inauguration officielle de la nouvelle salle</span></li>
+            <li><span>Animations, buvette &amp; stands partenaires</span></li>
+            <li><span>Photos &amp; vidéos professionnelles</span></li>
+          </ul>
+        </div>
+        </div>
+        </div>
+      </div>
+    </section>
 
-        <div class="form-card">
-          <form id="registrationForm" novalidate>
+    <!-- ═══════════════════════ INSCRIPTION ═══════════════════════ -->
+    <section class="section form-section" id="inscription">
+      <div class="form-bg" aria-hidden="true"><img src="image/gala/garde-casque-bleu.jpg" alt="" loading="lazy" /></div>
+      <div class="container form-layout">
+        <aside class="form-aside reveal">
+          <span class="section-kicker section-tag">Inscriptions ouvertes</span>
+          <h2 class="section-title">Monte <em>sur le ring</em></h2>
+          <p class="section-desc">
+            Inscris-toi au Boxing Trophy 19 · Boxe anglaise &amp; pied-poing.
+            Portet-sur-Garonne · 13 novembre · 19h.
+          </p>
+          <ul class="form-checklist">
+            <li>Débutants et intermédiaires</li>
+            <li>Licence FFB / FFKMDA, ou engagement à prendre une licence loisir</li>
+            <li>Appariement par sexe, poids et niveau</li>
+            <li>Ta photo sur l'affiche officielle (optionnel)</li>
+          </ul>
+        </aside>
 
-            <!-- STEP 1 -->
-            <div class="form-step active" data-step="1">
-              <h3 class="form-step-title">Identité</h3>
-              <p class="form-step-desc">Vos informations personnelles</p>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="nom">Nom <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="nom" name="nom" placeholder="Votre nom" required />
-                  <div class="form-error" id="nom-error">Veuillez saisir votre nom</div>
+        <div class="form-container reveal">
+          <div class="form-steps">
+            <div class="step-indicator active" data-step="1">
+              <div class="step-number">1</div>
+              <span class="step-label">Identité</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-indicator" data-step="2">
+              <div class="step-number">2</div>
+              <span class="step-label">Sportif</span>
+            </div>
+            <div class="step-connector"></div>
+            <div class="step-indicator" data-step="3">
+              <div class="step-number">3</div>
+              <span class="step-label">Finalisation</span>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <form id="registrationForm" novalidate>
+
+              <!-- STEP 1 -->
+              <div class="form-step active" data-step="1">
+                <h3 class="form-step-title">Identité</h3>
+                <p class="form-step-desc">Vos informations personnelles</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="nom">Nom <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="nom" name="nom" placeholder="Votre nom" autocomplete="family-name" required />
+                    <div class="form-error" id="nom-error">Veuillez saisir votre nom</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="prenom">Prénom <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Votre prénom" autocomplete="given-name" required />
+                    <div class="form-error" id="prenom-error">Veuillez saisir votre prénom</div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="prenom">Prénom <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Votre prénom" required />
-                  <div class="form-error" id="prenom-error">Veuillez saisir votre prénom</div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="dateNaissance">Date de naissance <span class="required">*</span></label>
+                    <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" autocomplete="bday" required />
+                    <div class="form-error" id="dateNaissance-error">Veuillez saisir votre date de naissance</div>
+                  </div>
+                  <div class="form-group">
+                    <span class="form-label">Sexe <span class="required">*</span></span>
+                    <div class="form-radio-group">
+                      <label class="form-radio-label male-corner">
+                        <input type="radio" name="sexe" value="Homme" required />
+                        <span class="radio-card-content"><span class="radio-card-title">Homme</span><span class="radio-card-badge">Coin rouge</span></span>
+                      </label>
+                      <label class="form-radio-label female-corner">
+                        <input type="radio" name="sexe" value="Femme" required />
+                        <span class="radio-card-content"><span class="radio-card-title">Femme</span><span class="radio-card-badge">Coin bleu</span></span>
+                      </label>
+                    </div>
+                    <div class="form-error" id="sexe-error">Veuillez sélectionner votre sexe</div>
+                  </div>
+                </div>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="email">Adresse e-mail <span class="required">*</span></label>
+                    <input type="email" class="form-input" id="email" name="email" placeholder="exemple@mail.com" autocomplete="email" required />
+                    <div class="form-error" id="email-error">Veuillez saisir une adresse e-mail valide</div>
+                    <div class="form-error" id="email-duplicate-error">Cette adresse e-mail est déjà inscrite</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="telephone">Téléphone <span class="required">*</span></label>
+                    <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="06 12 34 56 78" autocomplete="tel" required />
+                    <div class="form-error" id="telephone-error">Veuillez saisir un numéro de téléphone valide</div>
+                    <div class="form-error" id="telephone-duplicate-error">Ce numéro de téléphone est déjà inscrit</div>
+                  </div>
+                </div>
+                <div class="form-nav">
+                  <div></div>
+                  <button type="button" class="btn btn-next" data-next="2">Suivant →</button>
                 </div>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="dateNaissance">Date de naissance <span class="required">*</span></label>
-                  <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" required />
-                  <div class="form-error" id="dateNaissance-error">Veuillez saisir votre date de naissance</div>
+
+              <!-- STEP 2 -->
+              <div class="form-step" data-step="2">
+                <h3 class="form-step-title">Informations sportives</h3>
+                <p class="form-step-desc">Votre profil de combattant</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="niveau">Niveau <span class="required">*</span></label>
+                    <select class="form-select" id="niveau" name="niveau" required>
+                      <option value="">Sélectionner</option>
+                      <option value="Débutant">Débutant</option>
+                      <option value="Intermédiaire">Intermédiaire</option>
+                    </select>
+                    <div class="form-error" id="niveau-error">Veuillez sélectionner votre niveau</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="discipline">Discipline <span class="required">*</span></label>
+                    <select class="form-select" id="discipline" name="discipline" required>
+                      <option value="">Sélectionner</option>
+                      <option value="Boxe Anglaise">Boxe Anglaise</option>
+                      <option value="Pied-Poing">Pied-Poing</option>
+                    </select>
+                    <div class="form-error" id="discipline-error">Veuillez sélectionner votre discipline</div>
+                  </div>
                 </div>
                 <div class="form-group">
-                  <label class="form-label">Sexe <span class="required">*</span></label>
+                  <span class="form-label">Licencié FFB / FFKMDA <span class="required">*</span></span>
                   <div class="form-radio-group">
-                    <label class="form-radio-label male-corner">
-                      <input type="radio" name="sexe" value="Homme" required />
-                      <span class="radio-card-content"><span class="radio-card-title">Homme</span><span class="radio-card-badge">Coin Rouge</span></span>
+                    <label class="form-radio-label yes-license">
+                      <input type="radio" name="licencie" value="Oui" required />
+                      <span class="radio-card-content"><span class="radio-card-title">Oui</span><span class="radio-card-desc">Licencié actif</span></span>
                     </label>
-                    <label class="form-radio-label female-corner">
-                      <input type="radio" name="sexe" value="Femme" required />
-                      <span class="radio-card-content"><span class="radio-card-title">Femme</span><span class="radio-card-badge">Coin Bleu</span></span>
+                    <label class="form-radio-label no-license">
+                      <input type="radio" name="licencie" value="Non" required />
+                      <span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Non licencié</span></span>
                     </label>
                   </div>
-                  <div class="form-error" id="sexe-error">Veuillez sélectionner votre sexe</div>
+                  <div class="form-error" id="licencie-error">Veuillez indiquer si vous êtes licencié</div>
+                </div>
+                <div class="conditional-field" id="licenceField">
+                  <div class="form-group">
+                    <label class="form-label" for="numeroLicence">Numéro de licence <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="numeroLicence" name="numeroLicence" placeholder="Votre numéro de licence" />
+                    <div class="form-error" id="numeroLicence-error">Veuillez saisir votre numéro de licence</div>
+                  </div>
+                </div>
+                <div class="conditional-field" id="engagementField">
+                  <div class="form-group">
+                    <label class="form-checkbox-label">
+                      <input type="checkbox" name="engagementLicence" id="engagementLicence" />
+                      Je m'engage à obtenir une licence loisir valide avant le 01/11/2026
+                    </label>
+                    <div class="form-error" id="engagementLicence-error">Vous devez vous engager à obtenir une licence</div>
+                  </div>
+                </div>
+                <div class="form-nav">
+                  <button type="button" class="btn btn-prev" data-prev="1">← Retour</button>
+                  <button type="button" class="btn btn-next" data-next="3">Suivant →</button>
                 </div>
               </div>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="email">Adresse e-mail <span class="required">*</span></label>
-                  <input type="email" class="form-input" id="email" name="email" placeholder="exemple@mail.com" required />
-                  <div class="form-error" id="email-error">Veuillez saisir une adresse e-mail valide</div>
-                  <div class="form-error" id="email-duplicate-error">Cette adresse e-mail est déjà inscrite</div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="telephone">Téléphone <span class="required">*</span></label>
-                  <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="06 12 34 56 78" required />
-                  <div class="form-error" id="telephone-error">Veuillez saisir un numéro de téléphone valide</div>
-                  <div class="form-error" id="telephone-duplicate-error">Ce numéro de téléphone est déjà inscrit</div>
-                </div>
-              </div>
-              <div class="form-nav">
-                <div></div>
-                <button type="button" class="btn btn-next" data-next="2">Suivant →</button>
-              </div>
-            </div>
 
-            <!-- STEP 2 -->
-            <div class="form-step" data-step="2">
-              <h3 class="form-step-title">Informations Sportives</h3>
-              <p class="form-step-desc">Votre profil de combattant</p>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="niveau">Niveau <span class="required">*</span></label>
-                  <select class="form-select" id="niveau" name="niveau" required>
-                    <option value="">Sélectionner</option>
-                    <option value="Débutant">Débutant</option>
-                    <option value="Intermédiaire">Intermédiaire</option>
-                  </select>
-                  <div class="form-error" id="niveau-error">Veuillez sélectionner votre niveau</div>
+              <!-- STEP 3 -->
+              <div class="form-step" data-step="3">
+                <h3 class="form-step-title">Informations complémentaires</h3>
+                <p class="form-step-desc">Dernières informations pour finaliser</p>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label" for="club">Club d'entraînement <span class="required">*</span></label>
+                    <input type="text" class="form-input" id="club" name="club" placeholder="Nom de votre club" required />
+                    <div class="form-error" id="club-error">Veuillez saisir votre club</div>
+                  </div>
+                  <div class="form-group">
+                    <label class="form-label" for="categoriePoids">Catégorie de poids <span class="required">*</span></label>
+                    <select class="form-select" id="categoriePoids" name="categoriePoids" required>
+                      <option value="">Sélectionner</option>
+                      <option value="-60kg">Moins de 60 kg</option>
+                      <option value="-64kg">60 – 64 kg</option>
+                      <option value="-69kg">64 – 69 kg</option>
+                      <option value="-75kg">69 – 75 kg</option>
+                      <option value="-81kg">75 – 81 kg</option>
+                      <option value="-91kg">81 – 91 kg</option>
+                      <option value="+91kg">Plus de 91 kg</option>
+                    </select>
+                    <div class="form-error" id="categoriePoids-error">Veuillez sélectionner une catégorie</div>
+                  </div>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="discipline">Discipline <span class="required">*</span></label>
-                  <select class="form-select" id="discipline" name="discipline" required>
-                    <option value="">Sélectionner</option>
-                    <option value="Boxe Anglaise">Boxe Anglaise</option>
-                    <option value="Pied-Poing">Pied-Poing</option>
-                  </select>
-                  <div class="form-error" id="discipline-error">Veuillez sélectionner votre discipline</div>
+                <div class="form-group form-group-photo-reg">
+                  <span class="form-label">Photo pour l'affiche officielle</span>
+                  <p class="form-hint-photo">JPG ou PNG — visible sur la carte des combats. Optionnel mais recommandé.</p>
+                  <div class="reg-photo-row">
+                    <div id="regPhotoPreview" class="reg-photo-preview" aria-hidden="true"></div>
+                    <div class="reg-photo-actions">
+                      <input type="file" id="regPhotoFile" class="visually-hidden" accept="image/jpeg,image/png,image/webp" />
+                      <input type="hidden" id="regPhotoUrl" name="regPhotoUrl" value="" />
+                      <button type="button" id="regPhotoBtn" class="btn btn-secondary btn-sm reg-photo-btn">Choisir une image</button>
+                      <button type="button" id="regPhotoClearBtn" class="btn btn-ghost reg-photo-clear" hidden>Retirer</button>
+                    </div>
+                  </div>
+                  <p id="regPhotoStatus" class="form-hint-photo reg-photo-status"></p>
                 </div>
-              </div>
-              <div class="form-group">
-                <label class="form-label">Licencié FFB / FFKMDA <span class="required">*</span></label>
-                <div class="form-radio-group">
-                  <label class="form-radio-label yes-license">
-                    <input type="radio" name="licencie" value="Oui" required />
-                    <span class="radio-card-content"><span class="radio-card-title">Oui</span><span class="radio-card-desc">Licencié actif</span></span>
-                  </label>
-                  <label class="form-radio-label no-license">
-                    <input type="radio" name="licencie" value="Non" required />
-                    <span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Non licencié</span></span>
-                  </label>
-                </div>
-                <div class="form-error" id="licencie-error">Veuillez indiquer si vous êtes licencié</div>
-              </div>
-              <div class="conditional-field" id="licenceField">
-                <div class="form-group">
-                  <label class="form-label" for="numeroLicence">Numéro de Licence <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="numeroLicence" name="numeroLicence" placeholder="Votre numéro de licence" />
-                  <div class="form-error" id="numeroLicence-error">Veuillez saisir votre numéro de licence</div>
-                </div>
-              </div>
-              <div class="conditional-field" id="engagementField">
                 <div class="form-group">
                   <label class="form-checkbox-label">
-                    <input type="checkbox" name="engagementLicence" id="engagementLicence" />
-                    Je m'engage à obtenir une licence loisir valide avant le 01/11/2026
+                    <input type="checkbox" name="consentementRGPD" id="consentementRGPD" required />
+                    J'accepte que mes données soient traitées dans le cadre du Boxing Trophy 19, conformément au RGPD.
                   </label>
-                  <div class="form-error" id="engagementLicence-error">Vous devez vous engager à obtenir une licence</div>
+                  <div class="form-error" id="consentementRGPD-error">Vous devez accepter les conditions</div>
+                </div>
+                <div class="form-nav">
+                  <button type="button" class="btn btn-prev" data-prev="2">← Retour</button>
+                  <button type="submit" class="btn btn-submit">Valider l'inscription</button>
                 </div>
               </div>
-              <div class="form-nav">
-                <button type="button" class="btn btn-prev" data-prev="1">← Retour</button>
-                <button type="button" class="btn btn-next" data-next="3">Suivant →</button>
-              </div>
+            </form>
+
+            <div class="registrations-closed" id="registrationsClosed" hidden>
+              <span class="state-mark" aria-hidden="true">✕</span>
+              <h3>Inscriptions fermées</h3>
+              <p>Rendez-vous sur place le <strong>13 novembre</strong> à partir de <strong>19h</strong> à Portet-sur-Garonne.</p>
+              <a href="#carte-combats" class="btn btn-outline btn-sm">Voir le programme</a>
             </div>
 
-            <!-- STEP 3 -->
-            <div class="form-step" data-step="3">
-              <h3 class="form-step-title">Informations Complémentaires</h3>
-              <p class="form-step-desc">Dernières informations pour finaliser</p>
-              <div class="form-row">
-                <div class="form-group">
-                  <label class="form-label" for="club">Club d'entraînement <span class="required">*</span></label>
-                  <input type="text" class="form-input" id="club" name="club" placeholder="Nom de votre club" required />
-                  <div class="form-error" id="club-error">Veuillez saisir votre club</div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label" for="categoriePoids">Catégorie de poids <span class="required">*</span></label>
-                  <select class="form-select" id="categoriePoids" name="categoriePoids" required>
-                    <option value="">Sélectionner</option>
-                    <option value="-60kg">Moins de 60 kg</option>
-                    <option value="-64kg">60 – 64 kg</option>
-                    <option value="-69kg">64 – 69 kg</option>
-                    <option value="-75kg">69 – 75 kg</option>
-                    <option value="-81kg">75 – 81 kg</option>
-                    <option value="-91kg">81 – 91 kg</option>
-                    <option value="+91kg">Plus de 91 kg</option>
-                  </select>
-                  <div class="form-error" id="categoriePoids-error">Veuillez sélectionner une catégorie</div>
-                </div>
-              </div>
-              <div class="form-group form-group-photo-reg">
-                <label class="form-label">Photo pour l'affiche officielle</label>
-                <p class="form-hint-photo">JPG ou PNG — visible sur la carte des combats. Optionnel mais recommandé.</p>
-                <div class="reg-photo-row">
-                  <div id="regPhotoPreview" class="reg-photo-preview" aria-hidden="true"></div>
-                  <div class="reg-photo-actions">
-                    <input type="file" id="regPhotoFile" class="visually-hidden" accept="image/jpeg,image/png,image/webp" />
-                    <input type="hidden" id="regPhotoUrl" name="regPhotoUrl" value="" />
-                    <button type="button" id="regPhotoBtn" class="btn btn-secondary reg-photo-btn">Choisir une image</button>
-                    <button type="button" id="regPhotoClearBtn" class="btn btn-ghost reg-photo-clear" hidden>Retirer</button>
-                  </div>
-                </div>
-                <p id="regPhotoStatus" class="form-hint-photo" style="margin-top:8px;color:var(--fire);"></p>
-              </div>
-              <div class="form-group">
-                <label class="form-checkbox-label">
-                  <input type="checkbox" name="consentementRGPD" id="consentementRGPD" required />
-                  J'accepte que mes données soient traitées dans le cadre du Boxing Trophy 19, conformément au RGPD.
-                </label>
-                <div class="form-error" id="consentementRGPD-error">Vous devez accepter les conditions</div>
-              </div>
-              <div class="form-nav">
-                <button type="button" class="btn btn-prev" data-prev="2">← Retour</button>
-                <button type="submit" class="btn btn-submit">🥊 Valider l'inscription</button>
-              </div>
+            <div class="form-success" id="formSuccess">
+              <span class="state-mark state-mark-ok" aria-hidden="true">✓</span>
+              <h3>Inscription confirmée&nbsp;!</h3>
+              <p>Merci pour votre inscription au Boxing Trophy 19.<br/>Vous serez contacté(e) prochainement. Préparez-vous&nbsp;!</p>
             </div>
-          </form>
-
-          <div class="registrations-closed" id="registrationsClosed" hidden>
-            <span class="registrations-closed-icon">🔒</span>
-            <h3>Inscriptions fermées</h3>
-            <p>Rendez-vous sur place le <strong>13 novembre</strong> à partir de <strong>19h</strong> à Portet-sur-Garonne.</p>
-            <a href="#carte-combats" class="btn btn-secondary">Voir le programme</a>
-          </div>
-
-          <div class="form-success" id="formSuccess">
-            <span class="form-success-icon">🏆</span>
-            <h3>Inscription confirmée !</h3>
-            <p>Merci pour votre inscription au Boxing Trophy 19.<br/>Vous serez contacté(e) prochainement. Préparez-vous !</p>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+  </main>
 
   <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
   <footer class="footer" id="footer">
-    <div class="footer-inner">
+    <div class="container footer-inner">
       <div class="footer-brand">
         <div class="footer-logo-block">
           <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" />
-          <div>
-            <span class="flb-name">Boxing <em>Trophy</em></span>
-            <span class="flb-num">19</span>
-          </div>
+          <span class="nl-divider" aria-hidden="true"></span>
+          <span class="nl-edition">Trophy <strong>19</strong></span>
         </div>
-        <p>Célébrons l'ouverture de la nouvelle salle à <strong>Portet-sur-Garonne</strong>. Boxe Anglaise &amp; Pied-Poing. 13 Novembre, 19h.</p>
+        <p>L'ouverture de la nouvelle salle à <strong>Portet-sur-Garonne</strong>. Boxe anglaise &amp; pied-poing. 13 novembre, 19h.</p>
+        <a href="#inscription" class="btn btn-primary btn-sm footer-cta">S'inscrire</a>
       </div>
       <div class="footer-col">
         <h5>Navigation</h5>
-        <a href="#event">L'Événement</a>
-        <a href="#nouvelle-salle">Nouvelle Salle</a>
+        <a href="#event">L'événement</a>
         <a href="#disciplines">Disciplines</a>
-        <a href="#inscription">Inscription</a>
+        <a href="#galerie">Galerie</a>
         <a href="#carte-combats">Programme</a>
+        <a href="#inscription">Inscription</a>
       </div>
       <div class="footer-col">
         <h5>Informations</h5>
-        <a href="#">Boxing Center, Portet-sur-Garonne</a>
-        <a href="#"><strong>13 Novembre 2026</strong></a>
-        <a href="#">À partir de <strong>19h</strong></a>
-        <a href="#">Entrée : <strong>10€</strong></a>
+        <span>Boxing Center, Portet-sur-Garonne</span>
+        <span>Vendredi 13 novembre 2026</span>
+        <span>À partir de 19h</span>
+        <span>Entrée : 10 €</span>
       </div>
     </div>
-    <div class="footer-bottom">
+    <div class="container footer-bottom">
       <p>© 2026 Boxing Trophy 19 — Tous droits réservés</p>
       <a href="#">Politique de confidentialité &amp; RGPD</a>
     </div>
     <p class="ai-dev-credit" aria-hidden="true">chef equipe dev : <a href="https://fr.linkedin.com/in/germain-raphael-angoula-onambele-a6b858395" rel="noopener noreferrer">Angoula Onambele Germain Raphael</a> · dev : mbosseu brad bruel</p>
   </footer>
+
+  <!-- LIGHTBOX (galerie + vidéos) -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse" hidden>
+    <button class="lb-btn lb-close" type="button" aria-label="Fermer">✕</button>
+    <button class="lb-btn lb-prev" type="button" aria-label="Précédent">‹</button>
+    <div class="lb-stage" id="lightboxStage"></div>
+    <button class="lb-btn lb-next" type="button" aria-label="Suivant">›</button>
+    <p class="lb-count" id="lightboxCount"></p>
+  </div>
 
   <script src="env-loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -614,5 +637,6 @@
   <script src="registration-gate.js"></script>
   <script src="home-combats.js"></script>
   <script src="app.js?v=4"></script>
+  <script src="gallery.js?v=1"></script>
 </body>
 </html>
