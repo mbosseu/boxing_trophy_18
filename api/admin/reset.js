@@ -12,7 +12,7 @@ module.exports = async function handler(req, res) {
   if (req.method !== 'DELETE') return res.status(405).json({ error: 'Method not allowed' });
 
   const adminPass = (req.headers['x-admin-password'] || '').trim();
-  const expected = (process.env.ADMIN_PASSWORD || '').trim() || 'boxingtrophy19admin';
+  const expected = (process.env.ADMIN_PASSWORD || '').trim();
   if (!adminPass || adminPass !== expected) {
     return res.status(401).json({ error: 'Non autorisé' });
   }

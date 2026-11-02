@@ -15,7 +15,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="admin.css?v=7">
+    <link rel="stylesheet" href="admin.css?v=8">
     <link rel="stylesheet" href="poster.css?v=6">
 </head>
 <body>
@@ -128,6 +128,17 @@
                 <!-- Dynamically filled -->
             </div>
 
+            <!-- Par discipline -->
+            <div class="discipline-section">
+                <div class="discipline-section-head">
+                    <h3>Par discipline</h3>
+                    <p>Inscrits, combats et profils séparés pour chaque discipline</p>
+                </div>
+                <div class="discipline-grid" id="disciplineGrid">
+                    <!-- Dynamically filled -->
+                </div>
+            </div>
+
             <!-- Breakdown cards -->
             <div class="breakdown-grid">
                 <div class="card breakdown-card">
@@ -157,6 +168,7 @@
                             <tr>
                                 <th>Nom</th>
                                 <th>Prénom</th>
+                                <th>Discipline</th>
                                 <th>Sexe</th>
                                 <th>Niveau</th>
                                 <th>Cat. Poids</th>
@@ -881,6 +893,6 @@ create policy "Accès public total" on match_metadata
     <script src="supabase-config.js"></script>
     <script src="cloudinary-config.js?v=3"></script>
     <script src="poster.js?v=6"></script>
-    <script src="admin.js?v=19"></script>
+    <script src="admin.js?v=20"></script>
 </body>
 </html>

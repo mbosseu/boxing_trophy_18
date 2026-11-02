@@ -31,7 +31,7 @@
 
     // ── Constants ──────────────────────────────────────────
     const ADMIN_PASSWORD = (typeof getAdminPasswordFromEnv === 'function' && getAdminPasswordFromEnv())
-        || 'boxingtrophy19admin';
+        || '';
     const AUTH_KEY = 'boxingtrophy19_admin_auth';
     const REG_KEY = 'boxingtrophy19_registrations';
     const MATCH_KEY = 'boxingtrophy19_matches';
@@ -283,7 +283,7 @@
 
     loginForm.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (loginPassword.value === ADMIN_PASSWORD || loginPassword.value === 'fightevent19admin') {
+        if (ADMIN_PASSWORD && loginPassword.value === ADMIN_PASSWORD) {
             sessionStorage.setItem(AUTH_KEY, 'true');
             sessionStorage.setItem('bt19_admin_pw', loginPassword.value);
             loginError.hidden = true;
@@ -772,6 +772,93 @@
         if (poidsKeys.length === 0) {
             breakdownPoids.innerHTML = '<p style="color:var(--text-muted);font-size:13px;">Aucune donnée</p>';
         }
+
+        renderDisciplineBreakdown(total);
+    }
+
+    // ── Répartition par discipline ─────────────────────────
+    // Déclaré en fonction (hissée) : utilisable même si le rendu a lieu avant cette ligne
+    function disciplines() {
+        return [
+            { key: 'Boxe Anglaise', icon: '🥊', cls: 'ba' },
+            { key: 'Pied-Poing', icon: '🦵', cls: 'pp' }
+        ];
+    }
+
+    function disciplineBadge(value) {
+        var d = disciplines().find(function (x) { return x.key === value; });
+        if (!d) return '<span class="discipline-badge">—</span>';
+        return '<span class="discipline-badge discipline-badge--' + d.cls + '">' + d.icon + ' ' + escapeHtml(d.key) + '</span>';
+    }
+
+    function renderDisciplineBreakdown(total) {
+        var grid = $('#disciplineGrid');
+        if (!grid) return;
+
+        function count(list, field, value) {
+            return list.filter(function (r) { return r[field] === value; }).length;
+        }
+
+        grid.innerHTML = disciplines().map(function (d) {
+            var regs = registrations.filter(function (r) { return r.discipline === d.key; });
+            var discMatches = matches.filter(function (m) { return (m.discipline || 'Boxe Anglaise') === d.key; });
+            var n = regs.length;
+            var pct = total > 0 ? Math.round((n / total) * 100) : 0;
+            var stats = [
+                { label: 'Combats', value: discMatches.filter(function (m) { return m.type === 'pair'; }).length },
+                { label: 'En attente', value: discMatches.filter(function (m) { return m.type === 'waiting'; }).length },
+                { label: 'Hommes', value: count(regs, 'sexe', 'Homme') },
+                { label: 'Femmes', value: count(regs, 'sexe', 'Femme') },
+                { label: 'Débutants', value: count(regs, 'niveau', 'Débutant') },
+                { label: 'Intermédiaires', value: count(regs, 'niveau', 'Intermédiaire') }
+            ];
+            return (
+                '<article class="card discipline-card discipline-card--' + d.cls + '">' +
+                    '<header class="discipline-card-head">' +
+                        '<span class="discipline-icon" aria-hidden="true">' + d.icon + '</span>' +
+                        '<div class="discipline-title">' +
+                            '<h4>' + escapeHtml(d.key) + '</h4>' +
+                            '<span>' + pct + ' % des inscrits</span>' +
+                        '</div>' +
+                        '<span class="discipline-count">' + n + '</span>' +
+                    '</header>' +
+                    '<div class="discipline-share-bar"><span style="width:' + pct + '%"></span></div>' +
+                    '<dl class="discipline-stats">' +
+                        stats.map(function (s) {
+                            return '<div><dt>' + s.label + '</dt><dd>' + s.value + '</dd></div>';
+                        }).join('') +
+                    '</dl>' +
+                    '<button type="button" class="btn btn-outline btn-sm discipline-link" data-discipline-filter="' + escapeHtml(d.key) + '"' +
+                        (n === 0 ? ' disabled' : '') + '>Voir les ' + n + ' inscrit' + (n > 1 ? 's' : '') + ' →</button>' +
+                '</article>'
+            );
+        }).join('');
+
+        // Inscriptions sans discipline reconnue (anciennes données)
+        var known = disciplines().map(function (d) { return d.key; });
+        var other = registrations.filter(function (r) { return known.indexOf(r.discipline) === -1; }).length;
+        if (other > 0) {
+            grid.insertAdjacentHTML('beforeend',
+                '<p class="discipline-other">' + other + ' inscription' + (other > 1 ? 's' : '') +
+                ' sans discipline renseignée.</p>');
+        }
+    }
+
+    // « Voir les inscrits » : ouvre la liste filtrée sur la discipline
+    var disciplineGridEl = $('#disciplineGrid');
+    if (disciplineGridEl) {
+        disciplineGridEl.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-discipline-filter]');
+            if (!btn) return;
+            var select = $('#filterDiscipline');
+            if (select) {
+                select.value = btn.getAttribute('data-discipline-filter');
+                select.dispatchEvent(new Event('change'));
+            }
+            var tab = document.querySelector('.tab-btn[data-tab="registrations"]');
+            if (tab) tab.click();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
     }
 
     function renderRecentRegistrations() {
@@ -787,7 +874,7 @@
 
         const recent = sorted.slice(0, 5);
         if (recent.length === 0) {
-            body.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--text-dim); padding:16px;">Aucune inscription récente.</td></tr>';
+            body.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--text-dim); padding:16px;">Aucune inscription récente.</td></tr>';
             return;
         }
 
@@ -796,6 +883,7 @@
             tr.innerHTML = 
                 '<td data-label="Nom">' + escapeHtml(r.nom || '') + '</td>' +
                 '<td data-label="Prénom">' + escapeHtml(r.prenom || '') + '</td>' +
+                '<td data-label="Discipline">' + disciplineBadge(r.discipline) + '</td>' +
                 '<td data-label="Sexe"><span class="badge badge-info badge-sexe">' + escapeHtml(r.sexe || '') + '</span></td>' +
                 '<td data-label="Niveau">' + escapeHtml(r.niveau || '') + '</td>' +
                 '<td data-label="Cat. Poids">' + escapeHtml(r.categoriePoids || '—') + '</td>' +

@@ -561,6 +561,48 @@ body {
     transition: width 0.6s ease;
 }
 
+/* ── Par discipline ─────────────────────────────────────── */
+.discipline-section { margin-bottom: 32px; }
+.discipline-section-head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.discipline-section-head h3 { font-size: 15px; font-weight: 600; color: var(--text); }
+.discipline-section-head p { font-size: 13px; color: var(--text-dim); }
+.discipline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
+.discipline-card { --disc: var(--red); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 18px; }
+.discipline-card--pp { --disc: var(--blue); }
+.discipline-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--disc), transparent); }
+.discipline-card-head { display: flex; align-items: center; gap: 14px; }
+.discipline-icon {
+    width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; font-size: 22px; flex-shrink: 0;
+    background: color-mix(in srgb, var(--disc) 18%, transparent);
+}
+.discipline-title { flex: 1; min-width: 0; }
+.discipline-title h4 { font-size: 17px; font-weight: 700; color: var(--text); }
+.discipline-title span { font-size: 13px; color: var(--text-dim); }
+.discipline-count { font-size: 40px; font-weight: 800; line-height: 1; color: var(--disc); }
+.discipline-card--pp .discipline-count { color: #7fb2d6; }
+.discipline-share-bar { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
+.discipline-share-bar span { display: block; height: 100%; border-radius: 3px; background: var(--disc); transition: width 0.6s ease; }
+.discipline-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; }
+.discipline-stats div { padding: 10px 12px; border-radius: var(--radius-xs); background: rgba(255, 255, 255, 0.03); }
+.discipline-stats dt { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-dim); margin-bottom: 4px; }
+.discipline-stats dd { font-size: 20px; font-weight: 700; color: var(--text); margin: 0; }
+.discipline-link { align-self: flex-start; }
+.discipline-link:disabled { opacity: 0.45; cursor: not-allowed; }
+.discipline-other { grid-column: 1 / -1; font-size: 13px; color: var(--text-dim); }
+
+.discipline-badge {
+    display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+    padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
+    background: rgba(255, 255, 255, 0.06); color: var(--text-dim);
+}
+.discipline-badge--ba { background: rgba(230, 57, 70, 0.15); color: #ff8a93; }
+.discipline-badge--pp { background: rgba(69, 123, 157, 0.22); color: #9cc6e3; }
+
+@media (max-width: 480px) {
+    .discipline-grid { grid-template-columns: 1fr; }
+    .discipline-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
 /* ── Filters Bar ────────────────────────────────────────── */
 .filters-bar {
     display: flex;
