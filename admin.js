@@ -2140,6 +2140,10 @@
                     photoUrl: f.photoUrl || reg.photoUrl || ''
                 });
             });
+            // La table matches ne stocke pas la discipline : on la reprend du combattant
+            if (!m.discipline) {
+                m.discipline = (m.fighter1 && m.fighter1.discipline) || (m.fighter2 && m.fighter2.discipline) || m.discipline;
+            }
         });
     }
 

@@ -1,17 +1,17 @@
 /* ═══════════════════════════════════════════════════════════
-   Boxing Trophy 18 — Affiche style GALA PRO (rendu partagé)
+   Boxing Trophy 19 — Affiche style GALA PRO (rendu partagé)
    ═══════════════════════════════════════════════════════════ */
 
 (function (global) {
     'use strict';
 
     const EVENT_TITLE = 'BOXING TROPHY';
-    const EVENT_EDITION = '18';
-    const EVENT_DATE = 'VENDREDI 5 JUIN 2026';
-    const EVENT_VENUE = 'BOXING CENTER — ST CYPRIEN';
+    const EVENT_EDITION = '19';
+    const EVENT_DATE = 'VENDREDI 13 NOVEMBRE 2026';
+    const EVENT_VENUE = 'BOXING CENTER — PORTET-SUR-GARONNE';
     const EVENT_TIME_PRELIM = '19H00';
     const EVENT_FOOTER = '★ SOIRÉE DE BOXE EXCEPTIONNELLE ! ★';
-    const EVENT_LOGO = 'image/affiche1.png';
+    const EVENT_LOGO = 'image/gala/affiche-trophy-19.jpg';
 
     function escapeHtml(str) {
         if (!str) return '';
@@ -25,8 +25,16 @@
         return ((f.prenom || '') + ' ' + (f.nom || '')).trim().toUpperCase();
     }
 
+    function matchDiscipline(m) {
+        return (m && (m.discipline ||
+            (m.fighter1 && m.fighter1.discipline) ||
+            (m.fighter2 && m.fighter2.discipline))) || '';
+    }
+
     function matchCategoryLabel(m) {
         var parts = [];
+        var disc = matchDiscipline(m);
+        if (disc) parts.push(String(disc).toUpperCase());
         if (m.niveau) parts.push(String(m.niveau).toUpperCase());
         if (m.categoriePoids) parts.push(String(m.categoriePoids).toUpperCase());
         if (m.sexe) parts.push(String(m.sexe).toUpperCase());
@@ -226,6 +234,11 @@
                 m.type = 'pair';
             } else if (m.fighter1 && !m.fighter2) {
                 m.type = 'waiting';
+            }
+            // La discipline n'est pas stockée dans la table matches : on la reprend des combattants
+            if (!m.discipline) {
+                var disc = matchDiscipline(m);
+                if (disc) m.discipline = disc;
             }
         });
     }
