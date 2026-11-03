@@ -26,9 +26,11 @@
     }
 
     function matchDiscipline(m) {
-        return (m && (m.discipline ||
-            (m.fighter1 && m.fighter1.discipline) ||
-            (m.fighter2 && m.fighter2.discipline))) || '';
+        // La fiche du combattant fait foi : la colonne « discipline » des combats
+        // valait « Boxe Anglaise » par défaut avant correction
+        return (m && ((m.fighter1 && m.fighter1.discipline) ||
+            (m.fighter2 && m.fighter2.discipline) ||
+            m.discipline)) || '';
     }
 
     function matchCategoryLabel(m) {
@@ -235,11 +237,9 @@
             } else if (m.fighter1 && !m.fighter2) {
                 m.type = 'waiting';
             }
-            // La discipline n'est pas stockée dans la table matches : on la reprend des combattants
-            if (!m.discipline) {
-                var disc = matchDiscipline(m);
-                if (disc) m.discipline = disc;
-            }
+            // Discipline : celle des combattants si elle est connue
+            var disc = matchDiscipline(m);
+            if (disc) m.discipline = disc;
         });
     }
 

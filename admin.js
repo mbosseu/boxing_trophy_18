@@ -394,8 +394,10 @@
                     GalaPoster.renumberPairMatches(matches);
                     GalaPoster.assignMatchMeta(matches);
                 }
+                syncMatchDisciplines();
                 const matchesToInsert = matches.map((m, index) => ({
                     type: m.type,
+                    discipline: m.discipline || null,
                     sexe: m.sexe,
                     categoriePoids: m.categoriePoids,
                     niveau: m.niveau,
@@ -644,6 +646,7 @@
                     GalaPoster.normalizeMatches(matches);
                     GalaPoster.assignMatchMeta(matches);
                 }
+                enrichMatchesFromRegistrations();
 
                 const { data: metaData, error: metaError } = await supabaseClient
                     .from('match_metadata')
@@ -680,6 +683,7 @@
             GalaPoster.normalizeMatches(matches);
             GalaPoster.assignMatchMeta(matches);
         }
+        enrichMatchesFromRegistrations();
         const ts = localStorage.getItem(MATCH_TS_KEY);
         if (ts) {
             const d = new Date(ts);
@@ -1420,6 +1424,7 @@
         let candidates = registrations.filter(r => {
             if (r.id === sourceFighter.id) return false;
             if (r.sexe !== sourceMatch.sexe) return false; // MUST be same sex
+            if (sourceMatch.discipline && r.discipline !== sourceMatch.discipline) return false; // MUST be same discipline
             if (matchedIds.has(r.id)) return false; // MUST not be already matched in a pair
             
             if (manualMatchSearchVal) {
@@ -2030,11 +2035,13 @@
         var sourceMatch = matches[swapSourceMatchIndex];
         if (!sourceMatch) return;
         var sourceSexe = sourceMatch.sexe;
+        var sourceDisc = sourceMatch.discipline || '';
 
-        // Collect all fighters from all matches of the SAME sex except the source fighter
+        // Collect all fighters from all matches of the SAME sex and discipline except the source fighter
         var candidates = [];
         matches.forEach(function (m, idx) {
             if (m.sexe !== sourceSexe) return; // Strict gender segregation
+            if ((m.discipline || '') !== sourceDisc) return; // Same discipline only
 
             if (m.fighter1 && m.fighter1.id !== swapSourceFighterId) {
                 candidates.push({ matchIdx: idx, side: 1, fighter: m.fighter1, sexe: m.sexe, poids: m.categoriePoids, niveau: m.niveau });
@@ -2083,6 +2090,10 @@
             alert("Erreur : Les combattants doivent être du même sexe.");
             return;
         }
+        if ((targetMatch.discipline || '') !== (sourceMatch.discipline || '')) {
+            alert("Erreur : Les combattants doivent être de la même discipline.");
+            return;
+        }
 
         // Get references
         var sourceRef = sourceSide === 1 ? 'fighter1' : 'fighter2';
@@ -2122,8 +2133,28 @@
             nom: reg.nom,
             prenom: reg.prenom,
             club: reg.club,
+            discipline: reg.discipline || '',
             photoUrl: reg.photoUrl || ''
         };
+    }
+
+    /**
+     * La discipline d'un combat est celle de ses combattants, telle qu'inscrite.
+     * Corrige les combats enregistrés avant que la discipline ne soit sauvegardée
+     * (la base mettait « Boxe Anglaise » par défaut).
+     */
+    function syncMatchDisciplines() {
+        matches.forEach(function (m) {
+            var disc = '';
+            ['fighter1', 'fighter2'].some(function (slot) {
+                var f = m[slot];
+                if (!f) return false;
+                var reg = f.id ? registrations.find(function (r) { return r.id === f.id; }) : null;
+                disc = (reg && reg.discipline) || f.discipline || '';
+                return !!disc;
+            });
+            if (disc) m.discipline = disc;
+        });
     }
 
     function enrichMatchesFromRegistrations() {
@@ -2140,11 +2171,8 @@
                     photoUrl: f.photoUrl || reg.photoUrl || ''
                 });
             });
-            // La table matches ne stocke pas la discipline : on la reprend du combattant
-            if (!m.discipline) {
-                m.discipline = (m.fighter1 && m.fighter1.discipline) || (m.fighter2 && m.fighter2.discipline) || m.discipline;
-            }
         });
+        syncMatchDisciplines();
     }
 
     function normalizeAllMatches() {
