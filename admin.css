@@ -567,8 +567,8 @@ body {
 .discipline-section-head h3 { font-size: 15px; font-weight: 600; color: var(--text); }
 .discipline-section-head p { font-size: 13px; color: var(--text-dim); }
 .discipline-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; }
-.discipline-card { --disc: var(--red); position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 18px; }
-.discipline-card--pp { --disc: var(--blue); }
+.discipline-card { --disc: #f4b860; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 18px; }
+.discipline-card--pp { --disc: #3cc8b4; }
 .discipline-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--disc), transparent); }
 .discipline-card-head { display: flex; align-items: center; gap: 14px; }
 .discipline-icon {
@@ -579,7 +579,6 @@ body {
 .discipline-title h4 { font-size: 17px; font-weight: 700; color: var(--text); }
 .discipline-title span { font-size: 13px; color: var(--text-dim); }
 .discipline-count { font-size: 40px; font-weight: 800; line-height: 1; color: var(--disc); }
-.discipline-card--pp .discipline-count { color: #7fb2d6; }
 .discipline-share-bar { height: 6px; border-radius: 3px; background: rgba(255, 255, 255, 0.06); overflow: hidden; }
 .discipline-share-bar span { display: block; height: 100%; border-radius: 3px; background: var(--disc); transition: width 0.6s ease; }
 .discipline-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; }
@@ -595,8 +594,8 @@ body {
     padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 600;
     background: rgba(255, 255, 255, 0.06); color: var(--text-dim);
 }
-.discipline-badge--ba { background: rgba(230, 57, 70, 0.15); color: #ff8a93; }
-.discipline-badge--pp { background: rgba(69, 123, 157, 0.22); color: #9cc6e3; }
+.discipline-badge--ba { background: rgba(244, 184, 96, 0.16); color: #f6c67e; }
+.discipline-badge--pp { background: rgba(60, 200, 180, 0.16); color: #6fdccb; }
 
 @media (max-width: 480px) {
     .discipline-grid { grid-template-columns: 1fr; }
@@ -790,6 +789,31 @@ body {
     color: var(--text-muted);
     font-weight: 400;
 }
+
+/* ── Appariement : séparation par discipline ────────────── */
+.match-discipline-filter { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.match-filter-btn {
+    display: inline-flex; align-items: center; min-height: 36px; padding: 4px 10px; border-radius: 999px;
+    font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text-dim); cursor: pointer;
+    background: var(--bg-card); border: 1px solid var(--border); transition: border-color var(--transition), background var(--transition);
+}
+.match-filter-btn:hover { border-color: rgba(255, 255, 255, 0.25); }
+.match-filter-btn.is-active { color: var(--text); border-color: var(--gold); background: rgba(255, 215, 0, 0.08); }
+.match-filter-btn .discipline-badge { background: transparent; padding: 0 4px; }
+
+.match-discipline { --disc: #f4b860; --disc-soft: rgba(244, 184, 96, 0.13); margin-bottom: 40px; }
+.match-discipline--pp { --disc: #3cc8b4; --disc-soft: rgba(60, 200, 180, 0.13); }
+.match-discipline--other { --disc: var(--text-dim); --disc-soft: rgba(255, 255, 255, 0.06); }
+.match-discipline-head {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    padding: 14px 18px; margin-bottom: 20px; border-radius: var(--radius-sm);
+    background: linear-gradient(90deg, var(--disc-soft), transparent 80%);
+    border-left: 4px solid var(--disc);
+}
+.match-discipline-icon { font-size: 22px; line-height: 1; }
+.match-discipline-head h3 { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text); }
+.match-discipline-meta { margin-left: auto; font-size: 13px; font-weight: 600; color: var(--disc); }
+.match-discipline .match-group-header { border-bottom-color: var(--disc-soft); }
 
 .match-group {
     margin-bottom: 32px;

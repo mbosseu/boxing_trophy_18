@@ -1806,6 +1806,8 @@
     // ═══════════════════════════════════════════════════════
     //  RENDER MATCHES
     // ═══════════════════════════════════════════════════════
+    var matchDisciplineFilter = '';
+
     function renderMatches() {
         if (matches.length === 0) {
             noMatches.hidden = false;
@@ -1827,18 +1829,66 @@
             grouped[key].items.push({ match: m, index: idx });
         });
 
-        Object.keys(grouped).forEach(function (key) {
+        // Un bloc par discipline, chacun avec son bandeau de couleur
+        var discList = disciplines();
+        var discOrder = discList.map(function (d) { return d.key; });
+        var discBlocks = {};
+        function discBlock(name) {
+            if (discBlocks[name]) return discBlocks[name];
+            var meta = discList.find(function (d) { return d.key === name; }) || { key: name, icon: '🥋', cls: 'other' };
+            var discMatches = matches.filter(function (m) { return (m.discipline || 'Boxe Anglaise') === name; });
+            var nPairs = discMatches.filter(function (m) { return m.type === 'pair'; }).length;
+            var nWait = discMatches.length - nPairs;
+            var block = document.createElement('section');
+            block.className = 'match-discipline match-discipline--' + meta.cls;
+            block.dataset.discipline = name;
+            block.innerHTML =
+                '<header class="match-discipline-head">' +
+                    '<span class="match-discipline-icon" aria-hidden="true">' + meta.icon + '</span>' +
+                    '<h3>' + escapeHtml(name) + '</h3>' +
+                    '<span class="match-discipline-meta">' +
+                        nPairs + ' combat' + (nPairs > 1 ? 's' : '') +
+                        (nWait ? ' · ' + nWait + ' en attente' : '') +
+                    '</span>' +
+                '</header>';
+            matchesContainer.appendChild(block);
+            discBlocks[name] = block;
+            return block;
+        }
+
+        // Filtre rapide par discipline
+        var filterBar = document.createElement('div');
+        filterBar.className = 'match-discipline-filter';
+        filterBar.setAttribute('role', 'group');
+        filterBar.setAttribute('aria-label', 'Filtrer par discipline');
+        filterBar.innerHTML = ['', 'Boxe Anglaise', 'Pied-Poing'].map(function (value) {
+            var label = value ? disciplineBadge(value) : 'Toutes';
+            var active = (matchDisciplineFilter || '') === value;
+            return '<button type="button" class="match-filter-btn' + (active ? ' is-active' : '') + '" data-match-filter="' + escapeHtml(value) + '" aria-pressed="' + active + '">' + label + '</button>';
+        }).join('');
+        matchesContainer.appendChild(filterBar);
+        filterBar.addEventListener('click', function (e) {
+            var btn = e.target.closest('[data-match-filter]');
+            if (!btn) return;
+            matchDisciplineFilter = btn.getAttribute('data-match-filter');
+            renderMatches();
+        });
+
+        Object.keys(grouped).sort(function (a, b) {
+            var da = discOrder.indexOf(grouped[a].discipline);
+            var db = discOrder.indexOf(grouped[b].discipline);
+            return (da === -1 ? 99 : da) - (db === -1 ? 99 : db);
+        }).forEach(function (key) {
             var g = grouped[key];
+            if (matchDisciplineFilter && g.discipline !== matchDisciplineFilter) return;
             var section = document.createElement('div');
             section.className = 'match-group';
 
-            var discTag = g.discipline === 'Pied-Poing'
-                ? '<span class="tag" style="background:rgba(160,200,232,0.15);color:var(--volt);">🦵 Pied-Poing</span>'
-                : '<span class="tag" style="background:rgba(90,144,204,0.15);color:var(--fire);">🥊 Boxe Anglaise</span>';
+            var discTag = disciplineBadge(g.discipline);
 
             section.innerHTML =
                 '<div class="match-group-header">' +
-                    '<h3>' + escapeHtml(g.discipline) + ' — ' + escapeHtml(g.sexe) + ' — ' + escapeHtml(g.poids || 'N/A') + ' — ' + escapeHtml(g.niveau || 'N/A') + '</h3>' +
+                    '<h3>' + escapeHtml(g.sexe) + ' — ' + escapeHtml(g.poids || 'N/A') + ' — ' + escapeHtml(g.niveau || 'N/A') + '</h3>' +
                     discTag +
                     '<span class="tag tag-sexe">' + escapeHtml(g.sexe) + '</span>' +
                     '<span class="tag tag-poids">' + escapeHtml(g.poids || '—') + '</span>' +
@@ -1933,7 +1983,7 @@
             });
 
             section.appendChild(list);
-            matchesContainer.appendChild(section);
+            discBlock(g.discipline).appendChild(section);
         });
 
         // Attach swap handlers
