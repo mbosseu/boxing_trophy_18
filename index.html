@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=14" />
+  <link rel="stylesheet" href="style.css?v=15" />
   <link rel="stylesheet" href="poster.css?v=8" />
   <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
@@ -41,18 +41,6 @@
     </div>
   </nav>
 
-  <a href="#inscription" class="reg-deadline" id="regDeadline">
-    <span class="reg-deadline-dot" aria-hidden="true"></span>
-    <strong class="reg-deadline-title" id="regDeadlineTitle">Les inscriptions se terminent demain à 12h</strong>
-    <span class="reg-deadline-clock" id="regDeadlineClock" aria-hidden="true">
-      <span class="rd-unit"><b id="rd-hours">00</b><span>h</span></span>
-      <span class="rd-sep">:</span>
-      <span class="rd-unit"><b id="rd-min">00</b><span>min</span></span>
-      <span class="rd-sep">:</span>
-      <span class="rd-unit"><b id="rd-sec">00</b><span>s</span></span>
-    </span>
-  </a>
-
   <!-- ═══════════════════════ HERO ═══════════════════════ -->
   <header class="hero" id="hero">
     <video class="hero-video" autoplay muted loop playsinline poster="image/gala/victoire.jpg" aria-hidden="true">
@@ -77,9 +65,19 @@
       </p>
 
       <div class="hero-cta hero-cta-group">
-        <a href="#inscription" class="btn btn-primary">S'inscrire au combat</a>
+        <a href="#inscription" class="btn btn-primary btn-urgent">S'inscrire au combat</a>
         <a href="#event" class="btn btn-ghost-light">Découvrir l'événement</a>
       </div>
+
+      <p class="reg-urgency" id="regDeadline">
+        <span class="reg-urgency-pulse" aria-hidden="true"></span>
+        <span class="reg-urgency-copy">
+          <strong id="regDeadlineTitle">Clôture demain à 12h</strong>
+          <span class="reg-urgency-clock" id="regDeadlineClock" aria-hidden="true">
+            <b id="rd-hours">00</b><span>:</span><b id="rd-min">00</b><span>:</span><b id="rd-sec">00</b>
+          </span>
+        </span>
+      </p>
     </div>
 
     <div class="hero-bar">
@@ -656,7 +654,7 @@
   <script src="published-matches.js"></script>
   <script src="registration-gate.js"></script>
   <script src="home-combats.js"></script>
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=7"></script>
   <script src="gallery.js?v=2"></script>
   <script src="film.js?v=3"></script>
 </body>

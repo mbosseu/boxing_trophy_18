@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 /* ============================================
    NAVIGATION
    ============================================ */
-const NAV_SCROLL_OFFSET = 140;
+const NAV_SCROLL_OFFSET = 96;
 
 function revealInSection(section) {
   if (!section) return;
@@ -205,14 +205,15 @@ function initCountdown() {
    ============================================ */
 function initRegistrationDeadline() {
   const deadline = new Date('2026-11-05T12:00:00+01:00');
-  const bar = document.getElementById('regDeadline');
+  const urgency = document.getElementById('regDeadline');
   const title = document.getElementById('regDeadlineTitle');
   const kicker = document.getElementById('formDeadlineKicker');
   const line = document.getElementById('formDeadlineLine');
   const hoursEl = document.getElementById('rd-hours');
   const minEl = document.getElementById('rd-min');
   const secEl = document.getElementById('rd-sec');
-  if (!bar || !title) return;
+  const urgentBtns = document.querySelectorAll('.btn-urgent, .nav-cta');
+  if (!urgency || !title) return;
 
   function parisDay(date) {
     return new Intl.DateTimeFormat('en-CA', {
@@ -239,36 +240,43 @@ function initRegistrationDeadline() {
     return BT18RegistrationGate.isRegistrationOpen();
   }
 
-  function markClosed(message) {
-    title.textContent = message;
-    bar.classList.add('is-closed');
+  function clearUrgentPulse() {
+    urgentBtns.forEach(function (btn) {
+      btn.classList.remove('is-pulsing');
+    });
+  }
+
+  function markClosed() {
+    urgency.hidden = true;
+    if (line) line.hidden = true;
+    clearUrgentPulse();
   }
 
   function tick() {
     const now = new Date();
     const diff = deadline.getTime() - now.getTime();
-    if (!registrationsAreOpen()) {
-      markClosed('Les inscriptions sont closes.');
-      if (line) line.hidden = true;
-      return true;
-    }
-    if (diff <= 0) {
-      markClosed('Les inscriptions sont closes.');
+    if (!registrationsAreOpen() || diff <= 0) {
+      markClosed();
       if (kicker) kicker.textContent = 'Inscriptions closes';
-      if (line) line.textContent = 'Les inscriptions en ligne sont closes.';
       return true;
     }
 
     const when = whenLabel(now);
-    const phrase = 'Les inscriptions se terminent ' + when + ' à 12h';
-    title.textContent = phrase;
+    title.textContent = 'Clôture ' + when + ' à 12h';
     if (kicker) kicker.textContent = 'Clôture ' + when + ' 12h';
-    if (line) line.textContent = phrase + '.';
+    if (line) {
+      line.hidden = false;
+      line.textContent = 'Les inscriptions se terminent ' + when + ' à 12h.';
+    }
 
     const totalSec = Math.floor(diff / 1000);
     if (hoursEl) hoursEl.textContent = pad(Math.floor(totalSec / 3600));
     if (minEl) minEl.textContent = pad(Math.floor((totalSec % 3600) / 60));
     if (secEl) secEl.textContent = pad(totalSec % 60);
+
+    urgentBtns.forEach(function (btn) {
+      btn.classList.add('is-pulsing');
+    });
     return false;
   }
 
