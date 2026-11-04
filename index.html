@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=12" />
+  <link rel="stylesheet" href="style.css?v=14" />
   <link rel="stylesheet" href="poster.css?v=8" />
   <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
@@ -40,6 +40,18 @@
       </button>
     </div>
   </nav>
+
+  <a href="#inscription" class="reg-deadline" id="regDeadline">
+    <span class="reg-deadline-dot" aria-hidden="true"></span>
+    <strong class="reg-deadline-title" id="regDeadlineTitle">Les inscriptions se terminent demain à 12h</strong>
+    <span class="reg-deadline-clock" id="regDeadlineClock" aria-hidden="true">
+      <span class="rd-unit"><b id="rd-hours">00</b><span>h</span></span>
+      <span class="rd-sep">:</span>
+      <span class="rd-unit"><b id="rd-min">00</b><span>min</span></span>
+      <span class="rd-sep">:</span>
+      <span class="rd-unit"><b id="rd-sec">00</b><span>s</span></span>
+    </span>
+  </a>
 
   <!-- ═══════════════════════ HERO ═══════════════════════ -->
   <header class="hero" id="hero">
@@ -367,12 +379,13 @@
       <div class="form-bg" aria-hidden="true"><img src="image/gala/garde-casque-bleu.jpg" alt="" loading="lazy" /></div>
       <div class="container form-layout">
         <aside class="form-aside reveal">
-          <span class="section-kicker section-tag">Inscriptions ouvertes</span>
+          <span class="section-kicker section-tag" id="formDeadlineKicker">Clôture demain 12h</span>
           <h2 class="section-title">Monte <em>sur le ring</em></h2>
           <p class="section-desc">
             Inscris-toi au Boxing Trophy 19 · Boxe anglaise &amp; pied-poing.
             Portet-sur-Garonne · 13 novembre · 19h.
           </p>
+          <p class="form-deadline-line" id="formDeadlineLine">Les inscriptions se terminent demain à 12h.</p>
           <ul class="form-checklist">
             <li>Débutants et intermédiaires</li>
             <li>Licence FFB / FFKMDA, ou engagement à prendre une licence loisir</li>
@@ -643,7 +656,7 @@
   <script src="published-matches.js"></script>
   <script src="registration-gate.js"></script>
   <script src="home-combats.js"></script>
-  <script src="app.js?v=4"></script>
+  <script src="app.js?v=6"></script>
   <script src="gallery.js?v=2"></script>
   <script src="film.js?v=3"></script>
 </body>

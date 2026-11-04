@@ -30,6 +30,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       console.warn('registration gate:', e);
     }
   }
+  initRegistrationDeadline();
   initForm();
   initStatCounters();
 });
@@ -37,7 +38,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 /* ============================================
    NAVIGATION
    ============================================ */
-const NAV_SCROLL_OFFSET = 96;
+const NAV_SCROLL_OFFSET = 140;
 
 function revealInSection(section) {
   if (!section) return;
@@ -197,6 +198,85 @@ function initCountdown() {
 
   update();
   timerInterval = setInterval(update, 1000);
+}
+
+/* ============================================
+   INSCRIPTIONS — clôture le 5 novembre 2026 à 12h (Paris)
+   ============================================ */
+function initRegistrationDeadline() {
+  const deadline = new Date('2026-11-05T12:00:00+01:00');
+  const bar = document.getElementById('regDeadline');
+  const title = document.getElementById('regDeadlineTitle');
+  const kicker = document.getElementById('formDeadlineKicker');
+  const line = document.getElementById('formDeadlineLine');
+  const hoursEl = document.getElementById('rd-hours');
+  const minEl = document.getElementById('rd-min');
+  const secEl = document.getElementById('rd-sec');
+  if (!bar || !title) return;
+
+  function parisDay(date) {
+    return new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Europe/Paris',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).format(date);
+  }
+
+  function whenLabel(now) {
+    if (parisDay(now) === parisDay(deadline)) return "aujourd'hui";
+    const ahead = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    if (parisDay(ahead) === parisDay(deadline)) return 'demain';
+    return 'le 5 novembre';
+  }
+
+  function pad(n) {
+    return String(n).padStart(2, '0');
+  }
+
+  function registrationsAreOpen() {
+    if (typeof BT18RegistrationGate === 'undefined') return true;
+    return BT18RegistrationGate.isRegistrationOpen();
+  }
+
+  function markClosed(message) {
+    title.textContent = message;
+    bar.classList.add('is-closed');
+  }
+
+  function tick() {
+    const now = new Date();
+    const diff = deadline.getTime() - now.getTime();
+    if (!registrationsAreOpen()) {
+      markClosed('Les inscriptions sont closes.');
+      if (line) line.hidden = true;
+      return true;
+    }
+    if (diff <= 0) {
+      markClosed('Les inscriptions sont closes.');
+      if (kicker) kicker.textContent = 'Inscriptions closes';
+      if (line) line.textContent = 'Les inscriptions en ligne sont closes.';
+      return true;
+    }
+
+    const when = whenLabel(now);
+    const phrase = 'Les inscriptions se terminent ' + when + ' à 12h';
+    title.textContent = phrase;
+    if (kicker) kicker.textContent = 'Clôture ' + when + ' 12h';
+    if (line) line.textContent = phrase + '.';
+
+    const totalSec = Math.floor(diff / 1000);
+    if (hoursEl) hoursEl.textContent = pad(Math.floor(totalSec / 3600));
+    if (minEl) minEl.textContent = pad(Math.floor((totalSec % 3600) / 60));
+    if (secEl) secEl.textContent = pad(totalSec % 60);
+    return false;
+  }
+
+  if (!tick()) {
+    const timer = setInterval(function () {
+      if (tick()) clearInterval(timer);
+    }, 1000);
+  }
 }
 
 /* ============================================
