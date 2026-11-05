@@ -172,6 +172,71 @@ sup { font-size: .6em; line-height: 0; }
 .nav-toggle.active span:nth-child(2) { opacity: 0; }
 .nav-toggle.active span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
 
+/* Urgence inscriptions — dans le flux, sans masquer le hero */
+.reg-urgency {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 18px;
+  max-width: 100%;
+  color: var(--text);
+}
+.reg-urgency-pulse {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--danger);
+  box-shadow: 0 0 0 0 rgba(255, 122, 107, 0.55);
+  animation: regPulse 1.7s ease-out infinite;
+}
+@keyframes regPulse {
+  70% { box-shadow: 0 0 0 10px rgba(255, 122, 107, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 122, 107, 0); }
+}
+.reg-urgency-copy {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: rgba(244, 237, 226, 0.92);
+  text-shadow: 0 1px 12px rgba(11, 10, 9, 0.55);
+}
+.reg-urgency-clock {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+  color: var(--gold-hi);
+}
+.reg-urgency-clock span { color: var(--muted); margin-inline: 1px; }
+.btn-urgent.is-pulsing,
+.nav-links .nav-cta.is-pulsing {
+  animation: ctaPulse 2.2s ease-in-out infinite;
+}
+@keyframes ctaPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(207, 149, 99, 0.35); }
+  50% { box-shadow: 0 0 0 10px rgba(207, 149, 99, 0); }
+}
+.form-deadline-line {
+  margin-top: 14px;
+  color: var(--gold-hi);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1.4;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reg-urgency-pulse,
+  .btn-urgent.is-pulsing,
+  .nav-links .nav-cta.is-pulsing { animation: none; }
+}
+
 @media (max-width: 960px) {
   .nav-toggle { display: flex; }
   .nav-links {
