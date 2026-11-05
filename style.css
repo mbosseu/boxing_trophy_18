@@ -776,93 +776,25 @@ sup { font-size: .6em; line-height: 0; }
   line-height: 1.5;
 }
 .licence-step-list strong { color: var(--text); }
-.licence-pay-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
+.licence-cta {
   margin-top: clamp(28px, 4vw, 40px);
-}
-.licence-pay-card {
-  padding: clamp(20px, 3vw, 28px);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-lg);
-  background: var(--surface);
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  align-items: flex-start;
+  gap: 14px;
+  max-width: 420px;
 }
-.licence-pay-title {
-  font-family: var(--font-display);
-  font-size: clamp(22px, 3vw, 28px);
-  font-weight: 700;
-  letter-spacing: .02em;
-  text-transform: uppercase;
-}
-.licence-pay-club, .licence-pay-hint { color: var(--text-2); font-size: 15px; }
 .licence-pay-btn {
-  margin-top: 8px;
   width: 100%;
   text-align: center;
   min-height: 48px;
 }
-.licence-docs, .licence-depot { margin-top: clamp(36px, 5vw, 56px); }
-.licence-docs-title, .licence-depot-title {
-  font-family: var(--font-display);
-  font-size: clamp(20px, 2.6vw, 26px);
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-.licence-docs-desc, .licence-depot-desc {
-  color: var(--text-2);
-  font-size: 15px;
-  line-height: 1.6;
-  max-width: 640px;
-  margin-bottom: 16px;
-}
-.licence-doc-list {
-  display: grid;
-  gap: 10px;
-  max-width: 520px;
-}
-.licence-doc-btn {
-  width: 100%;
-  text-align: center;
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-}
-.licence-depot-grid {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  max-width: 720px;
-}
-.licence-depot-card {
-  padding: 18px 16px;
-  border: 1px solid var(--line);
-  border-radius: var(--radius-md);
-  background: var(--surface);
-}
-.licence-depot-card h4 {
-  font-size: 16px;
-  margin-bottom: 8px;
-  color: var(--gold-hi);
-}
-.licence-depot-card p {
+.licence-deadline {
   color: var(--text-2);
   font-size: 15px;
   line-height: 1.55;
-}
-.licence-deadline {
-  margin-top: 18px;
-  color: var(--text);
-  font-size: 15px;
   max-width: 640px;
 }
 @media (min-width: 720px) {
-  .licence-pay-grid { grid-template-columns: 1fr 1fr; }
-  .licence-depot-grid { grid-template-columns: 1fr 1fr; }
-  .licence-pay-btn { width: auto; align-self: flex-start; }
+  .licence-pay-btn { width: auto; min-width: 280px; }
 }

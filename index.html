@@ -13,7 +13,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=16" />
+  <link rel="stylesheet" href="style.css?v=17" />
   <link rel="stylesheet" href="poster.css?v=8" />
   <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
@@ -381,75 +381,25 @@
           <h2 class="section-title">Régulariser sa <em>licence</em> 50&nbsp;€</h2>
           <p class="section-desc licence-lead">
             Cotisation licence loisirs FFBoxe ou FFKMDA pour le Boxing Trophy 19.
-            Paiement en une fois, puis téléchargement des formulaires médicaux.
+            Paiement en une fois (50&nbsp;€), puis signature en ligne.
+            Les formulaires médicaux et la facture sont disponibles après signature.
             Remise du dossier signé en salle au plus tard le <strong>11 novembre 2026</strong>.
           </p>
         </div>
 
         <div class="licence-steps reveal">
           <ol class="licence-step-list">
-            <li><strong>1. Payer</strong> la cotisation de 50&nbsp;€ (choix de salle ci-dessous).</li>
-            <li><strong>2. Télécharger</strong> le formulaire de licence et le certificat médical.</li>
+            <li><strong>1. Payer</strong> la cotisation de 50&nbsp;€, puis signer en ligne.</li>
+            <li><strong>2. Télécharger</strong> le formulaire de licence et le certificat médical (après signature).</li>
             <li><strong>3. Faire remplir</strong> et tamponner le dossier par votre médecin.</li>
-            <li><strong>4. Déposer</strong> le dossier signé au manager (Minimes ou Portet) pour enregistrement fédéral.</li>
+            <li><strong>4. Déposer</strong> le dossier signé au manager de n’importe quelle salle Boxing Center pour enregistrement fédéral.</li>
           </ol>
         </div>
 
-        <div class="licence-pay-grid reveal" id="licencePayGrid">
-          <article class="licence-pay-card" data-salle="portet">
-            <h3 class="licence-pay-title">Je boxe à Portet</h3>
-            <p class="licence-pay-club">Affiliation : <strong>Noble Art Portésien</strong></p>
-            <p class="licence-pay-hint">Paiement carte via la boutique Boxing Center (compte Portet).</p>
-            <a
-              class="btn btn-primary licence-pay-btn"
-              href="https://boutique.boxingcenter.fr/inscription?product=licence-loisirs-trophy&amp;gym=portet"
-              rel="noopener noreferrer"
-            >Payer 50&nbsp;€ — Portet</a>
-          </article>
-          <article class="licence-pay-card" data-salle="autres">
-            <h3 class="licence-pay-title">Autre salle Boxing Center</h3>
-            <p class="licence-pay-club">Affiliation : <strong>Toulouse Minimes Boxing Club</strong></p>
-            <p class="licence-pay-hint">Minimes, Ramonville, Saint-Cyprien, États-Unis, etc.</p>
-            <a
-              class="btn btn-primary licence-pay-btn"
-              href="https://boutique.boxingcenter.fr/inscription?product=licence-loisirs-trophy&amp;gym=minimes"
-              rel="noopener noreferrer"
-            >Payer 50&nbsp;€ — Minimes</a>
-          </article>
-        </div>
-
-        <div class="licence-docs reveal">
-          <h3 class="licence-docs-title">Après paiement — documents à télécharger</h3>
-          <p class="licence-docs-desc">Imprimez-les ou donnez-les directement à votre médecin pour signature et tampon.</p>
-          <ul class="licence-doc-list">
-            <li>
-              <a class="btn btn-outline licence-doc-btn" href="documents/licence-loisirs-ffboxe.pdf" download>Formulaire licence loisirs (PDF)</a>
-            </li>
-            <li>
-              <a class="btn btn-outline licence-doc-btn" href="documents/certificat-medical-ffkmda-loisir.pdf" download>Certificat médical FFKMDA loisir (PDF)</a>
-            </li>
-            <li>
-              <a class="btn btn-outline licence-doc-btn" href="documents/charte-webmaster-licence-loisirs.pdf" download>Charte webmaster licence loisirs (PDF)</a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="licence-depot reveal">
-          <h3 class="licence-depot-title">Où déposer le dossier signé</h3>
-          <p class="licence-depot-desc">
-            Une fois rempli et signé par le médecin, remettez-le au manager de salle.
-            C’est le manager qui fait l’enregistrement auprès de la fédération pour que vous soyez assuré.
-          </p>
-          <div class="licence-depot-grid">
-            <div class="licence-depot-card">
-              <h4>Boxing Center Minimes</h4>
-              <p>12 rue de Fenouillet<br />31200 Toulouse</p>
-            </div>
-            <div class="licence-depot-card">
-              <h4>Boxing Center Portet</h4>
-              <p>61 route d’Espagne<br />31120 Portet-sur-Garonne</p>
-            </div>
-          </div>
+        <div class="licence-cta reveal">
+          <button type="button" class="btn btn-primary licence-pay-btn" id="licencePayBtn">
+            Payer ma licence — 50&nbsp;€
+          </button>
           <p class="licence-deadline">
             Sans régularisation avant le <strong>11 novembre 2026</strong>, l’inscription et le combat pourront être annulés.
           </p>
@@ -743,5 +693,18 @@
   <script src="app.js?v=7"></script>
   <script src="gallery.js?v=2"></script>
   <script src="film.js?v=3"></script>
+  <script>
+    (function () {
+      var btn = document.getElementById('licencePayBtn');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var gym = Math.random() < 0.5 ? 'portet' : 'minimes';
+        var url =
+          'https://boutique.boxingcenter.fr/inscription?product=licence-loisirs-trophy&gym=' +
+          encodeURIComponent(gym);
+        window.location.href = url;
+      });
+    })();
+  </script>
 </body>
 </html>
