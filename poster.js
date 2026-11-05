@@ -243,6 +243,21 @@
         });
     }
 
+    /**
+     * Un enregistrement ajoute toutes ses lignes d'un coup (sort_order 0, 1, 2…) puis retire
+     * les anciennes. S'il est interrompu entre les deux, seule la dernière série fait foi.
+     */
+    function latestGeneration(rows) {
+        var start = null;
+        rows.forEach(function (row) {
+            if (row.sort_order === 0 && typeof row.id === 'number' && (start === null || row.id > start)) {
+                start = row.id;
+            }
+        });
+        if (start === null) return rows;
+        return rows.filter(function (row) { return row.id >= start; });
+    }
+
     function isPairMatch(m) {
         return !!(m && m.fighter1 && m.fighter2);
     }
@@ -540,6 +555,7 @@
         normalizeMatches: normalizeMatches,
         isPairMatch: isPairMatch,
         computeTier: computeTier,
+        latestGeneration: latestGeneration,
         buildPosterHtml: buildPosterHtml,
         renderPoster: renderPoster,
         preparePrintFit: preparePrintFit,

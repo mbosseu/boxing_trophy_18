@@ -378,16 +378,31 @@
         localStorage.setItem(REG_KEY, JSON.stringify(registrations));
     }
 
+    // Horodatage des combats tels que chargés depuis la base : sert à détecter
+    // qu'un autre appareil a enregistré entre-temps.
+    let matchesDbTimestamp = null;
+    // Incrémenté à chaque écriture : un chargement parti avant est ignoré à son retour.
+    let matchesWriteGeneration = 0;
+
+    /** @returns {Promise<boolean>} true si les combats sont bien enregistrés */
     async function saveMatches() {
         const ts = new Date().toISOString();
+        matchesWriteGeneration++;
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
             try {
-                // Delete existing matches
-                const { error: deleteError } = await supabaseClient
-                    .from('matches')
-                    .delete()
-                    .neq('id', -1);
-                if (deleteError) throw deleteError;
+                // Ne jamais écraser ce qu'un autre appareil vient d'enregistrer
+                const { data: currentMeta, error: currentMetaError } = await supabaseClient
+                    .from('match_metadata')
+                    .select('value')
+                    .eq('key', 'matches_timestamp')
+                    .maybeSingle();
+                if (currentMetaError) throw currentMetaError;
+                if (((currentMeta && currentMeta.value) || '') !== (matchesDbTimestamp || '')) {
+                    await loadData();
+                    await loadMatches();
+                    showNotification('⚠️ Les combats ont été modifiés sur un autre appareil. Ils viennent d\'être rechargés : refaites votre dernière action.');
+                    return false;
+                }
 
                 // Prepare match rows to insert
                 if (typeof GalaPoster !== 'undefined') {
@@ -401,19 +416,25 @@
                     sexe: m.sexe,
                     categoriePoids: m.categoriePoids,
                     niveau: m.niveau,
-                    fighter1: m.fighter1,
-                    fighter2: m.fighter2,
+                    // La table est lisible par le site public : pas d'e-mail ni de téléphone ici
+                    fighter1: m.fighter1 ? fighterSnapshot(m.fighter1) : null,
+                    fighter2: m.fighter2 ? fighterSnapshot(m.fighter2) : null,
                     sort_order: index,
                     match_number: m.match_number != null ? m.match_number : null,
                     tier: m.tier || null,
                     winner: m.winner || null
                 }));
 
+                // Les nouvelles lignes d'abord : une coupure ou une sortie de page
+                // en cours d'enregistrement ne peut plus vider la table.
+                let oldestNewId = null;
                 if (matchesToInsert.length > 0) {
-                    const { error: insertError } = await supabaseClient
+                    const { data: inserted, error: insertError } = await supabaseClient
                         .from('matches')
-                        .insert(matchesToInsert);
+                        .insert(matchesToInsert)
+                        .select('id');
                     if (insertError) throw insertError;
+                    oldestNewId = Math.min.apply(null, (inserted || []).map(function (row) { return row.id; }));
                 }
 
                 // Update metadata
@@ -421,14 +442,26 @@
                     .from('match_metadata')
                     .upsert({ key: 'matches_timestamp', value: ts });
                 if (metaError) throw metaError;
+                matchesDbTimestamp = ts;
 
-                return;
+                // Puis retrait des anciennes lignes. S'il échoue, les combats sont quand même
+                // enregistrés : la lecture ignore les anciennes lignes (latestGeneration)
+                // et le prochain enregistrement les retirera.
+                let oldRows = supabaseClient.from('matches').delete();
+                oldRows = oldestNewId != null ? oldRows.lt('id', oldestNewId) : oldRows.neq('id', -1);
+                const { error: deleteError } = await oldRows;
+                if (deleteError) console.warn('Retrait des anciens combats :', deleteError);
+
+                return true;
             } catch (e) {
-                console.error("Supabase saveMatches error, falling back to LocalStorage:", e);
+                console.error('Supabase saveMatches error:', e);
+                showNotification('❌ Combats NON enregistrés : ' + (e.message || 'erreur de connexion') + '. Réessayez avec « Sauvegarder brouillon ».');
+                return false;
             }
         }
         localStorage.setItem(MATCH_KEY, JSON.stringify(matches));
         localStorage.setItem(MATCH_TS_KEY, ts);
+        return true;
     }
 
     async function loadPublishedState() {
@@ -477,14 +510,16 @@
 
     async function publishMatchesToSite() {
         enrichMatchesFromRegistrations();
-        await saveMatches();
+        if (!(await saveMatches())) return false;
         await setMatchesPublished(true);
+        return true;
     }
 
     async function saveMatchesDraft() {
         enrichMatchesFromRegistrations();
-        await saveMatches();
+        const saved = await saveMatches();
         updatePublishStatusUI();
+        return saved;
     }
 
     function updatePublishStatusUI() {
@@ -636,28 +671,34 @@
     async function loadMatches() {
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
             try {
+                const generationAtStart = matchesWriteGeneration;
                 const { data, error } = await supabaseClient
                     .from('matches')
                     .select('*')
                     .order('sort_order', { ascending: true });
                 if (error) throw error;
-                matches = data || [];
+
+                const { data: metaData, error: metaError } = await supabaseClient
+                    .from('match_metadata')
+                    .select('value')
+                    .eq('key', 'matches_timestamp')
+                    .maybeSingle();
+                if (metaError) throw metaError;
+
+                // Un enregistrement a eu lieu pendant la lecture : ces données sont périmées
+                if (generationAtStart !== matchesWriteGeneration) return;
+
+                matches = typeof GalaPoster !== 'undefined'
+                    ? GalaPoster.latestGeneration(data || [])
+                    : (data || []);
                 if (typeof GalaPoster !== 'undefined') {
                     GalaPoster.normalizeMatches(matches);
                     GalaPoster.assignMatchMeta(matches);
                 }
                 enrichMatchesFromRegistrations();
 
-                const { data: metaData, error: metaError } = await supabaseClient
-                    .from('match_metadata')
-                    .select('value')
-                    .eq('key', 'matches_timestamp')
-                    .single();
-
-                let ts = null;
-                if (!metaError && metaData) {
-                    ts = metaData.value;
-                }
+                const ts = metaData ? metaData.value : null;
+                matchesDbTimestamp = ts;
 
                 if (ts) {
                     const d = new Date(ts);
@@ -670,7 +711,11 @@
                 renderAfficheTab();
                 return;
             } catch (e) {
-                console.error("Supabase loadMatches error, falling back to LocalStorage:", e);
+                // Surtout pas de repli sur une copie locale ancienne : elle serait
+                // ensuite réenregistrée par-dessus les vrais combats.
+                console.error('Supabase loadMatches error:', e);
+                showNotification('⚠️ Impossible de recharger les combats. Vérifiez la connexion puis cliquez sur Actualiser.');
+                return;
             }
         }
 
@@ -1191,18 +1236,39 @@
             }
         }
         
-        registrations = registrations.filter(function (r) { return r.id !== pendingDeleteId; });
+        const deletedId = pendingDeleteId;
+        registrations = registrations.filter(function (r) { return r.id !== deletedId; });
         saveRegistrations();
         closeDeleteModalFn();
         renderDashboard();
         renderRegistrations();
         renderRecentRegistrations();
 
-        // Auto regenerate matches to keep consistency
-        generateMatches();
+        // Retire seulement ce combattant : les autres combats, dont ceux faits à la main, restent
+        removeFighterFromMatches(deletedId);
         await saveMatches();
         renderMatches();
+        renderAfficheTab();
+        renderDashboard();
     });
+
+    function removeFighterFromMatches(fighterId) {
+        matches = matches.filter(function (m) {
+            var isFirst = m.fighter1 && m.fighter1.id === fighterId;
+            var isSecond = m.fighter2 && m.fighter2.id === fighterId;
+            if (!isFirst && !isSecond) return true;
+            if (!m.fighter2) return false; // il était seul en attente
+
+            // Son adversaire repasse en attente
+            if (isFirst) m.fighter1 = m.fighter2;
+            m.fighter2 = null;
+            m.type = 'waiting';
+            m.winner = null;
+            m.match_number = null;
+            m.tier = null;
+            return true;
+        });
+    }
 
     deleteModal.addEventListener('click', function (e) {
         if (e.target === deleteModal) closeDeleteModalFn();
@@ -1377,9 +1443,9 @@
         renderRegistrations();
         renderRecentRegistrations();
         renderAfficheTab();
-        await saveMatches();
+        const saved = await saveMatches();
         renderMatches();
-        showNotification('✅ Candidat mis à jour');
+        if (saved) showNotification('✅ Candidat mis à jour');
     });
 
     // ── Manual Match Modal logic ──
@@ -1493,11 +1559,12 @@
             return true;
         });
 
-        await saveMatches();
+        const saved = await saveMatches();
         renderMatches();
         renderAfficheTab();
         closeManualMatchModalFn();
         renderDashboard();
+        if (saved) showNotification('✅ Combat enregistré');
 
         // Visual feedback animation
         setTimeout(() => {
@@ -1726,6 +1793,15 @@
     //  MATCHING ALGORITHM
     // ═══════════════════════════════════════════════════════
     generateMatchesBtn.addEventListener('click', async function () {
+        var existingPairs = matches.filter(function (m) { return m.type === 'pair'; }).length;
+        if (
+            existingPairs > 0 &&
+            !confirm(
+                'Générer les combats remplace les ' + existingPairs + ' combats actuels, y compris ceux faits à la main et les vainqueurs déclarés.\n\nContinuer ?'
+            )
+        ) {
+            return;
+        }
         generateMatchesBtn.disabled = true;
         const oldText = generateMatchesBtn.innerHTML;
         generateMatchesBtn.textContent = 'Génération...';
@@ -1733,11 +1809,11 @@
         await loadData();
         generateMatches();
         normalizeAllMatches();
-        await saveMatches();
+        const saved = await saveMatches();
         renderMatches();
         renderAfficheTab();
         renderDashboard();
-        showNotification('🥊 Combats générés — consultez l\'onglet Affiche');
+        if (saved) showNotification('🥊 Combats générés — consultez l\'onglet Affiche');
 
         generateMatchesBtn.disabled = false;
         generateMatchesBtn.innerHTML = oldText;
@@ -2104,10 +2180,11 @@
         sourceMatch[sourceRef] = targetMatch[targetRef];
         targetMatch[targetRef] = temp;
 
-        await saveMatches();
+        const saved = await saveMatches();
         renderMatches();
         renderAfficheTab();
         closeSwapModalFn();
+        if (saved) showNotification('✅ Échange enregistré');
     }
 
     function closeSwapModalFn() {
@@ -2134,7 +2211,7 @@
             prenom: reg.prenom,
             club: reg.club,
             discipline: reg.discipline || '',
-            photoUrl: reg.photoUrl || ''
+            photoUrl: reg.photoUrl || reg.photo_url || ''
         };
     }
 
@@ -2165,6 +2242,7 @@
                 var reg = registrations.find(function (r) { return r.id === f.id; });
                 if (!reg) return;
                 m[slot] = Object.assign({}, reg, f, {
+                    discipline: reg.discipline || f.discipline,
                     nom: f.nom || reg.nom,
                     prenom: f.prenom || reg.prenom,
                     club: f.club || reg.club,
@@ -2534,7 +2612,7 @@
             saveDraftBtn.addEventListener('click', async function () {
                 saveDraftBtn.disabled = true;
                 try {
-                    await saveMatchesDraft();
+                    if (!(await saveMatchesDraft())) return;
                     showNotification(
                         matchesPublished
                             ? '✅ Enregistré — republiez pour mettre le site à jour'
@@ -2561,7 +2639,7 @@
                 var oldLabel = publishSiteBtn.innerHTML;
                 publishSiteBtn.textContent = 'Publication…';
                 try {
-                    await publishMatchesToSite();
+                    if (!(await publishMatchesToSite())) return;
                     var done = pairs.filter(function (m) { return m.winner; }).length;
                     showNotification(
                         '✅ Publié ! Carte visible sur la page d\'accueil et la carte des combats' +
