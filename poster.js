@@ -6,12 +6,12 @@
     'use strict';
 
     const EVENT_TITLE = 'BOXING TROPHY';
-    const EVENT_EDITION = '19';
-    const EVENT_DATE = 'VENDREDI 13 NOVEMBRE 2026';
-    const EVENT_VENUE = 'BOXING CENTER — PORTET-SUR-GARONNE';
+    const EVENT_EDITION = '20';
+    const EVENT_DATE = 'SAMEDI 12 DÉCEMBRE 2026';
+    const EVENT_VENUE = 'GARAGE MOTEKA — FENOUILLET';
     const EVENT_TIME_PRELIM = '19H00';
     const EVENT_FOOTER = '★ SOIRÉE DE BOXE EXCEPTIONNELLE ! ★';
-    const EVENT_LOGO = 'image/gala/affiche-trophy-19.jpg';
+    const EVENT_LOGO = 'image/trophy20/affiche-fight-furious.jpg';
 
     function escapeHtml(str) {
         if (!str) return '';

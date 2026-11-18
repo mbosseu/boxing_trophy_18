@@ -3,37 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Boxing Trophy 19 · 13 Novembre · Portet-sur-Garonne</title>
-  <meta name="description" content="Boxing Trophy 19 — Soirée de gala pour l'ouverture de la nouvelle salle du Boxing Center. 13 novembre, 19h, Portet-sur-Garonne. Boxe anglaise & pied-poing." />
-  <meta name="theme-color" content="#0b0a09" />
+  <title>Boxing Trophy 20 · Samedi 12 décembre · Garage Moteka, Fenouillet</title>
+  <meta name="description" content="Boxing Trophy 20 — le samedi du week-end FIGHT &amp; Furious. Boxe anglaise et pied-poing au garage Moteka, Fenouillet. Samedi 12 décembre 2026 dès 19h. Place public 10 €." />
+  <meta name="theme-color" content="#070708" />
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Boxing Trophy 19 · 13 Novembre · Portet-sur-Garonne" />
-  <meta property="og:description" content="Soirée de gala pour l'ouverture de la nouvelle salle. Boxe anglaise & pied-poing. Place public à 10 €." />
-  <meta property="og:image" content="https://boxing-trophy-19.vercel.app/image/gala/affiche-trophy-19.jpg" />
+  <meta property="og:title" content="Boxing Trophy 20 · Samedi 12 décembre · Garage Moteka" />
+  <meta property="og:description" content="Boxe anglaise et pied-poing au garage Moteka, Fenouillet. Samedi 12 décembre dès 19h. Place public à 10 €." />
+  <meta property="og:image" content="https://boxing-trophy-19.vercel.app/image/trophy20/affiche-fight-furious.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=17" />
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter+Tight:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=25" />
   <link rel="stylesheet" href="poster.css?v=8" />
   <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
 </head>
 <body>
 
+  <!-- Intro cinématique (masquée si mouvement réduit ou déjà vue dans la session) -->
+  <div class="intro" id="intro" aria-hidden="true">
+    <div class="intro-panel intro-panel--top"></div>
+    <div class="intro-panel intro-panel--bottom"></div>
+    <div class="intro-center">
+      <span class="intro-round">Boxing Trophy</span>
+      <span class="intro-count" id="introCount">20</span>
+      <span class="intro-sub mono">Samedi 12 décembre · Fenouillet</span>
+    </div>
+    <div class="intro-bar"><span id="introBar"></span></div>
+  </div>
+
+  <div class="scroll-progress" aria-hidden="true"><span id="scrollProgress"></span></div>
+  <div class="grain" aria-hidden="true"></div>
   <!-- NAV -->
   <nav class="nav" id="navbar">
     <div class="nav-inner">
-      <a href="#" class="nav-logo" aria-label="Boxing Trophy 19 — accueil">
+      <a href="#" class="nav-logo" aria-label="Boxing Trophy 20 — accueil">
         <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" />
-        <span class="nl-divider" aria-hidden="true"></span>
-        <span class="nl-edition">Trophy <strong>19</strong></span>
+        <span class="nl-edition">Trophy <strong>20</strong></span>
       </a>
       <div class="nav-links" id="navLinks">
-        <a href="#event">L'événement</a>
+        <a href="#event">Le week-end</a>
         <a href="#disciplines">Disciplines</a>
         <a href="#galerie">Galerie</a>
         <a href="#carte-combats" id="navCarteCombats">Programme</a>
         <a href="#licence">Licence</a>
-        <a href="#infos">Infos pratiques</a>
+        <a href="#infos">Billetterie</a>
         <a href="#inscription" class="nav-cta">S'inscrire</a>
       </div>
       <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">
@@ -44,36 +57,47 @@
 
   <!-- ═══════════════════════ HERO ═══════════════════════ -->
   <header class="hero" id="hero">
-    <video class="hero-video" autoplay muted loop playsinline poster="image/gala/victoire.jpg" aria-hidden="true">
-      <source src="videos/mp_.mp4" type="video/mp4" />
-    </video>
-    <div class="hero-shade" aria-hidden="true"></div>
+    <!-- Couches : photo → titre géant → boxeur détouré → étincelles -->
+    <div class="hero-bg" aria-hidden="true">
+      <img src="image/trophy20/heros-garage.jpg" alt="" class="hero-photo" width="1600" height="1986" />
+      <div class="hero-light"></div>
+      <div class="hero-shade"></div>
+    </div>
 
-    <div class="hero-content container">
-      <p class="hero-eyebrow">
-        <span class="eyebrow-line" aria-hidden="true"></span>
-        <span>19<sup>e</sup> édition · Inauguration de la nouvelle salle</span>
+    <!-- Le grand « 20 » encadre le boxeur : le 2 à gauche de la tête, le 0 à droite -->
+    <div class="hero-num" id="heroNum" aria-hidden="true"><span class="hn hn-2">2</span><span class="hn hn-0">0</span></div>
+
+    <h1 class="hero-title" id="heroTitle">
+      <span class="ht-name">Boxing Trophy <span class="ht-sr">20</span></span>
+      <span class="ht-date">Samedi 12 décembre 2026 <i aria-hidden="true">·</i> 19h <i aria-hidden="true">·</i> Garage Moteka, Fenouillet</span>
+    </h1>
+
+    <div class="hero-fg" aria-hidden="true">
+      <img src="image/trophy20/heros-garage-cutout.webp" alt="" class="hero-cutout" width="1600" height="1986" onerror="this.remove()" />
+      <div class="hero-fg-shade"></div>
+    </div>
+    <canvas class="hero-embers" id="heroEmbers" aria-hidden="true"></canvas>
+
+    <div class="container hero-content">
+      <p class="hero-kicker mono">
+        <span class="live-dot" aria-hidden="true"></span>
+        Le samedi du week-end FIGHT &amp; Furious <i>/</i> 11 · 12 · 13 décembre
       </p>
 
-      <h1 class="hero-title">
-        <span class="ht-line">Boxing</span>
-        <span class="ht-line">Trophy <em class="ht-num">19</em></span>
-      </h1>
-
       <p class="hero-lead">
-        Une soirée de gala pour ouvrir le nouveau Boxing Center de
-        Portet-sur-Garonne. Boxe anglaise et pied-poing, sous les projecteurs.
+        Un ring monté au cœur de l'atelier. Deux disciplines, une salle pleine,
+        une seule nuit pour monter sur la carte.
       </p>
 
       <div class="hero-cta hero-cta-group">
         <a href="#inscription" class="btn btn-primary btn-urgent">S'inscrire au combat</a>
-        <a href="#event" class="btn btn-ghost-light">Découvrir l'événement</a>
+        <a href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" class="btn btn-glass" target="_blank" rel="noopener">Réserver ma place · 10 €</a>
       </div>
 
       <p class="reg-urgency" id="regDeadline">
         <span class="reg-urgency-pulse" aria-hidden="true"></span>
         <span class="reg-urgency-copy">
-          <strong id="regDeadlineTitle">Clôture demain à 12h</strong>
+          <strong id="regDeadlineTitle">Inscriptions ouvertes</strong>
           <span class="reg-urgency-clock" id="regDeadlineClock" aria-hidden="true">
             <b id="rd-hours">00</b><span>:</span><b id="rd-min">00</b><span>:</span><b id="rd-sec">00</b>
           </span>
@@ -84,10 +108,10 @@
     <div class="hero-bar">
       <div class="container hero-bar-inner">
         <dl class="hero-facts">
-          <div><dt>Date</dt><dd>Vendredi 13 nov. 2026</dd></div>
-          <div><dt>Ouverture</dt><dd>19h00</dd></div>
-          <div><dt>Lieu</dt><dd>Portet-sur-Garonne</dd></div>
-          <div><dt>Place public</dt><dd>10 €</dd></div>
+          <div><dt>Date</dt><dd>Sam. 12 déc.</dd></div>
+          <div><dt>Portes</dt><dd>19h00</dd></div>
+          <div><dt>Lieu</dt><dd>Fenouillet</dd></div>
+          <div><dt>Entrée</dt><dd>10 €</dd></div>
         </dl>
         <div id="countdown" class="countdown" aria-label="Compte à rebours avant l'événement">
           <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
@@ -95,68 +119,99 @@
           <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
           <span class="countdown-sep" aria-hidden="true">:</span>
           <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
-          <div class="countdown-finished-msg">L'événement a commencé&nbsp;!</div>
+          <div class="countdown-finished-msg">Ce soir, ça cogne&nbsp;!</div>
         </div>
       </div>
     </div>
   </header>
 
+  <div class="tapes" aria-hidden="true">
+    <div class="tape tape--red"><div class="tape-track"><span>Boxing Trophy 20 — Samedi 12.12 — Garage Moteka — Fenouillet — Boxe anglaise — Pied-poing — </span><span>Boxing Trophy 20 — Samedi 12.12 — Garage Moteka — Fenouillet — Boxe anglaise — Pied-poing — </span></div></div>
+    <div class="tape tape--dark"><div class="tape-track"><span>FIGHT &amp; Furious — Week-end boxe — 11 · 12 · 13 décembre — Inauguration Moteka — </span><span>FIGHT &amp; Furious — Week-end boxe — 11 · 12 · 13 décembre — Inauguration Moteka — </span></div></div>
+  </div>
+
+  <!-- Zoom à travers le « 20 » au défilement -->
+  <section class="zoom20" id="zoom20" aria-label="Vingtième édition">
+    <div class="zoom20-sticky">
+      <p class="zoom20-kicker mono">Depuis la première édition</p>
+      <div class="zoom20-text" id="zoom20Text" aria-hidden="true"><span>2</span><span class="z0">0</span></div>
+      <p class="zoom20-caption">Vingt éditions. <em>Une seule envie&nbsp;: monter sur le ring.</em></p>
+      <div class="zoom20-fill" aria-hidden="true"></div>
+      <p class="zoom20-final" aria-hidden="true">Bienvenue dans<br /><b>la 20<sup>e</sup></b></p>
+    </div>
+  </section>
+
   <main>
 
-    <!-- ═══════════════════════ L'ÉVÉNEMENT ═══════════════════════ -->
+    <!-- ═══════════════════════ LE WEEK-END ═══════════════════════ -->
     <section class="section intro" id="event">
-      <div class="container intro-grid">
-        <div class="intro-text reveal">
-          <span class="section-kicker">L'événement</span>
-          <h2 class="section-title">Célébrons <em>l'ouverture</em> de la nouvelle salle de Portet</h2>
-          <p class="lead">
-            Pour sa 19<sup>e</sup> édition, le Boxing Trophy pose ses cordes à
-            <strong>Portet-sur-Garonne</strong> et inaugure la nouvelle salle du Boxing Center&nbsp;:
-            un espace pensé pour faire grandir les combattants de demain.
-          </p>
-          <p>
-            Une soirée de gala, deux disciplines, un vrai ring sous les projecteurs —
-            et une salle comble pour porter chaque combattant.
+      <div class="container">
+        <div class="intro-grid">
+          <div class="reveal">
+            <span class="section-kicker">01 — Le week-end</span>
+            <h2 class="section-title">Trois nuits.<br /><em>Un seul ring.</em></h2>
+          </div>
+          <p class="lead reveal">
+            Pour sa 20<sup>e</sup> édition, le Boxing Trophy est le samedi du week-end
+            <strong>FIGHT &amp; Furious</strong>, organisé par le Boxing Center pour l'inauguration
+            du garage Moteka, à Fenouillet.
           </p>
         </div>
 
-        <figure class="intro-media reveal">
-          <img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur au centre du ring" loading="lazy" width="1280" height="846" />
-          <figcaption>Le verdict, au centre du ring.</figcaption>
-        </figure>
+        <div class="nights reveal" data-nights>
+          <article class="night">
+            <img src="image/trophy20/gala-elites.jpg" alt="Boxeur en débardeur noir portant un direct pendant un gala" loading="lazy" />
+            <div class="night-body">
+              <span class="night-day">Ven. 11</span>
+              <h3>Gala Élites</h3>
+              <p>Les meilleurs amateurs sous les projecteurs. Dès 19h.</p>
+            </div>
+          </article>
+          <article class="night is-open">
+            <img src="image/trophy20/heros-garage.jpg" alt="Boxeur en garde dans l'atelier du garage Moteka" loading="lazy" />
+            <div class="night-body">
+              <span class="night-day">Sam. 12</span>
+              <h3>Boxing Trophy 20</h3>
+              <p>Boxe anglaise et pied-poing, débutants et intermédiaires. Dès 19h.</p>
+              <span class="night-tag mono">Notre soirée</span>
+            </div>
+          </article>
+          <article class="night">
+            <img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy" />
+            <div class="night-body">
+              <span class="night-day">Dim. 13</span>
+              <h3>Boxe éducative</h3>
+              <p>La relève monte sur le ring. Dès 11h.</p>
+            </div>
+          </article>
+        </div>
       </div>
     </section>
 
     <!-- ═══════════════════════ DISCIPLINES ═══════════════════════ -->
     <section class="section disciplines" id="disciplines">
       <div class="container">
-        <div class="section-head reveal">
-          <span class="section-kicker">Les disciplines</span>
-          <h2 class="section-title">Deux arts, <em>un seul ring</em></h2>
+        <div class="section-head section-head-center reveal">
+          <span class="section-kicker">02 — Les disciplines</span>
+          <h2 class="section-title">Coin rouge <em>contre</em> coin bleu</h2>
         </div>
 
-        <div class="disc-grid">
-          <article class="disc-card reveal">
-            <div class="disc-media">
-              <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy" width="1280" height="970" />
-            </div>
-            <div class="disc-body">
-              <span class="disc-num">01</span>
-              <h3>Boxe anglaise</h3>
-              <p>Le noble art. Technique, puissance et stratégie&nbsp;: l'affrontement pur, dans les règles classiques.</p>
-              <ul class="disc-tags"><li>Tradition</li><li>Poings uniquement</li></ul>
+        <div class="versus reveal">
+          <article class="corner corner--red">
+            <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy" />
+            <div class="corner-body">
+              <span class="corner-label mono">Discipline 01</span>
+              <h3>Boxe<br />anglaise</h3>
+              <p>Le noble art. Technique, puissance et stratégie&nbsp;: les poings uniquement, dans les règles classiques.</p>
             </div>
           </article>
-
-          <article class="disc-card reveal">
-            <div class="disc-media">
-              <img src="image/gala/pied-poing-ring.jpg" alt="Combattant de pied-poing portant un middle kick sur le ring du Boxing Center" loading="lazy" width="1400" height="935" />
-            </div>
-            <div class="disc-body">
-              <span class="disc-num">02</span>
-              <h3>Pied-poing <span class="badge">Nouveau</span></h3>
+          <div class="vs-badge" aria-hidden="true"><span>VS</span></div>
+          <article class="corner corner--blue">
+            <img src="image/trophy20/pied-poing-kick.jpg" alt="Combattant en short rouge portant un high kick sur un partenaire" loading="lazy" />
+            <div class="corner-body">
+              <span class="corner-label mono">Discipline 02</span>
+              <h3>Pied-<br />poing</h3>
               <p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p>
-              <ul class="disc-tags"><li>Première au Trophy</li><li>Pieds &amp; poings</li></ul>
             </div>
           </article>
         </div>
@@ -168,10 +223,10 @@
       <div class="container">
         <div class="section-head section-head-split reveal">
           <div>
-            <span class="section-kicker">Galerie</span>
+            <span class="section-kicker">03 — Galerie</span>
             <h2 class="section-title">L'intensité, <em>en images</em></h2>
           </div>
-          <p class="section-desc">Gardes hautes, échanges, verdict&nbsp;: quelques instants capturés au Boxing Center.</p>
+          <p class="section-desc">Gardes hautes, échanges, verdict&nbsp;: quelques instants des éditions précédentes.</p>
         </div>
 
         <div class="gallery-grid" data-gallery>
@@ -205,7 +260,7 @@
       <canvas class="film-ambient" width="36" height="64" aria-hidden="true"></canvas>
 
       <div class="film-head container reveal">
-        <span class="section-kicker">Édition 18 · En images</span>
+        <span class="section-kicker">04 — Dans le rétro</span>
         <h2 class="section-title">Revivez <em>le Trophy 18</em></h2>
       </div>
 
@@ -254,41 +309,29 @@
 
       <div class="film-foot container reveal">
         <p class="lead">
-          Une salle pleine, debout autour du ring, des combats engagés&nbsp;: l'édition 18 a placé la barre très haut.
-          Le 13 novembre, le Trophy écrit la suite à Portet-sur-Garonne.
+          Une salle pleine, debout autour du ring, des combats engagés.
+          Le 12 décembre, le Trophy écrit sa 20<sup>e</sup> page au garage Moteka.
         </p>
-        <a href="#inscription" class="btn btn-primary nav-cta">Participer à l'édition 19</a>
+        <a href="#inscription" class="btn btn-primary nav-cta">Participer à l'édition 20</a>
       </div>
     </section>
 
     <!-- ═══════════════════════ L'EXPÉRIENCE ═══════════════════════ -->
     <section class="section experience" id="concept">
-      <div class="container exp-grid">
-        <figure class="exp-media reveal">
-          <img src="image/gala/esquive-arbitre.jpg" alt="Combat encadré par un arbitre expérimenté" loading="lazy" width="1280" height="800" />
-        </figure>
-        <div class="exp-text reveal">
-          <span class="section-kicker">L'expérience combattant</span>
-          <h2 class="section-title">Traité comme <em>un champion</em></h2>
-          <ol class="exp-list">
-            <li>
-              <h3>Ring professionnel</h3>
-              <p>Un vrai ring sous les projecteurs, digne des grands galas.</p>
-            </li>
-            <li>
-              <h3>Encadrement pro</h3>
-              <p>Entraîneurs certifiés et arbitre expérimenté&nbsp;: votre sécurité passe avant tout.</p>
-            </li>
-            <li>
-              <h3>Appariement juste</h3>
-              <p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p>
-            </li>
-            <li>
-              <h3>Mise en lumière</h3>
-              <p>Photos et vidéos professionnelles, entrée personnalisée sur la carte officielle.</p>
-            </li>
-          </ol>
+      <div class="container">
+        <div class="section-head section-head-split reveal">
+          <div>
+            <span class="section-kicker">05 — L'expérience combattant</span>
+            <h2 class="section-title">Traité comme <em>un champion</em></h2>
+          </div>
+          <p class="section-desc">Du premier contact à la pesée, tout est pensé pour que chaque combattant vive une vraie soirée de gala.</p>
         </div>
+        <ol class="exp-list">
+          <li class="reveal"><h3>Ring professionnel</h3><p>Un vrai ring au milieu de l'atelier, sous les projecteurs.</p></li>
+          <li class="reveal"><h3>Encadrement pro</h3><p>Entraîneurs certifiés et arbitre expérimenté&nbsp;: votre sécurité passe avant tout.</p></li>
+          <li class="reveal"><h3>Appariement juste</h3><p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p></li>
+          <li class="reveal"><h3>Mise en lumière</h3><p>Photos et vidéos professionnelles, et votre nom sur la carte officielle.</p></li>
+        </ol>
       </div>
     </section>
 
@@ -296,129 +339,129 @@
     <section class="section home-combats-section" id="carte-combats">
       <div class="container">
         <div class="section-head section-head-center reveal">
-          <span class="section-kicker">Programme officiel</span>
+          <span class="section-kicker">06 — Programme officiel</span>
           <h2 class="section-title">La carte <em>des combats</em></h2>
           <p class="section-desc" id="homeCombatsDesc">
-            Les affrontements du Boxing Trophy 19 — Portet-sur-Garonne.
+            Les affrontements du Boxing Trophy 20 — garage Moteka, Fenouillet.
           </p>
         </div>
-        <div class="home-combats-soon" id="homeCombatsSoon">
-          <span class="soon-mark" aria-hidden="true">19</span>
+        <div class="home-combats-soon reveal" id="homeCombatsSoon">
+          <span class="soon-ring" aria-hidden="true"><b>20</b></span>
           <h3 class="home-combats-soon-title">Bientôt dévoilée</h3>
           <p class="home-combats-soon-text">La carte officielle sera publiée ici dès la fin des appariements.</p>
-          <a href="affiche.html" class="btn btn-outline btn-sm">Page programme</a>
+          <a href="affiche.html" class="btn btn-glass btn-sm">Page programme</a>
         </div>
         <div id="homeCombatsPublished" hidden>
           <div class="home-poster-wrap gala-poster-wrap reveal" id="homePosterWrap"></div>
           <p class="home-combats-cta reveal">
-            <a href="affiche.html" class="btn btn-outline">Voir en plein écran</a>
+            <a href="affiche.html" class="btn btn-glass">Voir en plein écran</a>
           </p>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════════════════ INFOS PRATIQUES ═══════════════════════ -->
+    <!-- ═══════════════════════ BILLETTERIE / INFOS ═══════════════════════ -->
     <section class="section infos" id="infos">
       <div class="container">
+        <div class="section-head section-head-center reveal">
+          <span class="section-kicker">07 — Billetterie &amp; infos</span>
+          <h2 class="section-title">Ta place <em>au bord du ring</em></h2>
+        </div>
+
         <div class="infos-layout">
-        <figure class="poster-frame reveal">
-          <button class="poster-btn" type="button" data-poster="image/gala/affiche-trophy-19.jpg" aria-label="Agrandir l'affiche officielle">
-            <img src="image/gala/affiche-trophy-19.jpg" alt="Affiche officielle du Boxing Trophy 19 — vendredi 13 novembre 2026 dès 19h, Boxing Center Portet-sur-Garonne" loading="lazy" width="1280" height="1600" />
-          </button>
-          <figcaption>
-            <span>L'affiche officielle</span>
-            <a href="image/gala/affiche-trophy-19.jpg" download="affiche-boxing-trophy-19.jpg">Télécharger</a>
-          </figcaption>
-        </figure>
-        <div class="infos-main">
-        <div class="section-head reveal">
-          <span class="section-kicker">Infos pratiques</span>
-          <h2 class="section-title">Le rendez-vous <em>du 13 novembre</em></h2>
-          <p class="section-desc infos-tagline">Une nouvelle salle. Un nouveau round.</p>
-        </div>
-        <div class="infos-grid reveal">
-          <div class="info-card">
-            <span class="info-label">Date</span>
-            <span class="info-val">13 novembre 2026</span>
-            <span class="info-sub">Vendredi soir</span>
+          <figure class="poster-frame reveal" data-tilt>
+            <button class="poster-btn" type="button" data-poster="image/trophy20/affiche-fight-furious.jpg" aria-label="Agrandir l'affiche officielle">
+              <img src="image/trophy20/affiche-fight-furious.jpg" alt="Affiche officielle FIGHT and Furious : week-end boxe et inauguration du garage Moteka du 11 au 13 décembre 2026, avec le Boxing Trophy 20 le samedi 12" loading="lazy" width="1122" height="1402" />
+              <span class="poster-glare" aria-hidden="true"></span>
+            </button>
+            <figcaption>
+              <span class="mono">Affiche officielle</span>
+              <a href="image/trophy20/affiche-fight-furious.jpg" download="affiche-fight-furious.jpg">Télécharger ↓</a>
+            </figcaption>
+          </figure>
+
+          <div class="infos-main">
+            <div class="ticket reveal" data-tilt>
+              <div class="ticket-main">
+                <div class="ticket-head">
+                  <img src="image/logo_boxing_center.png" alt="" class="ticket-logo" />
+                  <span class="mono">Admit one · Place public</span>
+                </div>
+                <p class="ticket-title">Boxing Trophy <b>20</b></p>
+                <dl class="ticket-grid">
+                  <div><dt>Date</dt><dd>Samedi 12.12.2026</dd></div>
+                  <div><dt>Portes</dt><dd>19h00</dd></div>
+                  <div><dt>Lieu</dt><dd>Garage Moteka</dd></div>
+                  <div><dt>Adresse</dt><dd>14 rue Seveso, Fenouillet</dd></div>
+                </dl>
+              </div>
+              <div class="ticket-stub">
+                <span class="ticket-price">10<small>€</small></span>
+                <span class="ticket-code" aria-hidden="true"></span>
+                <span class="mono ticket-no">N° 0020</span>
+              </div>
+            </div>
+
+            <div class="infos-actions reveal">
+              <a href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" class="btn btn-primary" target="_blank" rel="noopener">Réserver ma place</a>
+              <a href="https://www.google.com/maps/dir/?api=1&amp;destination=MOTEKA%2C%2014%20rue%20Seveso%2C%2031150%20Fenouillet" class="btn btn-glass" target="_blank" rel="noopener">Itinéraire</a>
+            </div>
+            <p class="infos-note reveal">Pack 3 jours FIGHT &amp; Furious : <strong>20 €</strong>. Paiement sécurisé, billet avec QR code envoyé par e-mail. Accès direct depuis la rocade.</p>
+
+            <ul class="program-list reveal">
+              <li>Combats de boxe anglaise</li>
+              <li>Combats de pied-poing</li>
+              <li>Inauguration du garage Moteka</li>
+              <li>Buvette &amp; stands partenaires</li>
+              <li>Photos &amp; vidéos professionnelles</li>
+            </ul>
           </div>
-          <div class="info-card">
-            <span class="info-label">Horaire</span>
-            <span class="info-val">19h00</span>
-            <span class="info-sub">Ouverture des portes</span>
-          </div>
-          <div class="info-card">
-            <span class="info-label">Lieu</span>
-            <span class="info-val">Boxing Center</span>
-            <span class="info-sub">Portet-sur-Garonne</span>
-          </div>
-          <div class="info-card">
-            <span class="info-label">Place public</span>
-            <span class="info-val">10 €</span>
-            <span class="info-sub">Spectateurs bienvenus</span>
-          </div>
-        </div>
-        <div class="program reveal">
-          <h3 class="program-title">Au programme de la soirée</h3>
-          <ul class="program-list">
-            <li><span>Combats de boxe anglaise</span></li>
-            <li><span>Combats de pied-poing</span> <span class="badge">Nouveau</span></li>
-            <li><span>Inauguration officielle de la nouvelle salle</span></li>
-            <li><span>Animations, buvette &amp; stands partenaires</span></li>
-            <li><span>Photos &amp; vidéos professionnelles</span></li>
-          </ul>
-        </div>
-        </div>
         </div>
       </div>
     </section>
 
     <!-- ═══════════════════════ LICENCE LOISIRS ═══════════════════════ -->
     <section class="section licence-section" id="licence">
-      <div class="container">
+      <div class="container licence-layout">
         <div class="section-head reveal">
-          <span class="section-kicker">Licence loisirs</span>
-          <h2 class="section-title">Régulariser sa <em>licence</em> 50&nbsp;€</h2>
+          <span class="section-kicker">08 — Licence loisirs</span>
+          <h2 class="section-title">Régulariser sa <em>licence</em></h2>
           <p class="section-desc licence-lead">
-            Cotisation licence loisirs FFBoxe ou FFKMDA pour le Boxing Trophy 19.
-            Paiement en une fois (50&nbsp;€), puis signature en ligne.
+            Cotisation licence loisirs FFBoxe ou FFKMDA pour le Boxing Trophy 20.
+            Paiement en une fois, puis signature en ligne.
             Les formulaires médicaux et la facture sont disponibles après signature.
-            Remise du dossier signé en salle au plus tard le <strong>11 novembre 2026</strong>.
+            Remise du dossier signé en salle au plus tard le <strong>9 décembre 2026</strong>.
           </p>
-        </div>
-
-        <div class="licence-steps reveal">
-          <ol class="licence-step-list">
-            <li><strong>1. Payer</strong> la cotisation de 50&nbsp;€, déposer une copie de pièce d’identité, puis signer en ligne.</li>
-            <li><strong>2. Télécharger</strong> le formulaire de licence et le certificat médical (après signature).</li>
-            <li><strong>3. Faire remplir</strong> et tamponner le dossier par votre médecin.</li>
-            <li><strong>4. Déposer</strong> le dossier signé + la copie d’identité au manager de n’importe quelle salle Boxing Center pour enregistrement fédéral.</li>
-          </ol>
-        </div>
-
-        <div class="licence-cta reveal">
-          <button type="button" class="btn btn-primary licence-pay-btn" id="licencePayBtn">
-            Payer ma licence — 50&nbsp;€
-          </button>
+          <div class="licence-cta">
+            <span class="licence-price">50&nbsp;€</span>
+            <button type="button" class="btn btn-primary licence-pay-btn" id="licencePayBtn">Payer ma licence</button>
+          </div>
           <p class="licence-deadline">
-            Sans régularisation avant le <strong>11 novembre 2026</strong>, l’inscription et le combat pourront être annulés.
+            Sans régularisation avant le <strong>9 décembre 2026</strong>, l’inscription et le combat pourront être annulés.
           </p>
         </div>
+
+        <ol class="licence-step-list reveal">
+          <li><b>Payer</b><span>La cotisation de 50&nbsp;€, déposer une copie de pièce d’identité, puis signer en ligne.</span></li>
+          <li><b>Télécharger</b><span>Le formulaire de licence et le certificat médical (après signature).</span></li>
+          <li><b>Faire remplir</b><span>Et tamponner le dossier par votre médecin.</span></li>
+          <li><b>Déposer</b><span>Le dossier signé et la copie d’identité au manager de n’importe quelle salle Boxing Center, pour l’enregistrement fédéral.</span></li>
+        </ol>
       </div>
     </section>
 
     <!-- ═══════════════════════ INSCRIPTION ═══════════════════════ -->
     <section class="section form-section" id="inscription">
-      <div class="form-bg" aria-hidden="true"><img src="image/gala/garde-casque-bleu.jpg" alt="" loading="lazy" /></div>
+      <div class="form-bg" aria-hidden="true"><img src="image/trophy20/gala-elites.jpg" alt="" loading="lazy" /></div>
       <div class="container form-layout">
         <aside class="form-aside reveal">
-          <span class="section-kicker section-tag" id="formDeadlineKicker">Clôture demain 12h</span>
+          <span class="section-kicker section-tag" id="formDeadlineKicker">09 — Inscription</span>
           <h2 class="section-title">Monte <em>sur le ring</em></h2>
           <p class="section-desc">
-            Inscris-toi au Boxing Trophy 19 · Boxe anglaise &amp; pied-poing.
-            Portet-sur-Garonne · 13 novembre · 19h.
+            Inscris-toi au Boxing Trophy 20 · Boxe anglaise &amp; pied-poing.
+            Garage Moteka, Fenouillet · samedi 12 décembre · 19h.
           </p>
-          <p class="form-deadline-line" id="formDeadlineLine">Les inscriptions se terminent demain à 12h.</p>
+          <p class="form-deadline-line" id="formDeadlineLine"></p>
           <ul class="form-checklist">
             <li>Débutants et intermédiaires</li>
             <li>Licence FFB / FFKMDA, ou engagement à prendre une licence loisir</li>
@@ -554,7 +597,7 @@
                   <div class="form-group">
                     <label class="form-checkbox-label">
                       <input type="checkbox" name="engagementLicence" id="engagementLicence" />
-                      Je m'engage à obtenir une licence loisir valide avant le 10/11/2026
+                      Je m'engage à obtenir une licence loisir valide avant le 09/12/2026
                     </label>
                     <div class="form-error" id="engagementLicence-error">Vous devez vous engager à obtenir une licence</div>
                   </div>
@@ -607,7 +650,7 @@
                 <div class="form-group">
                   <label class="form-checkbox-label">
                     <input type="checkbox" name="consentementRGPD" id="consentementRGPD" required />
-                    J'accepte que mes données soient traitées dans le cadre du Boxing Trophy 19, conformément au RGPD.
+                    J'accepte que mes données soient traitées dans le cadre du Boxing Trophy 20, conformément au RGPD.
                   </label>
                   <div class="form-error" id="consentementRGPD-error">Vous devez accepter les conditions</div>
                 </div>
@@ -621,14 +664,14 @@
             <div class="registrations-closed" id="registrationsClosed" hidden>
               <span class="state-mark" aria-hidden="true">✕</span>
               <h3>Inscriptions fermées</h3>
-              <p>Rendez-vous sur place le <strong>13 novembre</strong> à partir de <strong>19h</strong> à Portet-sur-Garonne.</p>
-              <a href="#carte-combats" class="btn btn-outline btn-sm">Voir le programme</a>
+              <p>Rendez-vous sur place le <strong>samedi 12 décembre</strong> à partir de <strong>19h</strong> au garage Moteka, Fenouillet.</p>
+              <a href="#carte-combats" class="btn btn-glass btn-sm">Voir le programme</a>
             </div>
 
             <div class="form-success" id="formSuccess">
               <span class="state-mark state-mark-ok" aria-hidden="true">✓</span>
               <h3>Inscription confirmée&nbsp;!</h3>
-              <p>Merci pour votre inscription au Boxing Trophy 19.<br/>Vous serez contacté(e) prochainement. Préparez-vous&nbsp;!</p>
+              <p>Merci pour votre inscription au Boxing Trophy 20.<br/>Vous serez contacté(e) prochainement. Préparez-vous&nbsp;!</p>
             </div>
           </div>
         </div>
@@ -643,15 +686,15 @@
       <div class="footer-brand">
         <div class="footer-logo-block">
           <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" />
-          <span class="nl-divider" aria-hidden="true"></span>
-          <span class="nl-edition">Trophy <strong>19</strong></span>
+          <span class="footer-x" aria-hidden="true">×</span>
+          <img src="image/trophy20/moteka-blanc.svg" alt="Moteka" class="footer-moteka" />
         </div>
-        <p>L'ouverture de la nouvelle salle à <strong>Portet-sur-Garonne</strong>. Boxe anglaise &amp; pied-poing. 13 novembre, 19h.</p>
+        <p>Le samedi du week-end <strong>FIGHT &amp; Furious</strong>, au garage Moteka à Fenouillet. Boxe anglaise &amp; pied-poing. 12 décembre, 19h.</p>
         <a href="#inscription" class="btn btn-primary btn-sm footer-cta nav-cta">S'inscrire</a>
       </div>
       <div class="footer-col">
         <h5>Navigation</h5>
-        <a href="#event">L'événement</a>
+        <a href="#event">Le week-end</a>
         <a href="#disciplines">Disciplines</a>
         <a href="#galerie">Galerie</a>
         <a href="#carte-combats">Programme</a>
@@ -660,14 +703,15 @@
       </div>
       <div class="footer-col">
         <h5>Informations</h5>
-        <span>Boxing Center, Portet-sur-Garonne</span>
-        <span>Vendredi 13 novembre 2026</span>
+        <span>Garage Moteka, 14 rue Seveso, 31150 Fenouillet</span>
+        <span>Samedi 12 décembre 2026</span>
         <span>À partir de 19h</span>
         <span>Place public : 10 €</span>
       </div>
     </div>
+    <p class="footer-giant" aria-hidden="true">Trophy 20</p>
     <div class="container footer-bottom">
-      <p>© 2026 Boxing Trophy 19 — Tous droits réservés</p>
+      <p>© 2026 Boxing Trophy 20 — Tous droits réservés</p>
       <a href="#">Politique de confidentialité &amp; RGPD</a>
     </div>
     <p class="ai-dev-credit" aria-hidden="true">chef equipe dev : <a href="https://fr.linkedin.com/in/germain-raphael-angoula-onambele-a6b858395" rel="noopener noreferrer">Angoula Onambele Germain Raphael</a> · dev : mbosseu brad bruel</p>
@@ -690,9 +734,10 @@
   <script src="published-matches.js"></script>
   <script src="registration-gate.js"></script>
   <script src="home-combats.js"></script>
-  <script src="app.js?v=7"></script>
+  <script src="app.js?v=8"></script>
   <script src="gallery.js?v=2"></script>
   <script src="film.js?v=3"></script>
+  <script src="fx.js?v=4"></script>
   <script>
     (function () {
       var btn = document.getElementById('licencePayBtn');

@@ -60,7 +60,7 @@
     var desc = section.querySelector('.section-desc');
     if (desc) {
       desc.textContent =
-        'Les inscriptions au Boxing Trophy 19 sont closes. Rendez-vous sur place à la date officielle.';
+        'Les inscriptions au Boxing Trophy 20 sont closes. Rendez-vous le samedi 12 décembre au garage Moteka, Fenouillet.';
     }
 
     var steps = section.querySelector('.form-steps');
@@ -90,7 +90,7 @@
     var desc = section.querySelector('.section-desc');
     if (desc) {
       desc.textContent =
-        'Remplis le formulaire ci-dessous pour t\'inscrire au Boxing Trophy 19. Boxe Anglaise & Pied-Poing.';
+        'Remplis le formulaire ci-dessous pour t\'inscrire au Boxing Trophy 20. Boxe anglaise & pied-poing, samedi 12 décembre au garage Moteka.';
     }
 
     var steps = section.querySelector('.form-steps');
