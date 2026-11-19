@@ -335,6 +335,11 @@ sup { font-size: .55em; line-height: 0; }
 .form-success p, .registrations-closed p { margin: 0 0 22px; color: var(--g-text-2); line-height: 1.6; }
 .registrations-closed strong { color: var(--g-text); }
 
+/* ─────────── FIGHT & Furious (liens vers le site de l'événement) ─────────── */
+.g-ff { display: flex; justify-content: space-between; align-items: center; gap: 24px 40px; flex-wrap: wrap; border-color: rgba(225,29,46,.55); box-shadow: 0 30px 80px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.25), inset 4px 0 0 #e11d2e; }
+.g-ff .g-title { margin-bottom: 12px; }
+.g-ff .g-actions { margin-top: 0; }
+
 /* ─────────── Pied de page ─────────── */
 .g-footer { position: relative; z-index: 10; width: min(1180px, calc(100% - 32px)); margin: 40px auto 0; padding: 40px 0 46px; text-align: center; border-top: 1px solid var(--g-line); }
 .g-footer-logo { width: min(420px, 80%); height: auto; margin: 0 auto 20px; display: block; }
