@@ -126,10 +126,10 @@ function initAnchorScroll() {
 }
 
 /* ============================================
-   COUNTDOWN — Target: 5 June 2026, 19:00 CET
+   COUNTDOWN — Boxing Trophy 20 : samedi 12 décembre 2026, 19:00 (Paris)
    ============================================ */
 function initCountdown() {
-  const targetDate = new Date('2026-11-13T19:00:00+01:00').getTime(); // Boxing Trophy 19 — 13 Novembre, Portet-sur-Garonne
+  const targetDate = new Date('2026-12-12T19:00:00+01:00').getTime(); // Boxing Trophy 20 — garage Moteka, Fenouillet
   const countdownEl = document.getElementById('countdown');
   const daysEl = document.getElementById('cd-days');
   const hoursEl = document.getElementById('cd-hours');
@@ -201,10 +201,10 @@ function initCountdown() {
 }
 
 /* ============================================
-   INSCRIPTIONS — clôture le 5 novembre 2026 à 12h (Paris)
+   INSCRIPTIONS — clôture le 4 décembre 2026 à 12h (Paris)
    ============================================ */
 function initRegistrationDeadline() {
-  const deadline = new Date('2026-11-05T12:00:00+01:00');
+  const deadline = new Date('2026-12-04T12:00:00+01:00');
   const urgency = document.getElementById('regDeadline');
   const title = document.getElementById('regDeadlineTitle');
   const kicker = document.getElementById('formDeadlineKicker');
@@ -228,7 +228,7 @@ function initRegistrationDeadline() {
     if (parisDay(now) === parisDay(deadline)) return "aujourd'hui";
     const ahead = new Date(now.getTime() + 24 * 60 * 60 * 1000);
     if (parisDay(ahead) === parisDay(deadline)) return 'demain';
-    return 'le 5 novembre';
+    return 'le 4 décembre';
   }
 
   function pad(n) {
@@ -268,6 +268,10 @@ function initRegistrationDeadline() {
       line.hidden = false;
       line.textContent = 'Les inscriptions se terminent ' + when + ' à 12h.';
     }
+
+    // Le chrono n'apparaît que dans les 48 dernières heures
+    const clock = document.getElementById('regDeadlineClock');
+    if (clock) clock.hidden = diff > 48 * 3600 * 1000;
 
     const totalSec = Math.floor(diff / 1000);
     if (hoursEl) hoursEl.textContent = pad(Math.floor(totalSec / 3600));

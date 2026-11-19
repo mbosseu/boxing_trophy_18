@@ -113,27 +113,7 @@ html,body{overflow-x:hidden}
 .hint-cue::after{content:"";position:absolute;left:0;top:0;width:1px;height:6px;background:var(--gold-2);animation:cue-fall 2.4s cubic-bezier(.6,0,.3,1) infinite}
 @keyframes cue-fall{0%{transform:translateY(-6px)}60%,100%{transform:translateY(14px)}}
 
-/* ── Contenu après l'ouverture ── */
-main{position:relative;z-index:10;margin-top:100vh;margin-top:100svh}
-.panel{width:min(1180px,calc(100% - 32px));margin:0 auto 24px;border-radius:28px;padding:clamp(28px,5vw,56px);background:linear-gradient(165deg,rgba(255,255,255,.17),rgba(255,255,255,.06) 38%,rgba(20,14,16,.22));-webkit-backdrop-filter:blur(16px) saturate(190%) brightness(.92);backdrop-filter:blur(16px) saturate(190%) brightness(.92);border:1px solid rgba(255,255,255,.24);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.7)}
-.cap{display:flex;align-items:center;gap:12px;margin:0;font:500 10px/1.4 "Geist Mono",monospace;letter-spacing:.26em;text-transform:uppercase;color:var(--mist)}
-.cap::before{content:"";width:26px;height:1px;background:var(--gold-2)}
-.panel h2{margin:12px 0 18px;font:600 clamp(30px,4.4vw,52px)/1 Geist,sans-serif;letter-spacing:-.035em;text-wrap:balance}
-.panel p{margin:0 0 14px;font:400 15.5px/1.62 Geist,sans-serif;color:rgba(246,250,249,.74);max-width:62ch}
-.panel p b{color:var(--white);font-weight:600}
-.panel .quote{font:600 19px/1.42 "Lexend Giga","Archivo Black",sans-serif;color:var(--gold-2)}
-.film{position:relative;overflow:hidden;border-radius:20px;margin-top:22px;aspect-ratio:16/9;max-height:60vh;width:100%}
-.film video{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.25) brightness(.85)}
-.tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
-.ticket{border-radius:20px;padding:24px;display:grid;gap:10px;align-content:start;background:rgba(10,7,7,.35);border:1px solid rgba(255,255,255,.14)}
-.ticket.vip{border-color:rgba(255,197,112,.6)}
-.ticket h3{margin:0;font:600 22px/1.1 Geist,sans-serif;letter-spacing:-.02em}
-.price{font:400 26px/1.1 Boldonse,sans-serif;color:var(--gold-2)}
-.ticket ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;color:rgba(246,250,249,.74);font-size:14.5px}
-.btn{justify-self:start;display:inline-flex;align-items:center;gap:8px;margin-top:6px;padding:13px 20px;border-radius:999px;font:500 11px/1 "Geist Mono",monospace;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#1a0f08;background:linear-gradient(90deg,var(--gold-1),var(--gold-2))}
-.btn.ghost{color:var(--white);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22)}
-.tbd{border-bottom:1px dashed var(--gold-2)}
-footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;font:400 11px/1.6 "Geist Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mist-2)}
+/* Le contenu après l'ouverture est stylé dans gala.css */
 
 @media (max-width:760px),(max-aspect-ratio:1/1){
   .top{padding:14px 16px 0}
@@ -145,10 +125,14 @@ footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;fon
   .ht-k{font-size:9px;gap:12px;letter-spacing:.7em}
   .ht-k i{width:12vw}
   .hint{bottom:calc(22px + env(safe-area-inset-bottom,0px));font-size:10px}
-  .tickets{grid-template-columns:1fr}
 }
 @media (prefers-reduced-motion:reduce){.ch-face,.hint-cue::after{animation:none}}
 </style>
+<link rel="stylesheet" href="poster.css?v=8">
+<link rel="stylesheet" href="gala.css?v=1">
+<link rel="icon" type="image/png" href="image/logo_boxing_center.png">
+<meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
+<meta name="theme-color" content="#0a0807">
 </head>
 <body class="lock">
 
@@ -186,12 +170,444 @@ footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;fon
   </div>
 </div>
 
-<header class="top">
-  <a class="logo" href="#"><img src="image/intro/logo.png" alt="Boxing Center"></a>
-  <div class="brand"><p>Boxing Center · Édition 2027</p></div>
-  <button class="menu" type="button" aria-label="Menu"><span></span></button>
+<header class="top" id="navbar">
+  <span aria-hidden="true"></span>
+  <div class="brand"><p>Samedi 12 décembre 2026 · Fenouillet</p></div>
+  <button class="menu" id="navToggle" type="button" aria-label="Ouvrir le menu" aria-controls="navLinks"><span></span></button>
 </header>
+
+<!-- Menu plein écran (ouvert par le bouton en haut à droite) -->
+<nav class="gnav" id="navLinks" aria-label="Navigation principale">
+  <div class="gnav-inner">
+    <a href="#infos-cles"><small>01</small>La soirée</a>
+    <a href="#event"><small>02</small>Le week-end</a>
+    <a href="#disciplines"><small>03</small>Disciplines</a>
+    <a href="#galerie"><small>04</small>Galerie</a>
+    <a href="#carte-combats" id="navCarteCombats"><small>05</small>Carte des combats</a>
+    <a href="#infos"><small>06</small>Billetterie</a>
+    <a href="#licence"><small>07</small>Licence</a>
+    <a href="#inscription" class="nav-cta">S'inscrire au combat</a>
+  </div>
+  <p class="gnav-foot">Samedi 12 décembre 2026 · 19h · Garage Moteka, Fenouillet</p>
+</nav>
+
+<p class="hint" aria-hidden="true"><span class="hint-cue"></span>Découvrir la soirée</p>
 <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Boxing Trophy 20, la soirée de gala</h1>
+
+<!-- ═════════════ CONTENU (défile par-dessus la scène de l'intro) ═════════════ -->
+<main class="g-main">
+
+  <!-- 01 · Infos clés -->
+  <section class="g-panel g-key reveal" id="infos-cles">
+    <div class="g-key-head">
+      <p class="g-cap">La coupe de gala · 20<sup>e</sup> édition</p>
+      <h2 class="g-title">Boxing Trophy <span class="g-gold">20</span></h2>
+      <p class="g-lead">Le samedi du week-end <b>FIGHT &amp; Furious</b> : un ring monté au cœur du garage Moteka, deux disciplines, une salle pleine pour porter chaque combattant.</p>
+    </div>
+    <dl class="g-facts">
+      <div><dt>Date</dt><dd>Samedi 12 déc. 2026</dd></div>
+      <div><dt>Portes</dt><dd>19h00</dd></div>
+      <div><dt>Lieu</dt><dd>Garage Moteka</dd><dd class="g-sub">14 rue Seveso, Fenouillet</dd></div>
+      <div><dt>Place public</dt><dd>10 €</dd></div>
+    </dl>
+    <div class="g-key-foot">
+      <div id="countdown" class="countdown" aria-label="Compte à rebours avant l'événement">
+        <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
+        <span class="countdown-sep" aria-hidden="true">:</span>
+        <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
+        <span class="countdown-sep" aria-hidden="true">:</span>
+        <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
+        <div class="countdown-finished-msg">C'est ce soir&nbsp;!</div>
+      </div>
+      <div class="g-actions hero-cta-group">
+        <a href="#inscription" class="btn btn-primary btn-urgent">S'inscrire au combat</a>
+        <a href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" class="btn btn-ghost" target="_blank" rel="noopener">Réserver ma place · 10 €</a>
+      </div>
+    </div>
+    <p class="reg-urgency" id="regDeadline">
+      <span class="reg-urgency-pulse" aria-hidden="true"></span>
+      <span class="reg-urgency-copy">
+        <strong id="regDeadlineTitle">Inscriptions ouvertes</strong>
+        <span class="reg-urgency-clock" id="regDeadlineClock" aria-hidden="true"><b id="rd-hours">00</b><span>:</span><b id="rd-min">00</b><span>:</span><b id="rd-sec">00</b></span>
+      </span>
+    </p>
+  </section>
+
+  <!-- 02 · Le week-end -->
+  <section class="g-panel" id="event">
+    <div class="g-head reveal">
+      <p class="g-cap">Le week-end FIGHT &amp; Furious</p>
+      <h2 class="g-title">Trois soirs, <span class="g-gold">un seul ring</span></h2>
+      <p class="g-lead">Le Boxing Center inaugure le garage Moteka à Fenouillet avec trois jours de boxe. Le Trophy, c'est le samedi.</p>
+    </div>
+    <div class="g-nights">
+      <article class="g-night reveal">
+        <img src="image/trophy20/gala-elites.jpg" alt="Boxeur portant un direct pendant un gala" loading="lazy">
+        <div><span class="g-day">Ven. 11 déc. · 19h</span><h3>Gala Élites</h3><p>Les meilleurs amateurs sous les projecteurs.</p></div>
+      </article>
+      <article class="g-night g-night--on reveal">
+        <img src="image/trophy20/heros-garage.jpg" alt="Boxeur en garde dans l'atelier du garage Moteka" loading="lazy">
+        <div><span class="g-day">Sam. 12 déc. · 19h</span><h3>Boxing Trophy 20</h3><p>Boxe anglaise et pied-poing, débutants et intermédiaires.</p><span class="g-badge">Notre soirée</span></div>
+      </article>
+      <article class="g-night reveal">
+        <img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy">
+        <div><span class="g-day">Dim. 13 déc. · 11h</span><h3>Boxe éducative</h3><p>La relève monte sur le ring.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 03 · Disciplines -->
+  <section class="g-panel" id="disciplines">
+    <div class="g-head reveal">
+      <p class="g-cap">Les disciplines</p>
+      <h2 class="g-title">Coin rouge <span class="g-gold">contre</span> coin bleu</h2>
+    </div>
+    <div class="g-versus">
+      <article class="g-corner g-corner--red reveal">
+        <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy">
+        <div><span class="g-day">Discipline 01</span><h3>Boxe anglaise</h3><p>Le noble art. Technique, puissance et stratégie : les poings uniquement, dans les règles classiques.</p></div>
+      </article>
+      <span class="g-vs" aria-hidden="true">VS</span>
+      <article class="g-corner g-corner--blue reveal">
+        <img src="image/trophy20/pied-poing-kick.jpg" alt="Combattant portant un high kick" loading="lazy">
+        <div><span class="g-day">Discipline 02</span><h3>Pied-poing</h3><p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 04 · Galerie -->
+  <section class="g-panel" id="galerie">
+    <div class="g-head g-head--split reveal">
+      <div><p class="g-cap">Galerie</p><h2 class="g-title">L'intensité, <span class="g-gold">en images</span></h2></div>
+      <p class="g-lead">Gardes hautes, échanges, verdict : quelques instants des éditions précédentes.</p>
+    </div>
+    <div class="gallery-grid reveal" data-gallery>
+      <button class="g-item g-hero" type="button" data-full="image/gala/victoire.jpg" aria-label="Agrandir : la victoire"><img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/garde-casque-rouge.jpg" aria-label="Agrandir : garde haute, casque rouge"><img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/direct.jpg" aria-label="Agrandir : le direct"><img src="image/gala/direct.jpg" alt="Boxeur au casque rouge lançant un direct" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/esquive-arbitre.jpg" aria-label="Agrandir : esquive sous l'œil de l'arbitre"><img src="image/gala/esquive-arbitre.jpg" alt="Boxeur esquivant un coup sous l'œil de l'arbitre" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/garde-casque-bleu.jpg" aria-label="Agrandir : garde, casque bleu"><img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/accolade.jpg" aria-label="Agrandir : l'accolade"><img src="image/gala/accolade.jpg" alt="Deux combattants se donnent l'accolade sur le ring" loading="lazy"></button>
+      <button class="g-item g-band" type="button" data-full="image/gala/echange-union-jack.jpg" aria-label="Agrandir : l'échange"><img src="image/gala/echange-union-jack.jpg" alt="Échange sur le ring devant un drapeau britannique" loading="lazy"></button>
+    </div>
+  </section>
+
+  <!-- 05 · Vidéo Trophy 18 -->
+  <section class="g-panel film-section" id="edition-18">
+    <canvas class="film-ambient" width="36" height="64" aria-hidden="true"></canvas>
+    <div class="g-head g-head--center reveal">
+      <p class="g-cap">Dans le rétro</p>
+      <h2 class="g-title">Revivez <span class="g-gold">le Trophy 18</span></h2>
+    </div>
+    <div class="film-stage">
+      <div class="film-marquee" aria-hidden="true">
+        <div class="fm-row fm-row-a" data-marquee="-1"><span>Trophy 18 — St Cyprien — 5 juin 2026 — </span><span>Trophy 18 — St Cyprien — 5 juin 2026 — </span></div>
+        <div class="fm-row fm-row-b" data-marquee="1"><span>Salle comble — Combats engagés — </span><span>Salle comble — Combats engagés — </span></div>
+      </div>
+      <figure class="film" data-film data-clips="videos/gala/clip-1.mp4,videos/gala/clip-2.mp4,videos/gala/clip-3.mp4,videos/gala/clip-4.mp4,videos/gala/clip-5.mp4,videos/gala/clip-6.mp4">
+        <div class="film-tilt">
+          <div class="film-frame">
+            <video class="film-video is-active" muted playsinline preload="metadata" aria-label="Images de la soirée du Boxing Trophy 18"></video>
+            <video class="film-video" muted playsinline preload="none" aria-hidden="true"></video>
+            <div class="film-shade" aria-hidden="true"></div>
+            <div class="film-top" aria-hidden="true">
+              <span class="film-tag"><span class="film-dot"></span>Trophy 18</span>
+              <span class="film-time"><span data-film-time>0:00</span><span class="film-time-sep">/</span><span data-film-total>1:27</span></span>
+            </div>
+            <button class="film-toggle" type="button" data-film-toggle aria-label="Lire la vidéo"><span class="film-toggle-icon" aria-hidden="true"></span></button>
+            <div class="film-bottom">
+              <div class="film-progress" data-film-progress aria-hidden="true"></div>
+              <button class="film-mute" type="button" data-film-sound aria-pressed="false" aria-label="Activer le son">
+                <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6" fill="none"/></svg>
+                <svg class="icon-sound" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <span class="film-chip film-chip-1"><small>Date</small>5 juin 2026</span>
+        <span class="film-chip film-chip-2"><small>Lieu</small>Boxing Center St Cyprien</span>
+        <span class="film-chip film-chip-3"><small>Discipline</small>Boxe anglaise</span>
+      </figure>
+    </div>
+  </section>
+
+  <!-- 06 · Expérience -->
+  <section class="g-panel" id="concept">
+    <div class="g-head reveal">
+      <p class="g-cap">L'expérience combattant</p>
+      <h2 class="g-title">Traité comme <span class="g-gold">un champion</span></h2>
+    </div>
+    <ol class="g-exp">
+      <li class="reveal"><h3>Ring professionnel</h3><p>Un vrai ring au milieu de l'atelier, sous les projecteurs.</p></li>
+      <li class="reveal"><h3>Encadrement pro</h3><p>Entraîneurs certifiés et arbitre expérimenté : votre sécurité passe avant tout.</p></li>
+      <li class="reveal"><h3>Appariement juste</h3><p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p></li>
+      <li class="reveal"><h3>Mise en lumière</h3><p>Photos et vidéos professionnelles, et votre nom sur la carte officielle.</p></li>
+    </ol>
+  </section>
+
+  <!-- 07 · Carte des combats -->
+  <section class="g-panel" id="carte-combats">
+    <div class="g-head g-head--center reveal">
+      <p class="g-cap">Programme officiel</p>
+      <h2 class="g-title">La carte <span class="g-gold">des combats</span></h2>
+      <p class="g-lead section-desc" id="homeCombatsDesc">Les affrontements du Boxing Trophy 20 — garage Moteka, Fenouillet.</p>
+    </div>
+    <div class="g-soon reveal" id="homeCombatsSoon">
+      <img src="image/intro/lk-trophy.webp" alt="" class="g-soon-cup" loading="lazy">
+      <h3>Bientôt dévoilée</h3>
+      <p>La carte officielle sera publiée ici dès la fin des appariements.</p>
+      <a href="affiche.html" class="btn btn-ghost">Page programme</a>
+    </div>
+    <div id="homeCombatsPublished" hidden>
+      <div class="home-poster-wrap gala-poster-wrap" id="homePosterWrap"></div>
+      <p class="g-center"><a href="affiche.html" class="btn btn-ghost">Voir en plein écran</a></p>
+    </div>
+  </section>
+
+  <!-- 08 · Billetterie -->
+  <section class="g-panel" id="infos">
+    <div class="g-tickets">
+      <figure class="g-poster reveal">
+        <button class="g-poster-btn" type="button" data-poster="image/trophy20/affiche-trophy-20.jpg" aria-label="Agrandir l'affiche officielle">
+          <img src="image/trophy20/affiche-trophy-20.jpg" alt="Affiche officielle du Boxing Trophy 20 : FIGHT and Furious, inauguration du garage Moteka. Boxe anglaise et boxe pieds-poings, samedi 12 décembre 2026 dès 19h" loading="lazy" width="1122" height="1402">
+        </button>
+        <figcaption><span>Affiche officielle</span><a href="image/trophy20/affiche-trophy-20.jpg" download="affiche-boxing-trophy-20.jpg">Télécharger</a></figcaption>
+      </figure>
+      <div class="reveal">
+        <p class="g-cap">Billetterie</p>
+        <h2 class="g-title">Ta place <span class="g-gold">au bord du ring</span></h2>
+        <div class="g-ticket">
+          <div class="g-ticket-main">
+            <p class="g-ticket-k">Admit one · Place public</p>
+            <p class="g-ticket-t">Boxing Trophy <b>20</b></p>
+            <dl>
+              <div><dt>Date</dt><dd>Sam. 12.12.2026</dd></div>
+              <div><dt>Portes</dt><dd>19h00</dd></div>
+              <div><dt>Lieu</dt><dd>Garage Moteka</dd></div>
+              <div><dt>Adresse</dt><dd>14 rue Seveso, Fenouillet</dd></div>
+            </dl>
+          </div>
+          <div class="g-ticket-stub"><span class="g-ticket-price">10<small>€</small></span><span class="g-ticket-code" aria-hidden="true"></span></div>
+        </div>
+        <div class="g-actions">
+          <a href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" class="btn btn-primary" target="_blank" rel="noopener">Réserver ma place</a>
+          <a href="https://www.google.com/maps/dir/?api=1&amp;destination=MOTEKA%2C%2014%20rue%20Seveso%2C%2031150%20Fenouillet" class="btn btn-ghost" target="_blank" rel="noopener">Itinéraire</a>
+        </div>
+        <p class="g-note">Pack 3 jours FIGHT &amp; Furious : <b>20 €</b>. Paiement sécurisé, billet avec QR code envoyé par e-mail. Accès direct depuis la rocade.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 · Licence loisirs -->
+  <section class="g-panel" id="licence">
+    <div class="g-licence">
+      <div class="reveal">
+        <p class="g-cap">Licence loisirs</p>
+        <h2 class="g-title">Régulariser <span class="g-gold">sa licence</span></h2>
+        <p class="g-lead">Cotisation licence loisirs FFBoxe ou FFKMDA pour le Boxing Trophy 20. Paiement en une fois, puis signature en ligne. Les formulaires médicaux et la facture sont disponibles après signature. Remise du dossier signé en salle au plus tard le <b>9 décembre 2026</b>.</p>
+        <div class="g-actions">
+          <span class="g-price">50 €</span>
+          <button type="button" class="btn btn-primary" id="licencePayBtn">Payer ma licence</button>
+        </div>
+        <p class="g-note">Sans régularisation avant le <b>9 décembre 2026</b>, l’inscription et le combat pourront être annulés.</p>
+      </div>
+      <ol class="g-steps reveal">
+        <li><b>Payer</b><span>La cotisation de 50 €, déposer une copie de pièce d’identité, puis signer en ligne.</span></li>
+        <li><b>Télécharger</b><span>Le formulaire de licence et le certificat médical (après signature).</span></li>
+        <li><b>Faire remplir</b><span>Et tamponner le dossier par votre médecin.</span></li>
+        <li><b>Déposer</b><span>Le dossier signé et la copie d’identité au manager de n’importe quelle salle Boxing Center, pour l’enregistrement fédéral.</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 10 · Inscription -->
+  <section class="g-panel form-section" id="inscription">
+    <div class="form-layout">
+      <aside class="form-aside reveal">
+        <p class="g-cap section-tag" id="formDeadlineKicker">Inscription</p>
+        <h2 class="g-title">Monte <span class="g-gold">sur le ring</span></h2>
+        <p class="g-lead section-desc">Inscris-toi au Boxing Trophy 20 · Boxe anglaise &amp; pied-poing. Garage Moteka, Fenouillet · samedi 12 décembre · 19h.</p>
+        <p class="form-deadline-line" id="formDeadlineLine"></p>
+        <ul class="form-checklist">
+          <li>Débutants et intermédiaires</li>
+          <li>Licence FFB / FFKMDA, ou engagement à prendre une licence loisir</li>
+          <li>Appariement par sexe, poids et niveau</li>
+          <li>Ta photo sur l'affiche officielle (optionnel)</li>
+        </ul>
+      </aside>
+
+      <div class="form-container reveal">
+        <div class="form-steps">
+          <div class="step-indicator active" data-step="1"><div class="step-number">1</div><span class="step-label">Identité</span></div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="2"><div class="step-number">2</div><span class="step-label">Sportif</span></div>
+          <div class="step-connector"></div>
+          <div class="step-indicator" data-step="3"><div class="step-number">3</div><span class="step-label">Finalisation</span></div>
+        </div>
+
+        <div class="form-card">
+          <form id="registrationForm" novalidate>
+            <div class="form-step active" data-step="1">
+              <h3 class="form-step-title">Identité</h3>
+              <p class="form-step-desc">Vos informations personnelles</p>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="nom">Nom <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="nom" name="nom" placeholder="Votre nom" autocomplete="family-name" required>
+                  <div class="form-error" id="nom-error">Veuillez saisir votre nom</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="prenom">Prénom <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Votre prénom" autocomplete="given-name" required>
+                  <div class="form-error" id="prenom-error">Veuillez saisir votre prénom</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="dateNaissance">Date de naissance <span class="required">*</span></label>
+                  <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" autocomplete="bday" required>
+                  <div class="form-error" id="dateNaissance-error">Veuillez saisir votre date de naissance</div>
+                </div>
+                <div class="form-group">
+                  <span class="form-label">Sexe <span class="required">*</span></span>
+                  <div class="form-radio-group">
+                    <label class="form-radio-label male-corner"><input type="radio" name="sexe" value="Homme" required><span class="radio-card-content"><span class="radio-card-title">Homme</span><span class="radio-card-badge">Coin rouge</span></span></label>
+                    <label class="form-radio-label female-corner"><input type="radio" name="sexe" value="Femme" required><span class="radio-card-content"><span class="radio-card-title">Femme</span><span class="radio-card-badge">Coin bleu</span></span></label>
+                  </div>
+                  <div class="form-error" id="sexe-error">Veuillez sélectionner votre sexe</div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="email">Adresse e-mail <span class="required">*</span></label>
+                  <input type="email" class="form-input" id="email" name="email" placeholder="exemple@mail.com" autocomplete="email" required>
+                  <div class="form-error" id="email-error">Veuillez saisir une adresse e-mail valide</div>
+                  <div class="form-error" id="email-duplicate-error">Cette adresse e-mail est déjà inscrite</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="telephone">Téléphone <span class="required">*</span></label>
+                  <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="06 12 34 56 78" autocomplete="tel" required>
+                  <div class="form-error" id="telephone-error">Veuillez saisir un numéro de téléphone valide</div>
+                  <div class="form-error" id="telephone-duplicate-error">Ce numéro de téléphone est déjà inscrit</div>
+                </div>
+              </div>
+              <div class="form-nav"><div></div><button type="button" class="btn btn-next" data-next="2">Suivant →</button></div>
+            </div>
+
+            <div class="form-step" data-step="2">
+              <h3 class="form-step-title">Informations sportives</h3>
+              <p class="form-step-desc">Votre profil de combattant</p>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="niveau">Niveau <span class="required">*</span></label>
+                  <select class="form-select" id="niveau" name="niveau" required><option value="">Sélectionner</option><option value="Débutant">Débutant</option><option value="Intermédiaire">Intermédiaire</option></select>
+                  <div class="form-error" id="niveau-error">Veuillez sélectionner votre niveau</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="discipline">Discipline <span class="required">*</span></label>
+                  <select class="form-select" id="discipline" name="discipline" required><option value="">Sélectionner</option><option value="Boxe Anglaise">Boxe Anglaise</option><option value="Pied-Poing">Pied-Poing</option></select>
+                  <div class="form-error" id="discipline-error">Veuillez sélectionner votre discipline</div>
+                </div>
+              </div>
+              <div class="form-group">
+                <span class="form-label">Licencié FFB / FFKMDA <span class="required">*</span></span>
+                <div class="form-radio-group">
+                  <label class="form-radio-label yes-license"><input type="radio" name="licencie" value="Oui" required><span class="radio-card-content"><span class="radio-card-title">Oui</span><span class="radio-card-desc">Licencié actif</span></span></label>
+                  <label class="form-radio-label no-license"><input type="radio" name="licencie" value="Non" required><span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Non licencié</span></span></label>
+                </div>
+                <div class="form-error" id="licencie-error">Veuillez indiquer si vous êtes licencié</div>
+              </div>
+              <div class="conditional-field" id="licenceField">
+                <div class="form-group">
+                  <label class="form-label" for="numeroLicence">Numéro de licence <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="numeroLicence" name="numeroLicence" placeholder="Votre numéro de licence">
+                  <div class="form-error" id="numeroLicence-error">Veuillez saisir votre numéro de licence</div>
+                </div>
+              </div>
+              <div class="conditional-field" id="engagementField">
+                <div class="form-group">
+                  <label class="form-checkbox-label"><input type="checkbox" name="engagementLicence" id="engagementLicence"> Je m'engage à obtenir une licence loisir valide avant le 09/12/2026</label>
+                  <div class="form-error" id="engagementLicence-error">Vous devez vous engager à obtenir une licence</div>
+                </div>
+              </div>
+              <div class="form-nav"><button type="button" class="btn btn-prev" data-prev="1">← Retour</button><button type="button" class="btn btn-next" data-next="3">Suivant →</button></div>
+            </div>
+
+            <div class="form-step" data-step="3">
+              <h3 class="form-step-title">Informations complémentaires</h3>
+              <p class="form-step-desc">Dernières informations pour finaliser</p>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="club">Club d'entraînement <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="club" name="club" placeholder="Nom de votre club" required>
+                  <div class="form-error" id="club-error">Veuillez saisir votre club</div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="categoriePoids">Catégorie de poids <span class="required">*</span></label>
+                  <select class="form-select" id="categoriePoids" name="categoriePoids" required>
+                    <option value="">Sélectionner</option><option value="-60kg">Moins de 60 kg</option><option value="-64kg">60 – 64 kg</option><option value="-69kg">64 – 69 kg</option><option value="-75kg">69 – 75 kg</option><option value="-81kg">75 – 81 kg</option><option value="-91kg">81 – 91 kg</option><option value="+91kg">Plus de 91 kg</option>
+                  </select>
+                  <div class="form-error" id="categoriePoids-error">Veuillez sélectionner une catégorie</div>
+                </div>
+              </div>
+              <div class="form-group form-group-photo-reg">
+                <span class="form-label">Photo pour l'affiche officielle</span>
+                <p class="form-hint-photo">JPG ou PNG — visible sur la carte des combats. Optionnel mais recommandé.</p>
+                <div class="reg-photo-row">
+                  <div id="regPhotoPreview" class="reg-photo-preview" aria-hidden="true"></div>
+                  <div class="reg-photo-actions">
+                    <input type="file" id="regPhotoFile" class="visually-hidden" accept="image/jpeg,image/png,image/webp">
+                    <input type="hidden" id="regPhotoUrl" name="regPhotoUrl" value="">
+                    <button type="button" id="regPhotoBtn" class="btn btn-ghost btn-sm reg-photo-btn">Choisir une image</button>
+                    <button type="button" id="regPhotoClearBtn" class="btn btn-link reg-photo-clear" hidden>Retirer</button>
+                  </div>
+                </div>
+                <p id="regPhotoStatus" class="form-hint-photo reg-photo-status"></p>
+              </div>
+              <div class="form-group">
+                <label class="form-checkbox-label"><input type="checkbox" name="consentementRGPD" id="consentementRGPD" required> J'accepte que mes données soient traitées dans le cadre du Boxing Trophy 20, conformément au RGPD.</label>
+                <div class="form-error" id="consentementRGPD-error">Vous devez accepter les conditions</div>
+              </div>
+              <div class="form-nav"><button type="button" class="btn btn-prev" data-prev="2">← Retour</button><button type="submit" class="btn btn-submit">Valider l'inscription</button></div>
+            </div>
+          </form>
+
+          <div class="registrations-closed" id="registrationsClosed" hidden>
+            <span class="state-mark" aria-hidden="true">✕</span>
+            <h3>Inscriptions fermées</h3>
+            <p>Rendez-vous sur place le <strong>samedi 12 décembre</strong> à partir de <strong>19h</strong> au garage Moteka, Fenouillet.</p>
+            <a href="#carte-combats" class="btn btn-ghost btn-sm">Voir le programme</a>
+          </div>
+
+          <div class="form-success" id="formSuccess">
+            <span class="state-mark state-mark-ok" aria-hidden="true">✓</span>
+            <h3>Inscription confirmée&nbsp;!</h3>
+            <p>Merci pour votre inscription au Boxing Trophy 20.<br>Vous serez contacté(e) prochainement. Préparez-vous&nbsp;!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="g-footer">
+    <img src="image/intro/lk-full.webp" alt="Champions — Boxing Trophy" class="g-footer-logo" loading="lazy">
+    <p>Boxing Trophy 20 · Samedi 12 décembre 2026 · 19h · Garage Moteka, 14 rue Seveso, 31150 Fenouillet</p>
+    <nav class="g-footer-nav" aria-label="Liens du pied de page">
+      <a href="#event">Le week-end</a><a href="#carte-combats">Programme</a><a href="#infos">Billetterie</a><a href="#licence">Licence</a><a href="#inscription">Inscription</a>
+    </nav>
+    <p class="g-copy">© 2026 Boxing Center — Boxing Trophy 20 · <a href="#">Confidentialité &amp; RGPD</a></p>
+    <p class="ai-dev-credit" aria-hidden="true">chef equipe dev : <a href="https://fr.linkedin.com/in/germain-raphael-angoula-onambele-a6b858395" rel="noopener noreferrer">Angoula Onambele Germain Raphael</a> · dev : mbosseu brad bruel</p>
+  </footer>
+</main>
+
+<!-- Visionneuse (galerie + affiche) -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse" hidden>
+  <button class="lb-btn lb-close" type="button" aria-label="Fermer">✕</button>
+  <button class="lb-btn lb-prev" type="button" aria-label="Précédent">‹</button>
+  <div class="lb-stage" id="lightboxStage"></div>
+  <button class="lb-btn lb-next" type="button" aria-label="Suivant">›</button>
+  <p class="lb-count" id="lightboxCount"></p>
+</div>
 
 
 
@@ -440,6 +856,9 @@ footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;fon
   var stage=$('stage'),heroT=$('heroT'),bar=$('bar'),loader=$('loader');
   var T={load:3.8, bg:4.4, strip:4.9, ring1:5.6, rings:6.4, spiral:7.6, scatter:8.0, settle:9.4, title:9.0, end:11.2};
   var start=performance.now(), done=false;
+  // Déjà vue pendant cette visite (retour sur la page, rechargement) : on arrive directement à la fin
+  var seen=false; try{seen=sessionStorage.getItem('bt20-intro-gala')==='1'}catch(e){}
+  if(seen||location.hash) start=performance.now()-T.end*1000;
 
   function back(t){return t<1?1+2.7*Math.pow(t-1,3)+1.7*Math.pow(t-1,2):1}
 
@@ -545,7 +964,7 @@ footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;fon
     /* 3. en-tête et titre */
     if(t>T.title-.3)document.body.classList.add('on-ready');
 
-    if(t>T.end&&!done){done=true;document.body.classList.remove('lock');document.body.classList.add('intro-done')}
+    if(t>T.end&&!done){done=true;document.body.classList.remove('lock');document.body.classList.add('intro-done');try{sessionStorage.setItem('bt20-intro-gala','1')}catch(e){}}
 
     /* 4. au défilement : la scène recule doucement */
     var p=cl(scrollY/vh);
@@ -559,6 +978,34 @@ footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;fon
   // Un clic pendant l'intro la fait passer
   addEventListener('click',function(){ if(!done) start=performance.now()-T.end*1000; });
 })();
+</script>
+
+<script src="env-loader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase-config.js"></script>
+<script src="cloudinary-config.js?v=3"></script>
+<script src="poster.js?v=9"></script>
+<script src="published-matches.js"></script>
+<script src="registration-gate.js"></script>
+<script src="home-combats.js"></script>
+<script src="app.js?v=9"></script>
+<script src="gallery.js?v=2"></script>
+<script src="film.js?v=3"></script>
+<script>
+  // Masque l'indication « Découvrir la soirée » dès qu'on défile
+  addEventListener('scroll', function () {
+    document.body.classList.toggle('g-scrolled', scrollY > 40);
+  }, { passive: true });
+
+  // Licence : paiement réparti 50/50 entre Portet et Minimes
+  (function () {
+    var btn = document.getElementById('licencePayBtn');
+    if (!btn) return;
+    btn.addEventListener('click', function () {
+      var gym = Math.random() < 0.5 ? 'portet' : 'minimes';
+      window.location.href = 'https://boutique.boxingcenter.fr/inscription?product=licence-loisirs-trophy&gym=' + encodeURIComponent(gym);
+    });
+  })();
 </script>
 </body>
 </html>
