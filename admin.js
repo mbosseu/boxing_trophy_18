@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════
    Boxing Trophy 19 — Admin Panel Logic
    Handles auth, registrations, filtering, matching, export
    ═══════════════════════════════════════════════════════════ */
@@ -3096,7 +3096,7 @@
         if (typeof window !== 'undefined' && window.location?.origin?.startsWith('http')) {
             return window.location.origin.replace(/\/$/, '');
         }
-        return 'https://boxing-trophy-19.vercel.app';
+        return 'https://boxing-trophy-20.vercel.app';
     }
 
     function updateSiteUrlDisplays() {

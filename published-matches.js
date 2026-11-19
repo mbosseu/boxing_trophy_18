@@ -57,7 +57,16 @@
     return data;
   }
 
+  /* Interrupteur : true = la carte des combats reste masquée sur le site public
+     (accueil + /affiche), même si elle est publiée dans l'admin.
+     Activé en attendant les inscriptions du Trophy 20 : la carte en base est celle du Trophy 19.
+     Repasser à false quand la nouvelle carte est prête. L'admin n'est pas concerné. */
+  var HIDE_PUBLIC_CARD = true;
+
   async function loadPublishedMatches() {
+    if (HIDE_PUBLIC_CARD) {
+      return { published: false, publishedAt: null, matches: [] };
+    }
     var state = await fetchPublishState();
     if (!state.published) {
       return { published: false, publishedAt: null, matches: [] };
