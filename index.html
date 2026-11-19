@@ -1,710 +1,564 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Boxing Trophy 19 · 13 Novembre · Portet-sur-Garonne</title>
-  <meta name="description" content="Boxing Trophy 19 — Soirée de gala pour l'ouverture de la nouvelle salle du Boxing Center. 13 novembre, 19h, Portet-sur-Garonne. Boxe anglaise & pied-poing." />
-  <meta name="theme-color" content="#0b0a09" />
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Boxing Trophy 19 · 13 Novembre · Portet-sur-Garonne" />
-  <meta property="og:description" content="Soirée de gala pour l'ouverture de la nouvelle salle. Boxe anglaise & pied-poing. Place public à 10 €." />
-  <meta property="og:image" content="https://boxing-trophy-19.vercel.app/image/gala/affiche-trophy-19.jpg" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;800;900&family=Instrument+Serif:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=17" />
-  <link rel="stylesheet" href="poster.css?v=8" />
-  <link rel="icon" type="image/png" href="image/logo_boxing_center.png" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Boxing Trophy 20</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Montserrat:wght@900&display=swap">
+<style>
+:root{
+  --bg-0:#1c0f0d; --bg-1:#120a09; --bg-2:#0a0807;
+  --cream:#f3ebdf; --white:#f6faf9;
+  --mist:rgba(246,250,249,.72); --mist-2:rgba(246,250,249,.38);
+  --gold-1:#e8ab36; --gold-2:#ffc570;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --ui:1;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg-2);color:var(--white);font-family:Geist,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body.lock{overflow:hidden}
+img{max-width:100%}
+
+/* ── Écran de chargement ── */
+/* ── Préface ── */
+.pf{position:fixed;inset:0;z-index:60;overflow:hidden;background:#efe9e1}
+.pf.gone{display:none}
+.pf-scene{position:absolute;inset:-3%;will-change:transform,filter}
+.pf-plate{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 44%;display:block}
+.pf-sheen{position:absolute;inset:0;pointer-events:none;mix-blend-mode:soft-light;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.0) 38%,rgba(255,250,235,.9) 47%,rgba(255,236,190,.6) 50%,rgba(255,255,255,0) 60%,transparent 70%) 0 0/250% 100% no-repeat}
+.pf-center{position:absolute;left:0;right:0;top:44.5%;transform:translateY(-50%);display:grid;justify-items:center;gap:var(--pf-gap,18px);pointer-events:none}
+.pf-logo-wrap{width:var(--pf-w,520px);aspect-ratio:1040/388;perspective:900px}
+.pf-logo{position:relative;width:100%;height:100%;transform-style:preserve-3d;will-change:transform}
+.pf-logo .ly{left:0;top:0;width:100%;height:100%}
+.pf-shadow{position:absolute;inset:0;width:100%;height:100%;filter:brightness(0) blur(10px);opacity:0;transform:translateZ(-60px);will-change:transform,opacity}
+.pf-txt{margin:0;display:flex;gap:0;font:500 var(--pf-fs,15px)/1 Montserrat,Geist,sans-serif;letter-spacing:.52em;margin-right:-.52em;text-transform:uppercase;color:#2b221b;white-space:nowrap}
+.pf-txt span{display:inline-block;opacity:0;will-change:transform,opacity,filter}
+.pf-line{display:flex;align-items:center;gap:10px;width:calc(var(--pf-w,520px)*1.04)}
+.pf-track{flex:1;height:1.5px;display:flex;justify-content:flex-end;background:rgba(150,110,50,.12)}
+.pf-track.r{justify-content:flex-start}
+.pf-track i{display:block;height:100%;width:0;background:linear-gradient(90deg,rgba(201,150,60,0),#c99a45 30%,#f1d38c 70%,#b07a22)}
+.pf-track.r i{background:linear-gradient(270deg,rgba(201,150,60,0),#c99a45 30%,#f1d38c 70%,#b07a22)}
+.pf-dia{width:12px;height:12px;transform:rotate(45deg);background:linear-gradient(135deg,#fff3cf 0%,#e8b85a 35%,#8a5a18 55%,#f6d98e 80%,#fff 100%);box-shadow:0 0 10px rgba(255,210,120,.8),0 1px 2px rgba(80,50,10,.5)}
+.pf-dim{position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(120% 90% at 50% 42%,rgba(28,15,13,.6),#120a09 55%,#0a0807)}
+.dust{position:fixed;inset:0;width:100%;height:100%;z-index:61;pointer-events:none}
+
+/* ── Scène ── */
+.stage{position:fixed;inset:0;z-index:1;overflow:hidden;background:radial-gradient(120% 90% at 50% 42%,var(--bg-0),var(--bg-1) 55%,var(--bg-2));opacity:0;transition:opacity .9s var(--ease)}
+.stage.on{opacity:1}
+.stage::before{content:"";position:absolute;left:50%;top:56%;width:90vmin;height:90vmin;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,150,90,.2),rgba(200,40,30,.07) 55%,transparent);pointer-events:none}
+.cards{position:absolute;inset:0;z-index:3}
+.card{position:absolute;left:0;top:0;width:var(--cw);aspect-ratio:4/5;will-change:transform,filter,opacity;opacity:0;box-shadow:0 10px 26px rgba(0,0,0,.55)}
+.card img{display:block;width:100%;height:100%;object-fit:cover}
+.card b{position:absolute;left:6%;right:6%;bottom:7%;text-align:center;font:400 calc(var(--cw)*.075)/1.2 Boldonse,sans-serif;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.7),0 0 10px rgba(0,0,0,.45)}
+.stage{--cw:clamp(30px,8.6vmin,100px)}
+html,body{overflow-x:hidden}
+
+.trophy{position:absolute;left:0;top:0;z-index:8;width:200px;aspect-ratio:900/984;opacity:0;will-change:transform,opacity}
+.trophy img{display:block;width:100%;height:100%;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 52% 54% at 50% 50%,#000 70%,transparent 100%)}
+
+/* ── En-tête ── */
+.top{position:fixed;inset:0 0 auto;z-index:20;display:grid;grid-template-columns:1fr auto 1fr;align-items:start;padding:22px 36px 0;padding-top:max(22px,env(safe-area-inset-top,0px));pointer-events:none;opacity:0;transition:opacity .8s var(--ease)}
+.on-ready .top{opacity:1}
+.logo{justify-self:start;pointer-events:auto;filter:drop-shadow(0 2px 10px rgba(0,0,0,.5))}
+.logo img{height:30px;width:auto;display:block}
+.brand{display:grid;justify-items:center;gap:6px;text-align:center}
+.brand p{margin:0;font:500 10px/1 "Geist Mono",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--mist)}
+.ch{position:relative;font:900 26px/1 Montserrat,"Archivo Black",sans-serif;letter-spacing:.015em;text-transform:uppercase}
+.ch-gold{color:#b07a22;text-shadow:.4px .5px 0 #f3cd6a,.8px 1px 0 #e0ad45,1.2px 1.5px 0 #c58f2c,1.6px 2px 0 #a8741e,2px 2.5px 0 #8a5c16,2.4px 3px 0 #6d4610,2.8px 3.5px 0 #54350c,3px 6px 12px rgba(0,0,0,.7)}
+.ch-face{position:absolute;left:0;top:0;color:transparent;-webkit-text-fill-color:transparent;background:linear-gradient(104deg,transparent 42%,rgba(255,255,255,.95) 50%,transparent 58%) 160% 0/260% 100% no-repeat,linear-gradient(#fff,#eef1f4 20%,#c3cad2 41%,#7c8692 49%,#9aa3ad 52%,#e8ecef 60%,#fbfcfc 76%,#b9c1c9) 0 0/100% 100%;-webkit-background-clip:text;background-clip:text;animation:ch-shine 7s cubic-bezier(.4,0,.2,1) 1.5s infinite}
+@keyframes ch-shine{0%{background-position:160% 0,0 0}18%,100%{background-position:-60% 0,0 0}}
+.menu{justify-self:end;pointer-events:auto;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(160deg,#4a3433,#1c1212);border:1px solid rgba(255,255,255,.2);box-shadow:0 6px 18px rgba(0,0,0,.45),inset 0 1px 1px rgba(255,255,255,.35);color:var(--white);cursor:pointer}
+.menu span{display:block;width:16px;height:1.5px;background:currentColor;box-shadow:0 -5px 0 currentColor,0 5px 0 currentColor}
+
+/* ── Titre ── */
+.hero-t{position:fixed;left:0;right:0;top:var(--ht-top,110px);z-index:2;pointer-events:none;text-align:center;will-change:transform}
+.ht-k{display:flex;align-items:center;justify-content:center;gap:26px;margin:0 0 20px;font:400 14px/1 Boldonse,sans-serif;letter-spacing:.82em;text-transform:uppercase;color:var(--cream);transform:skew(-10deg);opacity:0}
+.ht-k span{margin-right:-.82em;white-space:nowrap}
+.ht-k i{display:block;width:min(16vw,150px);height:1px;transform-origin:100% 50%;transform:scaleX(0);background:linear-gradient(90deg,rgba(243,235,223,0),rgba(243,235,223,.7))}
+.ht-k i:last-child{transform-origin:0 50%;background:linear-gradient(90deg,rgba(243,235,223,.7),rgba(243,235,223,0))}
+.ht-hw{position:relative}
+.ht-h{margin:0;display:flex;justify-content:center;gap:.62em;font:400 var(--ht-size,40px)/1.02 Boldonse,sans-serif;letter-spacing:.01em;white-space:nowrap;transform:skew(-10deg);filter:drop-shadow(0 22px 40px rgba(0,0,0,.6))}
+.ht-w{display:inline-flex;overflow:hidden;padding:.24em .3em .34em;margin:-.24em -.3em -.34em}
+.ht-c{position:relative;display:inline-block;isolation:isolate;color:transparent;-webkit-text-stroke:.05em #ffdc8e;transform:translate(0,155%) rotate(7deg);will-change:transform}
+.ht-c::before,.ht-c::after{content:attr(data-c);position:absolute;left:0;top:0;pointer-events:none}
+.ht-c::before{z-index:-1;color:#ffd27e;text-shadow:.0042em .0062em 0 #ffcd74,.0084em .0124em 0 #ffc366,.0126em .0186em 0 #ffba58,.0168em .0248em 0 #ffb049,.021em .031em 0 #f5a440,.0252em .0372em 0 #e89739,.0294em .0434em 0 #dc8b32,.0336em .0496em 0 #cf7e2a,.0378em .0558em 0 #c37223,.042em .062em 0 #b3641d,.0462em .0682em 0 #965418,.0504em .0744em 0 #7a4313,.0546em .0806em 0 #5d320e,.0588em .0868em 0 #402109,.1em .14em .14em rgba(0,0,0,.6)}
+.ht-c::after{z-index:1;color:transparent;-webkit-text-stroke:0;background:linear-gradient(#fff,#eef1f3 30%,#b9c0c6 44%,#5f676e 49.5%,#8d959c 51%,#e4e7ea 58%,#fff 74%,#c3c9ce);-webkit-background-clip:text;background-clip:text}
+.ht-s{position:absolute;inset:0;color:#fff;filter:none;opacity:.75;-webkit-mask-image:linear-gradient(100deg,transparent 40%,#000 50%,transparent 60%);mask-image:linear-gradient(100deg,transparent 40%,#000 50%,transparent 60%);-webkit-mask-size:300% 100%;mask-size:300% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;-webkit-mask-position:var(--sh,120%) 0;mask-position:var(--sh,120%) 0}
+
+/* Logo en relief : 5 éléments à des profondeurs différentes, avec épaisseur, reflet, scintillements */
+.lk-wrap{position:relative;margin:0 auto;perspective:1100px;perspective-origin:50% 45%}
+.lk{position:relative;width:100%;aspect-ratio:2129/739;transform-style:preserve-3d;will-change:transform}
+.ly{position:absolute;transform-style:preserve-3d;opacity:0;will-change:transform,opacity}
+.ly img{position:absolute;inset:0;width:100%;height:100%;display:block;-webkit-user-drag:none;user-select:none}
+.ly .mat{position:absolute;inset:0;width:100%;height:100%;display:block;opacity:0}
+.ly.lit .mat{opacity:1}
+.ly.lit .face,.ly.lit .spec{visibility:hidden}
+.lk-shadow{position:absolute;inset:0;pointer-events:none;opacity:0;transform:translateZ(-170px)}
+.lk-shadow img{width:100%;height:100%;display:block;filter:brightness(0) blur(14px);opacity:.75}
+.ly .spec{position:absolute;inset:0;background:linear-gradient(110deg,transparent 38%,rgba(255,232,180,.5) 46%,rgba(255,255,255,.95) 50%,rgba(255,232,180,.5) 54%,transparent 62%) 120% 0/300% 100% no-repeat;-webkit-mask-size:100% 100%;mask-size:100% 100%;transform:translateZ(.6px);opacity:.75;pointer-events:none}
+.sp{position:absolute;width:var(--s);height:var(--s);margin:calc(var(--s)/-2) 0 0 calc(var(--s)/-2);pointer-events:none;opacity:0;transform:translateZ(4px) scale(0);background:radial-gradient(circle,#fff 0 7%,rgba(255,238,200,.85) 13%,transparent 38%),linear-gradient(90deg,transparent 48.5%,#fff 50%,transparent 51.5%),linear-gradient(0deg,transparent 48.5%,#fff 50%,transparent 51.5%);-webkit-mask-image:radial-gradient(circle,#000 18%,transparent 68%);mask-image:radial-gradient(circle,#000 18%,transparent 68%)}
+.lk.live .sp{opacity:1;animation:tw var(--d) ease-in-out var(--dl) infinite}
+@keyframes tw{0%,72%,100%{transform:translateZ(4px) scale(0) rotate(0)}84%{transform:translateZ(4px) scale(1) rotate(45deg)}}
+.lk-halo{position:absolute;left:8%;right:8%;top:0;bottom:0;background:radial-gradient(closest-side,rgba(255,170,70,.32),rgba(255,120,40,.1) 60%,transparent);transform:translateZ(-140px) scale(1.35);opacity:0;pointer-events:none}
+.lk-refl{position:absolute;left:0;right:0;top:99%;height:42%;overflow:hidden;opacity:0;pointer-events:none;-webkit-mask-image:linear-gradient(rgba(0,0,0,.55),transparent 80%);mask-image:linear-gradient(rgba(0,0,0,.55),transparent 80%)}
+.lk-refl img{position:absolute;left:0;top:0;width:100%;height:238.1%;transform:scaleY(-1);filter:blur(1.5px) brightness(.8)}
+/* Titre image, découpé en morceaux animés */
+.ti{position:relative;width:80vw;aspect-ratio:1700/567;margin:0}
+.hint{position:fixed;left:50%;bottom:calc(40px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:14;display:flex;align-items:center;gap:10px;margin:0;font:400 12px/1 "Geist Mono",monospace;letter-spacing:.12em;color:var(--mist-2);opacity:0;transition:opacity .7s var(--ease),translate .7s var(--ease);translate:0 8px;white-space:nowrap}
+.intro-done .hint{opacity:1;translate:0 0}
+.hint-cue{position:relative;width:1px;height:14px;overflow:hidden;background:rgba(246,250,249,.14)}
+.hint-cue::after{content:"";position:absolute;left:0;top:0;width:1px;height:6px;background:var(--gold-2);animation:cue-fall 2.4s cubic-bezier(.6,0,.3,1) infinite}
+@keyframes cue-fall{0%{transform:translateY(-6px)}60%,100%{transform:translateY(14px)}}
+
+/* ── Contenu après l'ouverture ── */
+main{position:relative;z-index:10;margin-top:100vh;margin-top:100svh}
+.panel{width:min(1180px,calc(100% - 32px));margin:0 auto 24px;border-radius:28px;padding:clamp(28px,5vw,56px);background:linear-gradient(165deg,rgba(255,255,255,.17),rgba(255,255,255,.06) 38%,rgba(20,14,16,.22));-webkit-backdrop-filter:blur(16px) saturate(190%) brightness(.92);backdrop-filter:blur(16px) saturate(190%) brightness(.92);border:1px solid rgba(255,255,255,.24);box-shadow:0 30px 80px rgba(0,0,0,.5),inset 0 1px 1px rgba(255,255,255,.7)}
+.cap{display:flex;align-items:center;gap:12px;margin:0;font:500 10px/1.4 "Geist Mono",monospace;letter-spacing:.26em;text-transform:uppercase;color:var(--mist)}
+.cap::before{content:"";width:26px;height:1px;background:var(--gold-2)}
+.panel h2{margin:12px 0 18px;font:600 clamp(30px,4.4vw,52px)/1 Geist,sans-serif;letter-spacing:-.035em;text-wrap:balance}
+.panel p{margin:0 0 14px;font:400 15.5px/1.62 Geist,sans-serif;color:rgba(246,250,249,.74);max-width:62ch}
+.panel p b{color:var(--white);font-weight:600}
+.panel .quote{font:600 19px/1.42 "Lexend Giga","Archivo Black",sans-serif;color:var(--gold-2)}
+.film{position:relative;overflow:hidden;border-radius:20px;margin-top:22px;aspect-ratio:16/9;max-height:60vh;width:100%}
+.film video{width:100%;height:100%;object-fit:cover;display:block;filter:sepia(.25) brightness(.85)}
+.tickets{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.ticket{border-radius:20px;padding:24px;display:grid;gap:10px;align-content:start;background:rgba(10,7,7,.35);border:1px solid rgba(255,255,255,.14)}
+.ticket.vip{border-color:rgba(255,197,112,.6)}
+.ticket h3{margin:0;font:600 22px/1.1 Geist,sans-serif;letter-spacing:-.02em}
+.price{font:400 26px/1.1 Boldonse,sans-serif;color:var(--gold-2)}
+.ticket ul{margin:0;padding:0;list-style:none;display:grid;gap:6px;color:rgba(246,250,249,.74);font-size:14.5px}
+.btn{justify-self:start;display:inline-flex;align-items:center;gap:8px;margin-top:6px;padding:13px 20px;border-radius:999px;font:500 11px/1 "Geist Mono",monospace;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:#1a0f08;background:linear-gradient(90deg,var(--gold-1),var(--gold-2))}
+.btn.ghost{color:var(--white);background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.22)}
+.tbd{border-bottom:1px dashed var(--gold-2)}
+footer{position:relative;z-index:10;padding:30px 16px 50px;text-align:center;font:400 11px/1.6 "Geist Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:var(--mist-2)}
+
+@media (max-width:760px),(max-aspect-ratio:1/1){
+  .top{padding:14px 16px 0}
+  .logo img{height:22px}
+  .ch{font-size:19px}
+  .brand{display:none}
+  .top{grid-template-columns:1fr auto}
+  .menu{width:38px;height:38px}
+  .ht-k{font-size:9px;gap:12px;letter-spacing:.7em}
+  .ht-k i{width:12vw}
+  .hint{bottom:calc(22px + env(safe-area-inset-bottom,0px));font-size:10px}
+  .tickets{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){.ch-face,.hint-cue::after{animation:none}}
+</style>
 </head>
-<body>
+<body class="lock">
 
-  <!-- NAV -->
-  <nav class="nav" id="navbar">
-    <div class="nav-inner">
-      <a href="#" class="nav-logo" aria-label="Boxing Trophy 19 — accueil">
-        <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" />
-        <span class="nl-divider" aria-hidden="true"></span>
-        <span class="nl-edition">Trophy <strong>19</strong></span>
-      </a>
-      <div class="nav-links" id="navLinks">
-        <a href="#event">L'événement</a>
-        <a href="#disciplines">Disciplines</a>
-        <a href="#galerie">Galerie</a>
-        <a href="#carte-combats" id="navCarteCombats">Programme</a>
-        <a href="#licence">Licence</a>
-        <a href="#infos">Infos pratiques</a>
-        <a href="#inscription" class="nav-cta">S'inscrire</a>
-      </div>
-      <button class="nav-toggle" id="navToggle" aria-label="Ouvrir le menu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-  </nav>
-
-  <!-- ═══════════════════════ HERO ═══════════════════════ -->
-  <header class="hero" id="hero">
-    <video class="hero-video" autoplay muted loop playsinline poster="image/gala/victoire.jpg" aria-hidden="true">
-      <source src="videos/mp_.mp4" type="video/mp4" />
-    </video>
-    <div class="hero-shade" aria-hidden="true"></div>
-
-    <div class="hero-content container">
-      <p class="hero-eyebrow">
-        <span class="eyebrow-line" aria-hidden="true"></span>
-        <span>19<sup>e</sup> édition · Inauguration de la nouvelle salle</span>
-      </p>
-
-      <h1 class="hero-title">
-        <span class="ht-line">Boxing</span>
-        <span class="ht-line">Trophy <em class="ht-num">19</em></span>
-      </h1>
-
-      <p class="hero-lead">
-        Une soirée de gala pour ouvrir le nouveau Boxing Center de
-        Portet-sur-Garonne. Boxe anglaise et pied-poing, sous les projecteurs.
-      </p>
-
-      <div class="hero-cta hero-cta-group">
-        <a href="#inscription" class="btn btn-primary btn-urgent">S'inscrire au combat</a>
-        <a href="#event" class="btn btn-ghost-light">Découvrir l'événement</a>
-      </div>
-
-      <p class="reg-urgency" id="regDeadline">
-        <span class="reg-urgency-pulse" aria-hidden="true"></span>
-        <span class="reg-urgency-copy">
-          <strong id="regDeadlineTitle">Clôture demain à 12h</strong>
-          <span class="reg-urgency-clock" id="regDeadlineClock" aria-hidden="true">
-            <b id="rd-hours">00</b><span>:</span><b id="rd-min">00</b><span>:</span><b id="rd-sec">00</b>
-          </span>
-        </span>
-      </p>
-    </div>
-
-    <div class="hero-bar">
-      <div class="container hero-bar-inner">
-        <dl class="hero-facts">
-          <div><dt>Date</dt><dd>Vendredi 13 nov. 2026</dd></div>
-          <div><dt>Ouverture</dt><dd>19h00</dd></div>
-          <div><dt>Lieu</dt><dd>Portet-sur-Garonne</dd></div>
-          <div><dt>Place public</dt><dd>10 €</dd></div>
-        </dl>
-        <div id="countdown" class="countdown" aria-label="Compte à rebours avant l'événement">
-          <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
-          <span class="countdown-sep" aria-hidden="true">:</span>
-          <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
-          <span class="countdown-sep" aria-hidden="true">:</span>
-          <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
-          <div class="countdown-finished-msg">L'événement a commencé&nbsp;!</div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <main>
-
-    <!-- ═══════════════════════ L'ÉVÉNEMENT ═══════════════════════ -->
-    <section class="section intro" id="event">
-      <div class="container intro-grid">
-        <div class="intro-text reveal">
-          <span class="section-kicker">L'événement</span>
-          <h2 class="section-title">Célébrons <em>l'ouverture</em> de la nouvelle salle de Portet</h2>
-          <p class="lead">
-            Pour sa 19<sup>e</sup> édition, le Boxing Trophy pose ses cordes à
-            <strong>Portet-sur-Garonne</strong> et inaugure la nouvelle salle du Boxing Center&nbsp;:
-            un espace pensé pour faire grandir les combattants de demain.
-          </p>
-          <p>
-            Une soirée de gala, deux disciplines, un vrai ring sous les projecteurs —
-            et une salle comble pour porter chaque combattant.
-          </p>
-        </div>
-
-        <figure class="intro-media reveal">
-          <img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur au centre du ring" loading="lazy" width="1280" height="846" />
-          <figcaption>Le verdict, au centre du ring.</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ DISCIPLINES ═══════════════════════ -->
-    <section class="section disciplines" id="disciplines">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="section-kicker">Les disciplines</span>
-          <h2 class="section-title">Deux arts, <em>un seul ring</em></h2>
-        </div>
-
-        <div class="disc-grid">
-          <article class="disc-card reveal">
-            <div class="disc-media">
-              <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy" width="1280" height="970" />
-            </div>
-            <div class="disc-body">
-              <span class="disc-num">01</span>
-              <h3>Boxe anglaise</h3>
-              <p>Le noble art. Technique, puissance et stratégie&nbsp;: l'affrontement pur, dans les règles classiques.</p>
-              <ul class="disc-tags"><li>Tradition</li><li>Poings uniquement</li></ul>
-            </div>
-          </article>
-
-          <article class="disc-card reveal">
-            <div class="disc-media">
-              <img src="image/gala/pied-poing-ring.jpg" alt="Combattant de pied-poing portant un middle kick sur le ring du Boxing Center" loading="lazy" width="1400" height="935" />
-            </div>
-            <div class="disc-body">
-              <span class="disc-num">02</span>
-              <h3>Pied-poing <span class="badge">Nouveau</span></h3>
-              <p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p>
-              <ul class="disc-tags"><li>Première au Trophy</li><li>Pieds &amp; poings</li></ul>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ GALERIE ═══════════════════════ -->
-    <section class="section gallery" id="galerie">
-      <div class="container">
-        <div class="section-head section-head-split reveal">
-          <div>
-            <span class="section-kicker">Galerie</span>
-            <h2 class="section-title">L'intensité, <em>en images</em></h2>
-          </div>
-          <p class="section-desc">Gardes hautes, échanges, verdict&nbsp;: quelques instants capturés au Boxing Center.</p>
-        </div>
-
-        <div class="gallery-grid" data-gallery>
-          <button class="g-item g-hero" type="button" data-full="image/gala/victoire.jpg" aria-label="Agrandir : la victoire">
-            <img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur" loading="lazy" />
-          </button>
-          <button class="g-item g-side" type="button" data-full="image/gala/garde-casque-rouge.jpg" aria-label="Agrandir : garde haute, casque rouge">
-            <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy" />
-          </button>
-          <button class="g-item g-side" type="button" data-full="image/gala/direct.jpg" aria-label="Agrandir : le direct">
-            <img src="image/gala/direct.jpg" alt="Boxeur au casque rouge lançant un direct" loading="lazy" />
-          </button>
-          <button class="g-item" type="button" data-full="image/gala/esquive-arbitre.jpg" aria-label="Agrandir : esquive sous l'œil de l'arbitre">
-            <img src="image/gala/esquive-arbitre.jpg" alt="Boxeur esquivant un coup sous l'œil de l'arbitre" loading="lazy" />
-          </button>
-          <button class="g-item" type="button" data-full="image/gala/garde-casque-bleu.jpg" aria-label="Agrandir : garde, casque bleu">
-            <img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy" />
-          </button>
-          <button class="g-item" type="button" data-full="image/gala/accolade.jpg" aria-label="Agrandir : l'accolade">
-            <img src="image/gala/accolade.jpg" alt="Deux combattants se donnent l'accolade sur le ring" loading="lazy" />
-          </button>
-          <button class="g-item g-band" type="button" data-full="image/gala/echange-union-jack.jpg" aria-label="Agrandir : l'échange">
-            <img src="image/gala/echange-union-jack.jpg" alt="Échange sur le ring devant un drapeau britannique" loading="lazy" />
-          </button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ ÉDITION 18 (VIDÉO) ═══════════════════════ -->
-    <section class="film-section" id="edition-18">
-      <canvas class="film-ambient" width="36" height="64" aria-hidden="true"></canvas>
-
-      <div class="film-head container reveal">
-        <span class="section-kicker">Édition 18 · En images</span>
-        <h2 class="section-title">Revivez <em>le Trophy 18</em></h2>
-      </div>
-
-      <div class="film-stage">
-        <div class="film-marquee" aria-hidden="true">
-          <div class="fm-row fm-row-a" data-marquee="-1">
-            <span>Trophy 18 — St Cyprien — 5 juin 2026 — Boxe anglaise — </span><span>Trophy 18 — St Cyprien — 5 juin 2026 — Boxe anglaise — </span>
-          </div>
-          <div class="fm-row fm-row-b" data-marquee="1">
-            <span>Salle comble — Combats engagés — Ambiance électrique — </span><span>Salle comble — Combats engagés — Ambiance électrique — </span>
-          </div>
-        </div>
-
-        <figure class="film" data-film
-                data-clips="videos/gala/clip-1.mp4,videos/gala/clip-2.mp4,videos/gala/clip-3.mp4,videos/gala/clip-4.mp4,videos/gala/clip-5.mp4,videos/gala/clip-6.mp4">
-          <div class="film-tilt">
-            <div class="film-frame">
-              <video class="film-video is-active" muted playsinline preload="metadata" aria-label="Images de la soirée du Boxing Trophy 18"></video>
-              <video class="film-video" muted playsinline preload="none" aria-hidden="true"></video>
-              <div class="film-shade" aria-hidden="true"></div>
-
-              <div class="film-top" aria-hidden="true">
-                <span class="film-tag"><span class="film-dot"></span>Trophy 18</span>
-                <span class="film-time"><span data-film-time>0:00</span><span class="film-time-sep">/</span><span data-film-total>1:27</span></span>
-              </div>
-
-              <button class="film-toggle" type="button" data-film-toggle aria-label="Lire la vidéo">
-                <span class="film-toggle-icon" aria-hidden="true"></span>
-              </button>
-
-              <div class="film-bottom">
-                <div class="film-progress" data-film-progress aria-hidden="true"></div>
-                <button class="film-mute" type="button" data-film-sound aria-pressed="false" aria-label="Activer le son">
-                  <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6" fill="none"/></svg>
-                  <svg class="icon-sound" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <span class="film-chip film-chip-1"><small>Date</small>5 juin 2026</span>
-          <span class="film-chip film-chip-2"><small>Lieu</small>Boxing Center St Cyprien</span>
-          <span class="film-chip film-chip-3"><small>Discipline</small>Boxe anglaise</span>
-        </figure>
-      </div>
-
-      <div class="film-foot container reveal">
-        <p class="lead">
-          Une salle pleine, debout autour du ring, des combats engagés&nbsp;: l'édition 18 a placé la barre très haut.
-          Le 13 novembre, le Trophy écrit la suite à Portet-sur-Garonne.
-        </p>
-        <a href="#inscription" class="btn btn-primary nav-cta">Participer à l'édition 19</a>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ L'EXPÉRIENCE ═══════════════════════ -->
-    <section class="section experience" id="concept">
-      <div class="container exp-grid">
-        <figure class="exp-media reveal">
-          <img src="image/gala/esquive-arbitre.jpg" alt="Combat encadré par un arbitre expérimenté" loading="lazy" width="1280" height="800" />
-        </figure>
-        <div class="exp-text reveal">
-          <span class="section-kicker">L'expérience combattant</span>
-          <h2 class="section-title">Traité comme <em>un champion</em></h2>
-          <ol class="exp-list">
-            <li>
-              <h3>Ring professionnel</h3>
-              <p>Un vrai ring sous les projecteurs, digne des grands galas.</p>
-            </li>
-            <li>
-              <h3>Encadrement pro</h3>
-              <p>Entraîneurs certifiés et arbitre expérimenté&nbsp;: votre sécurité passe avant tout.</p>
-            </li>
-            <li>
-              <h3>Appariement juste</h3>
-              <p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p>
-            </li>
-            <li>
-              <h3>Mise en lumière</h3>
-              <p>Photos et vidéos professionnelles, entrée personnalisée sur la carte officielle.</p>
-            </li>
-          </ol>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ CARTE DES COMBATS ═══════════════════════ -->
-    <section class="section home-combats-section" id="carte-combats">
-      <div class="container">
-        <div class="section-head section-head-center reveal">
-          <span class="section-kicker">Programme officiel</span>
-          <h2 class="section-title">La carte <em>des combats</em></h2>
-          <p class="section-desc" id="homeCombatsDesc">
-            Les affrontements du Boxing Trophy 19 — Portet-sur-Garonne.
-          </p>
-        </div>
-        <div class="home-combats-soon" id="homeCombatsSoon">
-          <span class="soon-mark" aria-hidden="true">19</span>
-          <h3 class="home-combats-soon-title">Bientôt dévoilée</h3>
-          <p class="home-combats-soon-text">La carte officielle sera publiée ici dès la fin des appariements.</p>
-          <a href="affiche.html" class="btn btn-outline btn-sm">Page programme</a>
-        </div>
-        <div id="homeCombatsPublished" hidden>
-          <div class="home-poster-wrap gala-poster-wrap reveal" id="homePosterWrap"></div>
-          <p class="home-combats-cta reveal">
-            <a href="affiche.html" class="btn btn-outline">Voir en plein écran</a>
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ INFOS PRATIQUES ═══════════════════════ -->
-    <section class="section infos" id="infos">
-      <div class="container">
-        <div class="infos-layout">
-        <figure class="poster-frame reveal">
-          <button class="poster-btn" type="button" data-poster="image/gala/affiche-trophy-19.jpg" aria-label="Agrandir l'affiche officielle">
-            <img src="image/gala/affiche-trophy-19.jpg" alt="Affiche officielle du Boxing Trophy 19 — vendredi 13 novembre 2026 dès 19h, Boxing Center Portet-sur-Garonne" loading="lazy" width="1280" height="1600" />
-          </button>
-          <figcaption>
-            <span>L'affiche officielle</span>
-            <a href="image/gala/affiche-trophy-19.jpg" download="affiche-boxing-trophy-19.jpg">Télécharger</a>
-          </figcaption>
-        </figure>
-        <div class="infos-main">
-        <div class="section-head reveal">
-          <span class="section-kicker">Infos pratiques</span>
-          <h2 class="section-title">Le rendez-vous <em>du 13 novembre</em></h2>
-          <p class="section-desc infos-tagline">Une nouvelle salle. Un nouveau round.</p>
-        </div>
-        <div class="infos-grid reveal">
-          <div class="info-card">
-            <span class="info-label">Date</span>
-            <span class="info-val">13 novembre 2026</span>
-            <span class="info-sub">Vendredi soir</span>
-          </div>
-          <div class="info-card">
-            <span class="info-label">Horaire</span>
-            <span class="info-val">19h00</span>
-            <span class="info-sub">Ouverture des portes</span>
-          </div>
-          <div class="info-card">
-            <span class="info-label">Lieu</span>
-            <span class="info-val">Boxing Center</span>
-            <span class="info-sub">Portet-sur-Garonne</span>
-          </div>
-          <div class="info-card">
-            <span class="info-label">Place public</span>
-            <span class="info-val">10 €</span>
-            <span class="info-sub">Spectateurs bienvenus</span>
-          </div>
-        </div>
-        <div class="program reveal">
-          <h3 class="program-title">Au programme de la soirée</h3>
-          <ul class="program-list">
-            <li><span>Combats de boxe anglaise</span></li>
-            <li><span>Combats de pied-poing</span> <span class="badge">Nouveau</span></li>
-            <li><span>Inauguration officielle de la nouvelle salle</span></li>
-            <li><span>Animations, buvette &amp; stands partenaires</span></li>
-            <li><span>Photos &amp; vidéos professionnelles</span></li>
-          </ul>
-        </div>
-        </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ LICENCE LOISIRS ═══════════════════════ -->
-    <section class="section licence-section" id="licence">
-      <div class="container">
-        <div class="section-head reveal">
-          <span class="section-kicker">Licence loisirs</span>
-          <h2 class="section-title">Régulariser sa <em>licence</em> 50&nbsp;€</h2>
-          <p class="section-desc licence-lead">
-            Cotisation licence loisirs FFBoxe ou FFKMDA pour le Boxing Trophy 19.
-            Paiement en une fois (50&nbsp;€), puis signature en ligne.
-            Les formulaires médicaux et la facture sont disponibles après signature.
-            Remise du dossier signé en salle au plus tard le <strong>11 novembre 2026</strong>.
-          </p>
-        </div>
-
-        <div class="licence-steps reveal">
-          <ol class="licence-step-list">
-            <li><strong>1. Payer</strong> la cotisation de 50&nbsp;€, déposer une copie de pièce d’identité, puis signer en ligne.</li>
-            <li><strong>2. Télécharger</strong> le formulaire de licence et le certificat médical (après signature).</li>
-            <li><strong>3. Faire remplir</strong> et tamponner le dossier par votre médecin.</li>
-            <li><strong>4. Déposer</strong> le dossier signé + la copie d’identité au manager de n’importe quelle salle Boxing Center pour enregistrement fédéral.</li>
-          </ol>
-        </div>
-
-        <div class="licence-cta reveal">
-          <button type="button" class="btn btn-primary licence-pay-btn" id="licencePayBtn">
-            Payer ma licence — 50&nbsp;€
-          </button>
-          <p class="licence-deadline">
-            Sans régularisation avant le <strong>11 novembre 2026</strong>, l’inscription et le combat pourront être annulés.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- ═══════════════════════ INSCRIPTION ═══════════════════════ -->
-    <section class="section form-section" id="inscription">
-      <div class="form-bg" aria-hidden="true"><img src="image/gala/garde-casque-bleu.jpg" alt="" loading="lazy" /></div>
-      <div class="container form-layout">
-        <aside class="form-aside reveal">
-          <span class="section-kicker section-tag" id="formDeadlineKicker">Clôture demain 12h</span>
-          <h2 class="section-title">Monte <em>sur le ring</em></h2>
-          <p class="section-desc">
-            Inscris-toi au Boxing Trophy 19 · Boxe anglaise &amp; pied-poing.
-            Portet-sur-Garonne · 13 novembre · 19h.
-          </p>
-          <p class="form-deadline-line" id="formDeadlineLine">Les inscriptions se terminent demain à 12h.</p>
-          <ul class="form-checklist">
-            <li>Débutants et intermédiaires</li>
-            <li>Licence FFB / FFKMDA, ou engagement à prendre une licence loisir</li>
-            <li>Appariement par sexe, poids et niveau</li>
-            <li>Ta photo sur l'affiche officielle (optionnel)</li>
-          </ul>
-        </aside>
-
-        <div class="form-container reveal">
-          <div class="form-steps">
-            <div class="step-indicator active" data-step="1">
-              <div class="step-number">1</div>
-              <span class="step-label">Identité</span>
-            </div>
-            <div class="step-connector"></div>
-            <div class="step-indicator" data-step="2">
-              <div class="step-number">2</div>
-              <span class="step-label">Sportif</span>
-            </div>
-            <div class="step-connector"></div>
-            <div class="step-indicator" data-step="3">
-              <div class="step-number">3</div>
-              <span class="step-label">Finalisation</span>
-            </div>
-          </div>
-
-          <div class="form-card">
-            <form id="registrationForm" novalidate>
-
-              <!-- STEP 1 -->
-              <div class="form-step active" data-step="1">
-                <h3 class="form-step-title">Identité</h3>
-                <p class="form-step-desc">Vos informations personnelles</p>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="nom">Nom <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="nom" name="nom" placeholder="Votre nom" autocomplete="family-name" required />
-                    <div class="form-error" id="nom-error">Veuillez saisir votre nom</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="prenom">Prénom <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="prenom" name="prenom" placeholder="Votre prénom" autocomplete="given-name" required />
-                    <div class="form-error" id="prenom-error">Veuillez saisir votre prénom</div>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="dateNaissance">Date de naissance <span class="required">*</span></label>
-                    <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" autocomplete="bday" required />
-                    <div class="form-error" id="dateNaissance-error">Veuillez saisir votre date de naissance</div>
-                  </div>
-                  <div class="form-group">
-                    <span class="form-label">Sexe <span class="required">*</span></span>
-                    <div class="form-radio-group">
-                      <label class="form-radio-label male-corner">
-                        <input type="radio" name="sexe" value="Homme" required />
-                        <span class="radio-card-content"><span class="radio-card-title">Homme</span><span class="radio-card-badge">Coin rouge</span></span>
-                      </label>
-                      <label class="form-radio-label female-corner">
-                        <input type="radio" name="sexe" value="Femme" required />
-                        <span class="radio-card-content"><span class="radio-card-title">Femme</span><span class="radio-card-badge">Coin bleu</span></span>
-                      </label>
-                    </div>
-                    <div class="form-error" id="sexe-error">Veuillez sélectionner votre sexe</div>
-                  </div>
-                </div>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="email">Adresse e-mail <span class="required">*</span></label>
-                    <input type="email" class="form-input" id="email" name="email" placeholder="exemple@mail.com" autocomplete="email" required />
-                    <div class="form-error" id="email-error">Veuillez saisir une adresse e-mail valide</div>
-                    <div class="form-error" id="email-duplicate-error">Cette adresse e-mail est déjà inscrite</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="telephone">Téléphone <span class="required">*</span></label>
-                    <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="06 12 34 56 78" autocomplete="tel" required />
-                    <div class="form-error" id="telephone-error">Veuillez saisir un numéro de téléphone valide</div>
-                    <div class="form-error" id="telephone-duplicate-error">Ce numéro de téléphone est déjà inscrit</div>
-                  </div>
-                </div>
-                <div class="form-nav">
-                  <div></div>
-                  <button type="button" class="btn btn-next" data-next="2">Suivant →</button>
-                </div>
-              </div>
-
-              <!-- STEP 2 -->
-              <div class="form-step" data-step="2">
-                <h3 class="form-step-title">Informations sportives</h3>
-                <p class="form-step-desc">Votre profil de combattant</p>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="niveau">Niveau <span class="required">*</span></label>
-                    <select class="form-select" id="niveau" name="niveau" required>
-                      <option value="">Sélectionner</option>
-                      <option value="Débutant">Débutant</option>
-                      <option value="Intermédiaire">Intermédiaire</option>
-                    </select>
-                    <div class="form-error" id="niveau-error">Veuillez sélectionner votre niveau</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="discipline">Discipline <span class="required">*</span></label>
-                    <select class="form-select" id="discipline" name="discipline" required>
-                      <option value="">Sélectionner</option>
-                      <option value="Boxe Anglaise">Boxe Anglaise</option>
-                      <option value="Pied-Poing">Pied-Poing</option>
-                    </select>
-                    <div class="form-error" id="discipline-error">Veuillez sélectionner votre discipline</div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <span class="form-label">Licencié FFB / FFKMDA <span class="required">*</span></span>
-                  <div class="form-radio-group">
-                    <label class="form-radio-label yes-license">
-                      <input type="radio" name="licencie" value="Oui" required />
-                      <span class="radio-card-content"><span class="radio-card-title">Oui</span><span class="radio-card-desc">Licencié actif</span></span>
-                    </label>
-                    <label class="form-radio-label no-license">
-                      <input type="radio" name="licencie" value="Non" required />
-                      <span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Non licencié</span></span>
-                    </label>
-                  </div>
-                  <div class="form-error" id="licencie-error">Veuillez indiquer si vous êtes licencié</div>
-                </div>
-                <div class="conditional-field" id="licenceField">
-                  <div class="form-group">
-                    <label class="form-label" for="numeroLicence">Numéro de licence <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="numeroLicence" name="numeroLicence" placeholder="Votre numéro de licence" />
-                    <div class="form-error" id="numeroLicence-error">Veuillez saisir votre numéro de licence</div>
-                  </div>
-                </div>
-                <div class="conditional-field" id="engagementField">
-                  <div class="form-group">
-                    <label class="form-checkbox-label">
-                      <input type="checkbox" name="engagementLicence" id="engagementLicence" />
-                      Je m'engage à obtenir une licence loisir valide avant le 10/11/2026
-                    </label>
-                    <div class="form-error" id="engagementLicence-error">Vous devez vous engager à obtenir une licence</div>
-                  </div>
-                </div>
-                <div class="form-nav">
-                  <button type="button" class="btn btn-prev" data-prev="1">← Retour</button>
-                  <button type="button" class="btn btn-next" data-next="3">Suivant →</button>
-                </div>
-              </div>
-
-              <!-- STEP 3 -->
-              <div class="form-step" data-step="3">
-                <h3 class="form-step-title">Informations complémentaires</h3>
-                <p class="form-step-desc">Dernières informations pour finaliser</p>
-                <div class="form-row">
-                  <div class="form-group">
-                    <label class="form-label" for="club">Club d'entraînement <span class="required">*</span></label>
-                    <input type="text" class="form-input" id="club" name="club" placeholder="Nom de votre club" required />
-                    <div class="form-error" id="club-error">Veuillez saisir votre club</div>
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label" for="categoriePoids">Catégorie de poids <span class="required">*</span></label>
-                    <select class="form-select" id="categoriePoids" name="categoriePoids" required>
-                      <option value="">Sélectionner</option>
-                      <option value="-60kg">Moins de 60 kg</option>
-                      <option value="-64kg">60 – 64 kg</option>
-                      <option value="-69kg">64 – 69 kg</option>
-                      <option value="-75kg">69 – 75 kg</option>
-                      <option value="-81kg">75 – 81 kg</option>
-                      <option value="-91kg">81 – 91 kg</option>
-                      <option value="+91kg">Plus de 91 kg</option>
-                    </select>
-                    <div class="form-error" id="categoriePoids-error">Veuillez sélectionner une catégorie</div>
-                  </div>
-                </div>
-                <div class="form-group form-group-photo-reg">
-                  <span class="form-label">Photo pour l'affiche officielle</span>
-                  <p class="form-hint-photo">JPG ou PNG — visible sur la carte des combats. Optionnel mais recommandé.</p>
-                  <div class="reg-photo-row">
-                    <div id="regPhotoPreview" class="reg-photo-preview" aria-hidden="true"></div>
-                    <div class="reg-photo-actions">
-                      <input type="file" id="regPhotoFile" class="visually-hidden" accept="image/jpeg,image/png,image/webp" />
-                      <input type="hidden" id="regPhotoUrl" name="regPhotoUrl" value="" />
-                      <button type="button" id="regPhotoBtn" class="btn btn-secondary btn-sm reg-photo-btn">Choisir une image</button>
-                      <button type="button" id="regPhotoClearBtn" class="btn btn-ghost reg-photo-clear" hidden>Retirer</button>
-                    </div>
-                  </div>
-                  <p id="regPhotoStatus" class="form-hint-photo reg-photo-status"></p>
-                </div>
-                <div class="form-group">
-                  <label class="form-checkbox-label">
-                    <input type="checkbox" name="consentementRGPD" id="consentementRGPD" required />
-                    J'accepte que mes données soient traitées dans le cadre du Boxing Trophy 19, conformément au RGPD.
-                  </label>
-                  <div class="form-error" id="consentementRGPD-error">Vous devez accepter les conditions</div>
-                </div>
-                <div class="form-nav">
-                  <button type="button" class="btn btn-prev" data-prev="2">← Retour</button>
-                  <button type="submit" class="btn btn-submit">Valider l'inscription</button>
-                </div>
-              </div>
-            </form>
-
-            <div class="registrations-closed" id="registrationsClosed" hidden>
-              <span class="state-mark" aria-hidden="true">✕</span>
-              <h3>Inscriptions fermées</h3>
-              <p>Rendez-vous sur place le <strong>13 novembre</strong> à partir de <strong>19h</strong> à Portet-sur-Garonne.</p>
-              <a href="#carte-combats" class="btn btn-outline btn-sm">Voir le programme</a>
-            </div>
-
-            <div class="form-success" id="formSuccess">
-              <span class="state-mark state-mark-ok" aria-hidden="true">✓</span>
-              <h3>Inscription confirmée&nbsp;!</h3>
-              <p>Merci pour votre inscription au Boxing Trophy 19.<br/>Vous serez contacté(e) prochainement. Préparez-vous&nbsp;!</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- ═══════════════════════ FOOTER ═══════════════════════ -->
-  <footer class="footer" id="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <div class="footer-logo-block">
-          <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" />
-          <span class="nl-divider" aria-hidden="true"></span>
-          <span class="nl-edition">Trophy <strong>19</strong></span>
-        </div>
-        <p>L'ouverture de la nouvelle salle à <strong>Portet-sur-Garonne</strong>. Boxe anglaise &amp; pied-poing. 13 novembre, 19h.</p>
-        <a href="#inscription" class="btn btn-primary btn-sm footer-cta nav-cta">S'inscrire</a>
-      </div>
-      <div class="footer-col">
-        <h5>Navigation</h5>
-        <a href="#event">L'événement</a>
-        <a href="#disciplines">Disciplines</a>
-        <a href="#galerie">Galerie</a>
-        <a href="#carte-combats">Programme</a>
-        <a href="#licence">Licence</a>
-        <a href="#inscription">Inscription</a>
-      </div>
-      <div class="footer-col">
-        <h5>Informations</h5>
-        <span>Boxing Center, Portet-sur-Garonne</span>
-        <span>Vendredi 13 novembre 2026</span>
-        <span>À partir de 19h</span>
-        <span>Place public : 10 €</span>
-      </div>
-    </div>
-    <div class="container footer-bottom">
-      <p>© 2026 Boxing Trophy 19 — Tous droits réservés</p>
-      <a href="#">Politique de confidentialité &amp; RGPD</a>
-    </div>
-    <p class="ai-dev-credit" aria-hidden="true">chef equipe dev : <a href="https://fr.linkedin.com/in/germain-raphael-angoula-onambele-a6b858395" rel="noopener noreferrer">Angoula Onambele Germain Raphael</a> · dev : mbosseu brad bruel</p>
-  </footer>
-
-  <!-- LIGHTBOX (galerie + vidéos) -->
-  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse" hidden>
-    <button class="lb-btn lb-close" type="button" aria-label="Fermer">✕</button>
-    <button class="lb-btn lb-prev" type="button" aria-label="Précédent">‹</button>
-    <div class="lb-stage" id="lightboxStage"></div>
-    <button class="lb-btn lb-next" type="button" aria-label="Suivant">›</button>
-    <p class="lb-count" id="lightboxCount"></p>
+<!-- Préface : marbre, soie or et argent, logo Boxing Center en relief -->
+<div class="pf" id="loader">
+  <div class="pf-scene" id="pfScene">
+    <img class="pf-plate" id="pfPlate" src="image/intro/pf-plate.jpg" alt="">
+    <div class="pf-sheen" id="pfSheen"></div>
   </div>
+  <div class="pf-center" id="pfCenter">
+    <div class="pf-logo-wrap" id="pfWrap">
+      <div class="pf-logo" id="pfLogo">
+        <img class="pf-shadow" id="pfShadow" src="image/intro/pf-logo.webp" alt="">
+        <div class="ly pf-ly" id="pfLy"><img class="face" src="image/intro/pf-logo.webp" alt="Boxing Center"><canvas class="mat" id="pfMat"></canvas></div>
+      </div>
+    </div>
+    <p class="pf-txt" id="pfTxt" aria-label="On accroche les affiches"></p>
+    <div class="pf-line"><span class="pf-track"><i id="bar"></i></span><b class="pf-dia" id="pfDia"></b><span class="pf-track r"><i id="bar2"></i></span></div>
+  </div>
+  <div class="pf-dim" id="pfDim"></div>
+</div>
+<canvas class="dust" id="dust" aria-hidden="true"></canvas>
 
-  <script src="env-loader.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="supabase-config.js"></script>
-  <script src="cloudinary-config.js?v=3"></script>
-  <script src="poster.js?v=9"></script>
-  <script src="published-matches.js"></script>
-  <script src="registration-gate.js"></script>
-  <script src="home-combats.js"></script>
-  <script src="app.js?v=7"></script>
-  <script src="gallery.js?v=2"></script>
-  <script src="film.js?v=3"></script>
-  <script>
-    (function () {
-      var btn = document.getElementById('licencePayBtn');
-      if (!btn) return;
-      btn.addEventListener('click', function () {
-        var gym = Math.random() < 0.5 ? 'portet' : 'minimes';
-        var url =
-          'https://boutique.boxingcenter.fr/inscription?product=licence-loisirs-trophy&gym=' +
-          encodeURIComponent(gym);
-        window.location.href = url;
-      });
-    })();
-  </script>
+<div class="stage" id="stage" aria-hidden="true">
+  <div class="cards" id="cards"></div>
+</div>
+
+<div class="hero-t" id="heroT" aria-hidden="true">
+  <div class="lk-wrap" id="lkWrap">
+    <div class="lk" id="lk">
+      <div class="lk-halo" id="lkHalo"></div>
+      <div class="lk-shadow" id="lkShadow"><img src="image/intro/lk-full.webp" alt=""></div>
+    </div>
+    <div class="lk-refl" id="lkRefl" hidden></div>
+  </div>
+</div>
+
+<header class="top">
+  <a class="logo" href="#"><img src="image/intro/logo.png" alt="Boxing Center"></a>
+  <div class="brand"><p>Boxing Center · Édition 2027</p></div>
+  <button class="menu" type="button" aria-label="Menu"><span></span></button>
+</header>
+<h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Boxing Trophy 20, la soirée de gala</h1>
+
+
+
+<script>
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var $=function(id){return document.getElementById(id)};
+  function cl(v){return v<0?0:v>1?1:v}
+  function eo(t){return 1-Math.pow(1-t,3)}
+  function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
+  function lerp(a,b,t){return a+(b-a)*t}
+
+  /* ── Logo en relief ── */
+  // position de chaque élément dans l'image d'origine (en %), profondeur, points de scintillement
+  var LAYERS={
+    champ:{x:5.589,y:5.277,w:69.61,h:31.529,z:28,sp:[[62.7,69.5],[41.8,64.4],[35.8,67.8],[58.8,69.5],[52.6,79.8]]},
+    sub:{x:2.583,y:36.671,w:72.71,h:7.848,z:16,sp:[]},
+    boxing:{x:1.362,y:44.384,w:43.166,h:55.616,z:0,sp:[[22.5,24.1],[15.3,46],[36.3,43.1],[46.5,34.8],[18.1,20.4],[10.2,11.2],[67.9,14.4],[87.9,51.1],[39.3,32.1]]},
+    word:{x:44.481,y:44.384,w:35.557,h:50.203,z:0,sp:[[27.6,55],[66.3,18.1],[40.7,56.1],[39,20.5],[77.7,50.7],[56.9,22.9],[27.2,27.5],[72.1,10.8]]},
+    trophy:{x:75.247,y:2.03,w:24.753,h:89.039,z:12,sp:[[35.9,36.9],[94.3,18.5],[82.2,92.9],[48.6,9.1],[66.4,7],[20.3,48.2],[73.2,79.8],[48.6,56.1],[77.6,47.3]]}
+  };
+  var lk=$('lk'), lkWrap=$('lkWrap'), lkRefl=$('lkRefl'), lkHalo=$('lkHalo'), lkShadow=$('lkShadow');
+  var small=matchMedia('(max-width:760px)').matches, EX=small?5:10, EXD=small?1.6:1.2;
+  Object.keys(LAYERS).forEach(function(k,ki){
+    var L=LAYERS[k], el=document.createElement('div');el.className='ly ly-'+k;
+    el.style.left=L.x+'%';el.style.top=L.y+'%';el.style.width=L.w+'%';el.style.height=L.h+'%';
+    var src='image/intro/lk-'+k+'.webp', html='';
+    // épaisseur : tranches d'or massif (silhouette pleine), de plus en plus sombres vers l'arrière
+    if(k!=='sub') for(var e=EX;e>=1;e--){
+      var f=e/EX;
+      html+='<img class="ex" src="'+src.replace('.webp','-wall.webp')+'" alt="" style="transform:translateZ('+(-e*EXD).toFixed(1)+'px);filter:brightness('+(1-.62*f).toFixed(2)+')">';
+    }
+    html+='<img class="face" src="'+src+'" alt="">';
+    html+='<canvas class="mat"></canvas>';
+    html+='<i class="spec" style="-webkit-mask-image:url('+src+');mask-image:url('+src+')"></i>';
+    L.sp.forEach(function(p,i){
+      var s=(10+((i*37+ki*11)%14))*(small?.7:1);
+      html+='<span class="sp" style="left:'+p[0]+'%;top:'+p[1]+'%;--s:'+s+'px;--d:'+(2.2+((i*13)%10)/6).toFixed(2)+'s;--dl:'+(((i*7+ki*5)%17)/6).toFixed(2)+'s"></span>';
+    });
+    el.innerHTML=html; lk.appendChild(el);
+    L.el=el; L.spec=el.querySelector('.spec'); L.face=el.querySelector('.face'); L.cv=el.querySelector('.mat'); L.src=src;
+  });
+
+  /* ── Matière : chaque élément est éclairé en temps réel (or poli + diamants) ── */
+  var VS='attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
+  var FS=[
+    'precision mediump float;',
+    'uniform sampler2D uC,uN;uniform vec3 uL;uniform float uAsp,uT,uK;uniform vec2 uCells;varying vec2 v;',
+    'float hash(vec2 q){return fract(sin(dot(q,vec2(12.9898,78.233)))*43758.5453);}',
+    'void main(){',
+    ' vec4 c=texture2D(uC,v); if(c.a<.01){gl_FragColor=vec4(0.);return;}',
+    ' vec3 n=texture2D(uN,v).rgb; vec2 g=(n.rg-.5)*2.;',
+    ' vec3 N=normalize(vec3(-g.x*uK,-g.y*uK,1.));',
+    ' vec3 L=normalize(vec3((uL.x-v.x)*uAsp,(uL.y-v.y),uL.z));',
+    ' vec3 L2=normalize(vec3(-.6,.9,.5));',                       // lumière d'appoint, en bas à gauche
+    ' vec3 H=normalize(L+vec3(0.,0.,1.));',
+    ' float lum=dot(c.rgb,vec3(.299,.587,.114));',
+    ' float dia=smoothstep(.62,.9,lum);',                          // zones « diamant » (claires)
+    ' float d=max(dot(N,L),0.), d2=max(dot(N,L2),0.);',
+    ' float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
+    ' vec2 cell=floor(v*uCells); float r=hash(cell);',
+    ' float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.55,r);',  // éclats des diamants
+    ' vec3 gold=vec3(1.,.82,.48);',
+    ' vec3 base=c.rgb*(.55+.7*d+.14*d2);',
+    ' vec3 spec=s*mix(gold*1.5,vec3(1.4),dia)*(1.+.8*dia);',
+    ' vec3 col=base+spec+tw*vec3(1.,.97,.9)*1.6;',
+    ' gl_FragColor=vec4(col*c.a,c.a);',
+    '}'].join('\n');
+  var GL_OK=true;
+  function loadImg(s){return new Promise(function(res,rej){var i=new Image();i.onload=function(){res(i)};i.onerror=rej;i.src=s})}
+  function setupGL(L){
+    var cv=L.cv, gl=cv.getContext('webgl',{premultipliedAlpha:true,alpha:true,antialias:false});
+    if(!gl){GL_OK=false;return Promise.resolve()}
+    function sh(t,s){var o=gl.createShader(t);gl.shaderSource(o,s);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS))throw gl.getShaderInfoLog(o);return o}
+    var pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,VS));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,FS));gl.linkProgram(pr);gl.useProgram(pr);
+    var buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+    var loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    function tex(img,unit){var t=gl.createTexture();gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);
+      gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,img);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);}
+    return Promise.all([loadImg(L.src),loadImg(L.src.replace('.webp','-n.webp'))]).then(function(im){
+      tex(im[0],0);tex(im[1],1);
+      L.gl=gl;L.nat=[im[0].naturalWidth,im[0].naturalHeight];
+      L.u={C:gl.getUniformLocation(pr,'uC'),N:gl.getUniformLocation(pr,'uN'),L:gl.getUniformLocation(pr,'uL'),asp:gl.getUniformLocation(pr,'uAsp'),T:gl.getUniformLocation(pr,'uT'),K:gl.getUniformLocation(pr,'uK'),cells:gl.getUniformLocation(pr,'uCells')};
+      gl.uniform1i(L.u.C,0);gl.uniform1i(L.u.N,1);
+      gl.uniform2f(L.u.cells,L.nat[0]/9,L.nat[1]/9);
+      gl.uniform1f(L.u.K,L.key==='sub'?2.:4.2);
+      L.el.classList.add('lit');
+    });
+  }
+  Object.keys(LAYERS).forEach(function(k){ LAYERS[k].key=k; try{ setupGL(LAYERS[k]).catch(function(){}) }catch(e){ GL_OK=false } });
+
+  // dessine un élément éclairé par une lumière placée en (lx, ly) à l'écran, à lz pixels « devant »
+  function drawMat(L,lx,ly,lz,t){
+    if(!L.gl)return;
+    var gl=L.gl, cv=L.cv, r=L.el.getBoundingClientRect(), dpr=Math.min(devicePixelRatio||1,1.5);
+    if(r.width<2)return;
+    var w=Math.max(2,Math.round(L.el.offsetWidth*dpr)), h=Math.max(2,Math.round(L.el.offsetHeight*dpr));
+    if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;gl.viewport(0,0,w,h)}
+    gl.uniform3f(L.u.L,(lx-r.left)/r.width,(ly-r.top)/r.height,lz/r.height);
+    gl.uniform1f(L.u.asp,r.width/r.height);
+    gl.uniform1f(L.u.T,t);
+    gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  }
+
+  /* ── Préface : logo Boxing Center en relief sur le marbre ── */
+  var PF={cv:$('pfMat'),src:'image/intro/pf-logo.webp',el:$('pfLy'),key:'pf'};
+  (function(){ var lg=$('pfLogo'), html=''; var n=small?5:9;
+    for(var e=n;e>=1;e--){var f=e/n; html+='<img class="ex" src="image/intro/pf-logo-wall.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ('+(-e*1.5).toFixed(1)+'px);filter:brightness('+(1-.55*f).toFixed(2)+')">';}
+    lg.insertAdjacentHTML('afterbegin',html); lg.insertBefore($('pfShadow'),lg.firstChild);
+  })();
+  try{ setupGL(PF).catch(function(){}) }catch(e){}
+  var pfTxt=$('pfTxt'), pfLetters=[];
+  'On accroche les affiches'.toUpperCase().split('').forEach(function(ch){var s=document.createElement('span');s.textContent=ch===' '?' ':ch;s.setAttribute('aria-hidden','true');pfTxt.appendChild(s);pfLetters.push(s)});
+  var pfLight={x:innerWidth/2,y:0};
+  function preface(t,vw,vh){
+    var pf=$('loader'); if(pf.classList.contains('gone'))return;
+    var plateW=Math.max(vw,vh*1672/941)*1.06;
+    var lw=Math.min(.311*plateW,vw*.84,660);
+    pf.style.setProperty('--pf-w',lw.toFixed(1)+'px');
+    pf.style.setProperty('--pf-fs',Math.max(8,lw*.03).toFixed(1)+'px');
+    pf.style.setProperty('--pf-gap',(lw*.045).toFixed(1)+'px');
+    // le marbre bouge un peu avec la souris, la soie brille par vagues
+    var px=tilt.has?tilt.ty:Math.sin(t*.3)*.15, py=tilt.has?tilt.tx:Math.cos(t*.25)*.1;
+    var tr=cl((t-T.load)/1.1), trE=eio(tr);
+    $('pfScene').style.transform='translate('+(-px*16).toFixed(1)+'px,'+(-py*10).toFixed(1)+'px) scale('+(1.05-eo(cl(t/2.5))*.04+trE*.06).toFixed(3)+')';
+    $('pfScene').style.filter=tr>0?'brightness('+(1-.75*trE).toFixed(3)+') sepia('+(.5*trE).toFixed(2)+')':'none';
+    $('pfSheen').style.backgroundPosition=(130-((t*.32)%1.7)*100).toFixed(1)+'% 0';
+    // le logo sort du marbre
+    var le=eo(cl((t-.25)/1.2));
+    var rx=lerp(26,0,le)+(-py*10)*le, ry=(px*16)*le;
+    $('pfLogo').style.transform='translateZ('+lerp(-420,0,le).toFixed(1)+'px) rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+    PF.el.style.opacity=cl(le*1.6).toFixed(3);
+    [].forEach.call($('pfLogo').querySelectorAll('.ex'),function(x){x.style.opacity=cl(le*1.6).toFixed(3)});
+    // lumière : balaie au-dessus du logo, ou suit la souris
+    var lr=$('pfWrap').getBoundingClientRect();
+    var lx=lr.left+lr.width*(.5+Math.sin(t*.7)*.55), ly=lr.top-lr.height*.35;
+    if(tilt.has){lx=(tilt.ty+.5)*vw; ly=Math.min((tilt.tx+.5)*vh,lr.top+lr.height*.3)}
+    pfLight.x+=(lx-pfLight.x)*.1; pfLight.y+=(ly-pfLight.y)*.1;
+    drawMat(PF,pfLight.x,pfLight.y,lr.height*.9,t);
+    // ombre portée sur le marbre, opposée à la lumière
+    var cx=lr.left+lr.width/2, cy=lr.top+lr.height/2;
+    var sh=$('pfShadow'); sh.style.opacity=(le*.32).toFixed(3);
+    sh.style.transform='translate3d('+((cx-pfLight.x)*.06).toFixed(1)+'px,'+(10+(cy-pfLight.y)*.05).toFixed(1)+'px,-60px) scale(1.04)';
+    // texte lettre par lettre, filet qui se remplit depuis le losange
+    pfLetters.forEach(function(s,i){var lt=eo(cl((t-(.9+i*.035))/.6));s.style.opacity=lt.toFixed(3);s.style.transform='translateY('+((1-lt)*8).toFixed(1)+'px)';s.style.filter=lt<1?'blur('+((1-lt)*5).toFixed(1)+'px)':'none'});
+    var pg=eio(cl((t-.6)/(T.load-.9)));
+    $('bar').style.width=$('bar2').style.width=(pg*100).toFixed(1)+'%';
+    $('pfDia').style.transform='rotate('+(45+Math.sin(t*2)*8).toFixed(1)+'deg) scale('+(lerp(.3,1,eo(cl((t-.5)/.6)))*(1+Math.sin(t*3)*.06)).toFixed(3)+')';
+    // les lumières baissent : on passe à la salle
+    $('pfDim').style.opacity=trE.toFixed(3);
+    $('pfCenter').style.transform='translateY(-50%) scale('+(1+trE*.18).toFixed(3)+')';
+    $('pfCenter').style.opacity=(1-cl(tr*1.4)).toFixed(3);
+    if(tr>=1)pf.classList.add('gone');
+  }
+
+  /* ── Poussière d'or : sur la préface, puis elle reste dans la salle ── */
+  var dust=$('dust'), dctx=dust.getContext('2d'), parts=[];
+  for(var di=0;di<(small?70:140);di++)parts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.004,vy:-.003-Math.random()*.006,s:.5+Math.random()*1.9,ph:Math.random()*6.28,sp:.8+Math.random()*2.4,gold:Math.random()<.72,keep:Math.random()<.4});
+  function drawDust(t){
+    var w=innerWidth,h=innerHeight; if(dust.width!==w||dust.height!==h){dust.width=w;dust.height=h}
+    dctx.clearRect(0,0,w,h);
+    var dark=eio(cl((t-T.load)/1.1));                       // 0 = marbre clair, 1 = salle sombre
+    var fadeOut=1-cl((t-T.end-2)/3)*.5;
+    for(var i=0;i<parts.length;i++){
+      var p=parts[i]; if(dark>.5&&!p.keep)continue;
+      p.x+=p.vx/60; p.y+=p.vy/60; if(p.y<-.02){p.y=1.02;p.x=Math.random()} if(p.x<0)p.x+=1; if(p.x>1)p.x-=1;
+      var tw=.35+.65*Math.pow(Math.max(0,Math.sin(t*p.sp+p.ph)),3);
+      var a=tw*(dark>.5?.55:.85)*fadeOut;
+      var col=p.gold?(dark>.5?'255,205,120':'184,134,48'):(dark>.5?'255,255,255':'150,150,160');
+      var X=p.x*w,Y=p.y*h,S=p.s*(dark>.5?1.1:1);
+      dctx.fillStyle='rgba('+col+','+a.toFixed(3)+')';
+      dctx.beginPath();dctx.arc(X,Y,S,0,6.283);dctx.fill();
+      if(p.s>1.8&&tw>.8){ dctx.strokeStyle='rgba('+col+','+(a*.8).toFixed(3)+')';dctx.lineWidth=.6;dctx.beginPath();dctx.moveTo(X-S*4,Y);dctx.lineTo(X+S*4,Y);dctx.moveTo(X,Y-S*4);dctx.lineTo(X,Y+S*4);dctx.stroke(); }
+    }
+  }
+
+  // position de la lumière à l'écran (suit la souris, sinon balaie doucement)
+  var light={x:0,y:0};
+  function renderMaterials(t,G){
+    var lx=G.left+G.W*(.5+Math.sin(t*.42)*.45), ly=G.top-G.H*.25;
+    if(tilt.has){lx=lerp(lx,(tilt.ty+.5)*innerWidth,.85); ly=Math.min(lerp(ly,(tilt.tx+.5)*innerHeight-G.H*.4,.85),G.top+G.H*.25)}   // la lumière reste au-dessus, comme un projecteur
+    light.x+=(lx-light.x)*.08; light.y+=(ly-light.y)*.08;
+    if(t>T.load)Object.keys(LAYERS).forEach(function(k){
+      var L=LAYERS[k]; if(L.el.style.opacity==='0')return;
+      drawMat(L,light.x,light.y,G.H*.55,t);
+    });
+    // ombres portées sur le fond : elles s'éloignent de la lumière
+    var cx=G.left+G.W/2, cy=G.top+G.H/2;
+    lkShadow.style.transform='translate3d('+((cx-light.x)*.07).toFixed(1)+'px,'+(18+(cy-light.y)*.05).toFixed(1)+'px,-170px) scale(1.12)';
+  }
+
+  /* Géométrie du logo à l'écran */
+  function geo(vw,vh){
+    var narrow=vw<=760||vw/vh<=1;
+    var W=narrow?vw*.86:Math.min(vw*.84,1250,vh*1.5);
+    var H=W*739/2129;
+    var top=narrow?Math.max(72,vh*.24):Math.max(64,vh*.08);
+    return {W:W,H:H,top:top,left:(vw-W)/2};
+  }
+
+  // inclinaison suivant la souris (ou le doigt), lissée
+  var tilt={x:0,y:0,tx:0,ty:0,has:false};
+  addEventListener('pointermove',function(e){tilt.has=true;tilt.tx=(e.clientY/innerHeight-.5);tilt.ty=(e.clientX/innerWidth-.5)});
+  addEventListener('pointerleave',function(){tilt.has=false});
+
+  /* ── Affiches ── */
+  var TITLES=['VICTOIRE','COIN ROUGE','PIED-POING','LE DIRECT','RESPECT','COIN BLEU','ROUND 3','L’ESQUIVE','HIGH KICK'];
+  var RINGS=[9,14,20], cardsEl=$('cards'), cards=[], n=0;
+  RINGS.forEach(function(count,ri){
+    for(var k=0;k<count;k++){
+      var d=document.createElement('div');d.className='card';
+      var pi=n%9;
+      d.innerHTML='<img src="image/intro/p'+(pi+1)+'.jpg" alt="" decoding="async"><b>'+TITLES[pi]+'</b>';
+      cardsEl.appendChild(d);
+      var rnd=function(s){var x=Math.sin(n*12.9898+s*78.233)*43758.5453;return x-Math.floor(x)};
+      cards.push({el:d,ri:ri,k:k,count:count,
+        a0:k/count*Math.PI*2-Math.PI/2+ri*.21,
+        // position finale « nuage » autour du trophée : x,y en fraction d'écran, z = profondeur
+        sx:(rnd(1)-.5)*1.25, sy:(rnd(2)-.5)*1.05, sz:rnd(3), tilt:(rnd(4)-.5)*34, ph:rnd(5)*6.28});
+      n++;
+    }
+  });
+  // Dans le nuage final, on ne garde qu'une douzaine d'affiches : 4 au premier plan (grandes, floues),
+  // quelques-unes nettes autour du trophée, le reste loin derrière.
+  // Composition finale : x, y (fraction de l'écran), taille (fraction du plus petit côté), flou, inclinaison, plan
+  var SLOTS=[
+    [.17,.42,.30,0,-14,6],   // affiche nette à gauche, devant le titre
+    [.80,.40,.46,9,12,7],    // grande floue à droite
+    [.18,.80,.50,10,-6,7],   // grande floue en bas à gauche
+    [.80,.76,.30,0,9,6],     // affiche nette en bas à droite
+    [.36,.30,.18,3,8,1],     // derrière le titre
+    [.64,.62,.14,1.5,-6,3],  // derrière le trophée
+    [.40,.58,.12,2,10,1],
+    [.70,.22,.15,3,-10,1],
+    [.08,.18,.16,4,12,1],
+    [.94,.58,.17,4,-12,1],
+    [.40,.92,.20,5,6,1]
+  ];
+  var si=0;
+  cards.forEach(function(c,i){ c.slot=(i%4===0&&si<SLOTS.length)?SLOTS[si++]:null; });
+
+
+  var stage=$('stage'),heroT=$('heroT'),bar=$('bar'),loader=$('loader');
+  var T={load:3.8, bg:4.4, strip:4.9, ring1:5.6, rings:6.4, spiral:7.6, scatter:8.0, settle:9.4, title:9.0, end:11.2};
+  var start=performance.now(), done=false;
+
+  function back(t){return t<1?1+2.7*Math.pow(t-1,3)+1.7*Math.pow(t-1,2):1}
+
+  function layoutLogo(t,vw,vh,G){
+    lkWrap.style.width=G.W.toFixed(1)+'px';
+    heroT.style.top=G.top.toFixed(0)+'px';
+    var T0=T.title;
+
+    // Le trophée : au centre pendant que les affiches tournent, puis il rejoint sa place dans le logo
+    var L=LAYERS.trophy;
+    var appear=eo(cl((t-T.bg)/.8)), grow=eio(cl((t-T.scatter)/1.4));
+    var natX=G.left+(L.x+L.w/2)/100*G.W, natY=G.top+(L.y+L.h/2)/100*G.H, natH=L.h/100*G.H;
+    var sC=(vh*.5/natH)*lerp(.4,1,grow)*lerp(.8,1,appear);
+    var pl=eio(cl((t-(T0+.5))/.8));
+    var dx=(vw/2-natX)*(1-pl), dy=(vh*.53-natY)*(1-pl)-Math.sin(pl*Math.PI)*vh*.06;
+    L.el.style.opacity=appear.toFixed(3);
+    L.el.style.transform='translate3d('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px,'+L.z+'px) scale('+lerp(sC,1,pl).toFixed(3)+') rotateY('+((1-pl)*Math.sin(t*1.4)*14).toFixed(1)+'deg)';
+
+    // Les mots arrivent du fond et se plaquent
+    var slam=0;
+    function enter(k,delay,from){
+      var M=LAYERS[k], lt=cl((t-(T0+delay))/.5), b=back(lt);
+      M.el.style.opacity=cl(lt*2.2).toFixed(3);
+      M.el.style.transform='translate3d('+((1-b)*from[0]).toFixed(1)+'%,'+((1-b)*from[1]).toFixed(1)+'%,'+(M.z+(1-b)*from[2]).toFixed(1)+'px) rotateY('+((1-b)*from[3]).toFixed(1)+'deg) scale('+lerp(from[4],1,b).toFixed(3)+')';
+      if(lt>0&&lt<.3&&from[5])slam=Math.max(slam,1-lt/.3);
+    }
+    enter('boxing',0,[-60,0,-700,40,1,1]);
+    enter('word',.22,[60,0,-700,-40,1,1]);
+    enter('champ',1.2,[0,-90,260,0,1,0]);
+    enter('sub',1.45,[0,0,120,0,1.35,0]);
+
+    // halo, reflet au sol, scintillements
+    var fin=eo(cl((t-(T0+1.6))/1));
+    lkHalo.style.opacity=lerp(0,1,eo(cl((t-(T0+.6))/1))).toFixed(3);
+    lkRefl.style.opacity=fin.toFixed(3);
+    lkShadow.style.opacity=eo(cl((t-(T0+.3))/1)).toFixed(3);
+    if(fin>.5&&!lk.classList.contains('live'))lk.classList.add('live');
+
+    // inclinaison : légère oscillation, plus la souris
+    var on=eo(cl((t-(T0+1.4))/1.2));
+    tilt.x+=(tilt.tx-tilt.x)*.06; tilt.y+=(tilt.ty-tilt.y)*.06;
+    var rx=(Math.sin(t*.45)*4+(tilt.has?-tilt.x*20:0))*on;
+    var ry=(Math.sin(t*.32)*9+(tilt.has?tilt.y*30:0))*on;
+    var shake=slam?'translate('+((Math.random()-.5)*8*slam).toFixed(1)+'px,'+((Math.random()-.5)*5*slam).toFixed(1)+'px) ':'';
+    lk.style.transform=shake+'rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)';
+
+    // reflet de lumière : un premier passage après l'arrivée, puis il suit l'inclinaison
+    var sweep=cl((t-(T0+1.9))/1.3);
+    var pos=sweep<1?lerp(120,-20,eio(sweep)):50-ry*5.5-rx*2;
+    Object.keys(LAYERS).forEach(function(k){LAYERS[k].spec.style.backgroundPosition=pos.toFixed(1)+'% 0'});
+  }
+
+  function frame(now){
+    var t=reduce?99:(now-start)/1000;
+    var vw=innerWidth,vh=innerHeight,vmin=Math.min(vw,vh),cw=cardsEl.firstChild.offsetWidth,ch=cw*1.25;
+
+    /* 1. chargement */
+    preface(t,vw,vh); drawDust(t);
+    if(t>T.load+.4&&!stage.classList.contains('on'))stage.classList.add('on');
+
+    var G=geo(vw,vh);
+    layoutLogo(t,vw,vh,G); renderMaterials(t,G); var cx=vw/2;
+
+    /* 2. affiches : bandeau → anneau → spirale → nuage */
+    var spin=(t-T.ring1)*.55;
+    var spread=eio(cl((t-T.rings)/(T.spiral-T.rings)));
+    var sc=eio(cl((t-T.scatter)/(T.settle-T.scatter)));
+    for(var i=0;i<cards.length;i++){
+      var c=cards[i], el=c.el;
+      // anneaux
+      var baseR=[.22,.36,.5][c.ri]*vmin;
+      var R=c.ri===0?baseR*lerp(1,1.25,spread):baseR*lerp(.6,1.5,spread);
+      var a=c.a0+(c.ri%2?-1:1)*Math.max(0,spin)*(1+c.ri*.25);
+      var rx=cx+Math.cos(a)*R, ry=vh*.5+Math.sin(a)*R;
+      var rr=a*180/Math.PI+90, rs=1, op=1;
+      var appear;
+      if(c.ri===0){
+        // tombe du bandeau du haut vers sa place sur l'anneau
+        var st=T.strip+c.k*.07, dp=eo(cl((t-st)/.55));
+        var stripX=vw/2+(c.k-(c.count-1)/2)*(cw*1.35), stripY=-ch*.05;
+        appear=cl((t-T.strip+.3)/.3);
+        rx=lerp(stripX+cw/2,rx,dp); ry=lerp(stripY+ch/2,ry,dp); rr=lerp(0,rr,dp);
+      } else {
+        var st2=T.ring1+(c.ri-1)*.35+c.k*.02, dp2=eo(cl((t-st2)/.6));
+        appear=dp2; rs=lerp(.4,1,dp2);
+      }
+      op=appear;
+      // nuage en profondeur
+      var sl=c.slot, fx, fy, ws, blur, tilt;
+      if(sl){ fx=sl[0]*vw; fy=sl[1]*vh; ws=sl[2]*vmin/cw; blur=sl[3]; tilt=sl[4]; }
+      else { fx=cx+c.sx*vw*1.4; fy=vh*.5+c.sy*vh*1.4; ws=.6; blur=4; tilt=c.tilt; }
+      var bob=Math.sin(t*.6+c.ph)*6, bob2=Math.cos(t*.5+c.ph)*5;
+      blur*=sc;
+      var X=lerp(rx,fx+bob2,sc), Y=lerp(ry,fy+bob,sc), S=lerp(rs,ws,sc), Rz=lerp(rr,tilt,sc);
+      var O=op*(sl?1:1-sc);
+      el.style.opacity=O.toFixed(3);
+      el.style.visibility=O<.01?'hidden':'visible';
+      el.style.transform='translate3d('+(X-cw/2).toFixed(1)+'px,'+(Y-ch/2).toFixed(1)+'px,0) rotate('+Rz.toFixed(1)+'deg) scale('+S.toFixed(3)+')';
+      el.style.filter=blur>.3?'blur('+blur.toFixed(1)+'px)':'none';
+      el.style.zIndex=sc>.5&&sl?sl[5]:3;
+    }
+
+    /* 3. en-tête et titre */
+    if(t>T.title-.3)document.body.classList.add('on-ready');
+
+    if(t>T.end&&!done){done=true;document.body.classList.remove('lock');document.body.classList.add('intro-done')}
+
+    /* 4. au défilement : la scène recule doucement */
+    var p=cl(scrollY/vh);
+    stage.style.transform='scale('+(1-p*.06).toFixed(3)+')';
+    stage.style.filter=p>0?'brightness('+(1-p*.5).toFixed(3)+')':'none';
+    heroT.style.transform='translate3d(0,'+(-p*vh*.25).toFixed(1)+'px,0) scale('+(1-p*.08).toFixed(3)+')';
+    heroT.style.opacity=(1-p*1.2).toFixed(3);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+  // Un clic pendant l'intro la fait passer
+  addEventListener('click',function(){ if(!done) start=performance.now()-T.end*1000; });
+})();
+</script>
 </body>
 </html>
