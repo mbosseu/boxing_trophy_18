@@ -6,6 +6,10 @@
 <title>Boxing Trophy 20</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<!-- Premier écran de l'intro : chargé en priorité -->
+<link rel="preload" as="image" href="image/intro/pf-plate.webp" fetchpriority="high">
+<link rel="preload" as="image" href="image/intro/pf-logo.webp" fetchpriority="high">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Montserrat:wght@900&display=swap">
 <style>
 :root{
@@ -50,6 +54,7 @@ img{max-width:100%}
 .stage.on{opacity:1}
 .stage::before{content:"";position:absolute;left:50%;top:56%;width:90vmin;height:90vmin;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,150,90,.2),rgba(200,40,30,.07) 55%,transparent);pointer-events:none}
 .cards{position:absolute;inset:0;z-index:3}
+.stage-dim{position:absolute;inset:0;z-index:9;background:#000;opacity:0;pointer-events:none}
 .card{position:absolute;left:0;top:0;width:var(--cw);aspect-ratio:4/5;will-change:transform,filter,opacity;opacity:0;box-shadow:0 10px 26px rgba(0,0,0,.55)}
 .card img{display:block;width:100%;height:100%;object-fit:cover}
 .card b{position:absolute;left:6%;right:6%;bottom:7%;text-align:center;font:400 calc(var(--cw)*.075)/1.2 Boldonse,sans-serif;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.7),0 0 10px rgba(0,0,0,.45)}
@@ -139,7 +144,7 @@ html,body{overflow-x:hidden}
 <!-- Préface : marbre, soie or et argent, logo Boxing Center en relief -->
 <div class="pf" id="loader">
   <div class="pf-scene" id="pfScene">
-    <img class="pf-plate" id="pfPlate" src="image/intro/pf-plate.jpg" alt="">
+    <img class="pf-plate" id="pfPlate" src="image/intro/pf-plate.webp" alt="">
     <div class="pf-sheen" id="pfSheen"></div>
   </div>
   <div class="pf-center" id="pfCenter">
@@ -158,13 +163,14 @@ html,body{overflow-x:hidden}
 
 <div class="stage" id="stage" aria-hidden="true">
   <div class="cards" id="cards"></div>
+  <div class="stage-dim" id="stageDim"></div>
 </div>
 
 <div class="hero-t" id="heroT" aria-hidden="true">
   <div class="lk-wrap" id="lkWrap">
     <div class="lk" id="lk">
       <div class="lk-halo" id="lkHalo"></div>
-      <div class="lk-shadow" id="lkShadow"><img src="image/intro/lk-full.webp" alt=""></div>
+      <div class="lk-shadow" id="lkShadow"><img src="image/intro/lk-full-sm.webp" alt=""></div>
     </div>
     <div class="lk-refl" id="lkRefl" hidden></div>
   </div>
@@ -252,15 +258,15 @@ html,body{overflow-x:hidden}
     </div>
     <div class="g-nights">
       <article class="g-night reveal">
-        <img src="image/trophy20/gala-elites.jpg" alt="Boxeur portant un direct pendant un gala" loading="lazy">
+        <img src="image/trophy20/gala-elites.webp" alt="Boxeur portant un direct pendant un gala" loading="lazy">
         <div><span class="g-day">Ven. 11 déc. · 19h</span><h3>Gala Élites</h3><p>Les meilleurs amateurs sous les projecteurs.</p></div>
       </article>
       <article class="g-night g-night--on reveal">
-        <img src="image/trophy20/heros-garage.jpg" alt="Boxeur en garde dans l'atelier du garage Moteka" loading="lazy">
+        <img src="image/trophy20/heros-garage.webp" alt="Boxeur en garde dans l'atelier du garage Moteka" loading="lazy">
         <div><span class="g-day">Sam. 12 déc. · 19h</span><h3>Boxing Trophy 20</h3><p>Boxe anglaise et pied-poing, débutants et intermédiaires.</p><span class="g-badge">Notre soirée</span></div>
       </article>
       <article class="g-night reveal">
-        <img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy">
+        <img src="image/gala/garde-casque-bleu.webp" alt="Boxeur au casque bleu en garde" loading="lazy">
         <div><span class="g-day">Dim. 13 déc. · 11h</span><h3>Boxe éducative</h3><p>La relève monte sur le ring.</p></div>
       </article>
     </div>
@@ -274,12 +280,12 @@ html,body{overflow-x:hidden}
     </div>
     <div class="g-versus">
       <article class="g-corner g-corner--red reveal">
-        <img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy">
+        <img src="image/gala/garde-casque-rouge.webp" alt="Boxeur en garde, casque rouge" loading="lazy">
         <div><span class="g-day">Discipline 01</span><h3>Boxe anglaise</h3><p>Le noble art. Technique, puissance et stratégie : les poings uniquement, dans les règles classiques.</p></div>
       </article>
       <span class="g-vs" aria-hidden="true">VS</span>
       <article class="g-corner g-corner--blue reveal">
-        <img src="image/trophy20/pied-poing-kick.jpg" alt="Combattant portant un high kick" loading="lazy">
+        <img src="image/trophy20/pied-poing-kick.webp" alt="Combattant portant un high kick" loading="lazy">
         <div><span class="g-day">Discipline 02</span><h3>Pied-poing</h3><p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p></div>
       </article>
     </div>
@@ -292,13 +298,13 @@ html,body{overflow-x:hidden}
       <p class="g-lead">Gardes hautes, échanges, verdict : quelques instants des éditions précédentes.</p>
     </div>
     <div class="gallery-grid reveal" data-gallery>
-      <button class="g-item g-hero" type="button" data-full="image/gala/victoire.jpg" aria-label="Agrandir : la victoire"><img src="image/gala/victoire.jpg" alt="L'arbitre lève le bras du vainqueur" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/garde-casque-rouge.jpg" aria-label="Agrandir : garde haute, casque rouge"><img src="image/gala/garde-casque-rouge.jpg" alt="Boxeur en garde, casque rouge" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/direct.jpg" aria-label="Agrandir : le direct"><img src="image/gala/direct.jpg" alt="Boxeur au casque rouge lançant un direct" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/esquive-arbitre.jpg" aria-label="Agrandir : esquive sous l'œil de l'arbitre"><img src="image/gala/esquive-arbitre.jpg" alt="Boxeur esquivant un coup sous l'œil de l'arbitre" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/garde-casque-bleu.jpg" aria-label="Agrandir : garde, casque bleu"><img src="image/gala/garde-casque-bleu.jpg" alt="Boxeur au casque bleu en garde" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/accolade.jpg" aria-label="Agrandir : l'accolade"><img src="image/gala/accolade.jpg" alt="Deux combattants se donnent l'accolade sur le ring" loading="lazy"></button>
-      <button class="g-item g-band" type="button" data-full="image/gala/echange-union-jack.jpg" aria-label="Agrandir : l'échange"><img src="image/gala/echange-union-jack.jpg" alt="Échange sur le ring devant un drapeau britannique" loading="lazy"></button>
+      <button class="g-item g-hero" type="button" data-full="image/gala/victoire.webp" aria-label="Agrandir : la victoire"><img src="image/gala/victoire.webp" alt="L'arbitre lève le bras du vainqueur" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/garde-casque-rouge.webp" aria-label="Agrandir : garde haute, casque rouge"><img src="image/gala/garde-casque-rouge.webp" alt="Boxeur en garde, casque rouge" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/direct.webp" aria-label="Agrandir : le direct"><img src="image/gala/direct.webp" alt="Boxeur au casque rouge lançant un direct" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/esquive-arbitre.webp" aria-label="Agrandir : esquive sous l'œil de l'arbitre"><img src="image/gala/esquive-arbitre.webp" alt="Boxeur esquivant un coup sous l'œil de l'arbitre" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/garde-casque-bleu.webp" aria-label="Agrandir : garde, casque bleu"><img src="image/gala/garde-casque-bleu.webp" alt="Boxeur au casque bleu en garde" loading="lazy"></button>
+      <button class="g-item" type="button" data-full="image/gala/accolade.webp" aria-label="Agrandir : l'accolade"><img src="image/gala/accolade.webp" alt="Deux combattants se donnent l'accolade sur le ring" loading="lazy"></button>
+      <button class="g-item g-band" type="button" data-full="image/gala/echange-union-jack.webp" aria-label="Agrandir : l'échange"><img src="image/gala/echange-union-jack.webp" alt="Échange sur le ring devant un drapeau britannique" loading="lazy"></button>
     </div>
   </section>
 
@@ -378,8 +384,8 @@ html,body{overflow-x:hidden}
   <section class="g-panel" id="infos">
     <div class="g-tickets">
       <figure class="g-poster reveal">
-        <button class="g-poster-btn" type="button" data-poster="image/trophy20/affiche-trophy-20.jpg" aria-label="Agrandir l'affiche officielle">
-          <img src="image/trophy20/affiche-trophy-20.jpg" alt="Affiche officielle du Boxing Trophy 20 : FIGHT and Furious, inauguration du garage Moteka. Boxe anglaise et boxe pieds-poings, samedi 12 décembre 2026 dès 19h" loading="lazy" width="1122" height="1402">
+        <button class="g-poster-btn" type="button" data-poster="image/trophy20/affiche-trophy-20.webp" aria-label="Agrandir l'affiche officielle">
+          <img src="image/trophy20/affiche-trophy-20.webp" alt="Affiche officielle du Boxing Trophy 20 : FIGHT and Furious, inauguration du garage Moteka. Boxe anglaise et boxe pieds-poings, samedi 12 décembre 2026 dès 19h" loading="lazy" width="1122" height="1402">
         </button>
         <figcaption><span>Affiche officielle</span><a href="image/trophy20/affiche-trophy-20.jpg" download="affiche-boxing-trophy-20.jpg">Télécharger</a></figcaption>
       </figure>
@@ -614,7 +620,7 @@ html,body{overflow-x:hidden}
   </section>
 
   <footer class="g-footer">
-    <img src="image/intro/lk-full.webp" alt="Champions — Boxing Trophy" class="g-footer-logo" loading="lazy">
+    <img src="image/intro/lk-full-sm.webp" alt="Champions — Boxing Trophy" class="g-footer-logo" loading="lazy">
     <p>Boxing Trophy 20 · Samedi 12 décembre 2026 · 19h · Garage Moteka, 14 rue Seveso, 31150 Fenouillet</p>
     <nav class="g-footer-nav" aria-label="Liens du pied de page">
       <a href="#event">Le week-end</a><a href="#carte-combats">Programme</a><a href="#infos">Billetterie</a><a href="#licence">Licence</a><a href="#inscription">Inscription</a>
@@ -848,7 +854,7 @@ html,body{overflow-x:hidden}
     for(var k=0;k<count;k++){
       var d=document.createElement('div');d.className='card';
       var pi=n%9;
-      d.innerHTML='<img src="image/intro/p'+(pi+1)+'.jpg" alt="" decoding="async"><b>'+TITLES[pi]+'</b>';
+      d.innerHTML='<img src="image/intro/p'+(pi+1)+'.webp" alt="" decoding="async"><b>'+TITLES[pi]+'</b>';
       cardsEl.appendChild(d);
       var rnd=function(s){var x=Math.sin(n*12.9898+s*78.233)*43758.5453;return x-Math.floor(x)};
       cards.push({el:d,ri:ri,k:k,count:count,
@@ -936,16 +942,41 @@ html,body{overflow-x:hidden}
     Object.keys(LAYERS).forEach(function(k){LAYERS[k].spec.style.backgroundPosition=pos.toFixed(1)+'% 0'});
   }
 
+  // Largeur d'une affiche : mesurée une fois puis à chaque redimensionnement (évite un recalcul de mise en page à chaque image)
+  var CW=0; function measureCards(){ CW=cardsEl.firstChild.offsetWidth; }
+  measureCards(); addEventListener('resize',measureCards);
+  var stageDim=$('stageDim'), frozen=false, lastP=-1;
+
+  // Effets liés au défilement : la scène recule et s'assombrit (calque noir plutôt qu'un filtre, bien plus léger)
+  function applyScroll(p,vh){
+    if(p===lastP)return; lastP=p;
+    stage.style.transform='scale('+(1-p*.06).toFixed(3)+')';
+    stageDim.style.opacity=(p*.5).toFixed(3);
+    heroT.style.transform='translate3d(0,'+(-p*vh*.25).toFixed(1)+'px,0) scale('+(1-p*.08).toFixed(3)+')';
+    heroT.style.opacity=Math.max(0,1-p*1.2).toFixed(3);
+  }
+
   function frame(now){
     var t=reduce?99:(now-start)/1000;
-    var vw=innerWidth,vh=innerHeight,vmin=Math.min(vw,vh),cw=cardsEl.firstChild.offsetWidth,ch=cw*1.25;
+    var vw=innerWidth,vh=innerHeight,vmin=Math.min(vw,vh),cw=CW,ch=cw*1.25;
+    var p=cl(scrollY/vh);
+
+    // Lecture du contenu : la scène est sous les panneaux, on arrête de la redessiner.
+    // La boucle repart d'elle-même quand on remonte vers le haut de la page.
+    if(done&&t>T.settle+1&&p>=.98){
+      if(!frozen){ frozen=true; dctx.clearRect(0,0,dust.width,dust.height); applyScroll(1,vh); }
+      return;
+    }
+    frozen=false;
 
     /* 1. chargement */
     preface(t,vw,vh); drawDust(t);
     if(t>T.load+.4&&!stage.classList.contains('on'))stage.classList.add('on');
 
     var G=geo(vw,vh);
-    layoutLogo(t,vw,vh,G); renderMaterials(t,G); var cx=vw/2;
+    // Le logo en or n'est redessiné que tant qu'il est visible (il disparaît en défilant)
+    if(p<.85){ layoutLogo(t,vw,vh,G); renderMaterials(t,G); }
+    var cx=vw/2;
 
     /* 2. affiches : bandeau → anneau → spirale → nuage */
     var spin=(t-T.ring1)*.55;
@@ -982,8 +1013,9 @@ html,body{overflow-x:hidden}
       el.style.opacity=O.toFixed(3);
       el.style.visibility=O<.01?'hidden':'visible';
       el.style.transform='translate3d('+(X-cw/2).toFixed(1)+'px,'+(Y-ch/2).toFixed(1)+'px,0) rotate('+Rz.toFixed(1)+'deg) scale('+S.toFixed(3)+')';
-      el.style.filter=blur>.3?'blur('+blur.toFixed(1)+'px)':'none';
-      el.style.zIndex=sc>.5&&sl?sl[5]:3;
+      // flou et plan : réécrits seulement s'ils changent (un flou réappliqué à chaque image coûte cher)
+      var f=blur>.3?'blur('+blur.toFixed(1)+'px)':'none'; if(c.f!==f){el.style.filter=f;c.f=f}
+      var zi=sc>.5&&sl?sl[5]:3; if(c.z!==zi){el.style.zIndex=zi;c.z=zi}
     }
 
     /* 3. en-tête et titre */
@@ -992,21 +1024,20 @@ html,body{overflow-x:hidden}
     if(t>T.end&&!done){done=true;document.body.classList.remove('lock');document.body.classList.add('intro-done');try{sessionStorage.setItem('bt20-intro-gala','1')}catch(e){}}
 
     /* 4. au défilement : la scène recule doucement */
-    var p=cl(scrollY/vh);
-    stage.style.transform='scale('+(1-p*.06).toFixed(3)+')';
-    stage.style.filter=p>0?'brightness('+(1-p*.5).toFixed(3)+')':'none';
-    heroT.style.transform='translate3d(0,'+(-p*vh*.25).toFixed(1)+'px,0) scale('+(1-p*.08).toFixed(3)+')';
-    heroT.style.opacity=(1-p*1.2).toFixed(3);
+    applyScroll(p,vh);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+  // Retour vers le haut : on relance l'animation de la scène
+  addEventListener('scroll',function(){ if(frozen&&scrollY/innerHeight<.98){ frozen=false; lastP=-1; requestAnimationFrame(frame); } },{passive:true});
+  addEventListener('resize',function(){ if(frozen){ lastP=-1; applyScroll(1,innerHeight); } });
   // Un clic pendant l'intro la fait passer
   addEventListener('click',function(){ if(!done) start=performance.now()-T.end*1000; });
 })();
 </script>
 
 <script src="env-loader.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2/dist/umd/supabase.js"></script>
 <script src="supabase-config.js"></script>
 <script src="cloudinary-config.js?v=3"></script>
 <script src="poster.js?v=9"></script>
