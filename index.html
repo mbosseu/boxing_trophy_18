@@ -55,6 +55,8 @@ img{max-width:100%}
 .stage::before{content:"";position:absolute;left:50%;top:56%;width:90vmin;height:90vmin;transform:translate(-50%,-50%);background:radial-gradient(closest-side,rgba(255,150,90,.2),rgba(200,40,30,.07) 55%,transparent);pointer-events:none}
 .cards{position:absolute;inset:0;z-index:3}
 .stage-dim{position:absolute;inset:0;z-index:9;background:#000;opacity:0;pointer-events:none}
+.skip{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:70;padding:11px 18px;border-radius:999px;cursor:pointer;font:500 11px/1 "Geist Mono",monospace;letter-spacing:.16em;text-transform:uppercase;color:var(--white);background:rgba(20,12,10,.6);border:1px solid rgba(255,255,255,.25);transition:opacity .4s}
+.intro-done .skip{opacity:0;pointer-events:none}
 .card{position:absolute;left:0;top:0;width:var(--cw);aspect-ratio:4/5;will-change:transform,filter,opacity;opacity:0;box-shadow:0 10px 26px rgba(0,0,0,.55)}
 .card img{display:block;width:100%;height:100%;object-fit:cover}
 .card b{position:absolute;left:6%;right:6%;bottom:7%;text-align:center;font:400 calc(var(--cw)*.075)/1.2 Boldonse,sans-serif;color:#fff;text-shadow:0 1px 0 rgba(0,0,0,.7),0 0 10px rgba(0,0,0,.45)}
@@ -160,6 +162,8 @@ html,body{overflow-x:hidden}
   <div class="pf-dim" id="pfDim"></div>
 </div>
 <canvas class="dust" id="dust" aria-hidden="true"></canvas>
+<!-- Passer l'intro (un clic n'importe où la passe aussi) -->
+<button class="skip" id="skipIntro" type="button">Passer l'intro <span aria-hidden="true">›</span></button>
 
 <div class="stage" id="stage" aria-hidden="true">
   <div class="cards" id="cards"></div>
@@ -661,7 +665,7 @@ html,body{overflow-x:hidden}
     trophy:{x:75.247,y:2.03,w:24.753,h:89.039,z:12,sp:[[35.9,36.9],[94.3,18.5],[82.2,92.9],[48.6,9.1],[66.4,7],[20.3,48.2],[73.2,79.8],[48.6,56.1],[77.6,47.3]]}
   };
   var lk=$('lk'), lkWrap=$('lkWrap'), lkRefl=$('lkRefl'), lkHalo=$('lkHalo'), lkShadow=$('lkShadow');
-  var small=matchMedia('(max-width:760px)').matches, EX=small?5:10, EXD=small?1.6:1.2;
+  var small=matchMedia('(max-width:760px)').matches, EX=small?3:4, EXD=small?2.7:3;   // épaisseur : moins de tranches, plus espacées (même rendu, bien plus léger)
   Object.keys(LAYERS).forEach(function(k,ki){
     var L=LAYERS[k], el=document.createElement('div');el.className='ly ly-'+k;
     el.style.left=L.x+'%';el.style.top=L.y+'%';el.style.width=L.w+'%';el.style.height=L.h+'%';
@@ -735,7 +739,7 @@ html,body{overflow-x:hidden}
   // dessine un élément éclairé par une lumière placée en (lx, ly) à l'écran, à lz pixels « devant »
   function drawMat(L,lx,ly,lz,t){
     if(!L.gl)return;
-    var gl=L.gl, cv=L.cv, r=L.el.getBoundingClientRect(), dpr=Math.min(devicePixelRatio||1,1.5);
+    var gl=L.gl, cv=L.cv, r=L.el.getBoundingClientRect(), dpr=1;   // éclairage calculé en résolution standard (il est doux, la différence ne se voit pas)
     if(r.width<2)return;
     var w=Math.max(2,Math.round(L.el.offsetWidth*dpr)), h=Math.max(2,Math.round(L.el.offsetHeight*dpr));
     if(cv.width!==w||cv.height!==h){cv.width=w;cv.height=h;gl.viewport(0,0,w,h)}
@@ -748,8 +752,8 @@ html,body{overflow-x:hidden}
 
   /* ── Préface : logo Boxing Center en relief sur le marbre ── */
   var PF={cv:$('pfMat'),src:'image/intro/pf-logo.webp',el:$('pfLy'),key:'pf'};
-  (function(){ var lg=$('pfLogo'), html=''; var n=small?5:9;
-    for(var e=n;e>=1;e--){var f=e/n; html+='<img class="ex" src="image/intro/pf-logo-wall.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ('+(-e*1.5).toFixed(1)+'px);filter:brightness('+(1-.55*f).toFixed(2)+')">';}
+  (function(){ var lg=$('pfLogo'), html=''; var n=small?3:4;
+    for(var e=n;e>=1;e--){var f=e/n; html+='<img class="ex" src="image/intro/pf-logo-wall.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ('+(-e*3.4).toFixed(1)+'px);filter:brightness('+(1-.55*f).toFixed(2)+')">';}
     lg.insertAdjacentHTML('afterbegin',html); lg.insertBefore($('pfShadow'),lg.firstChild);
   })();
   try{ setupGL(PF).catch(function(){}) }catch(e){}
@@ -780,7 +784,7 @@ html,body{overflow-x:hidden}
     var lx=lr.left+lr.width*(.5+Math.sin(t*.7)*.55), ly=lr.top-lr.height*.35;
     if(tilt.has){lx=(tilt.ty+.5)*vw; ly=Math.min((tilt.tx+.5)*vh,lr.top+lr.height*.3)}
     pfLight.x+=(lx-pfLight.x)*.1; pfLight.y+=(ly-pfLight.y)*.1;
-    drawMat(PF,pfLight.x,pfLight.y,lr.height*.9,t);
+    pfTick=!pfTick; if(pfTick) drawMat(PF,pfLight.x,pfLight.y,lr.height*.9,t);
     // ombre portée sur le marbre, opposée à la lumière
     var cx=lr.left+lr.width/2, cy=lr.top+lr.height/2;
     var sh=$('pfShadow'); sh.style.opacity=(le*.32).toFixed(3);
@@ -799,7 +803,7 @@ html,body{overflow-x:hidden}
 
   /* ── Poussière d'or : sur la préface, puis elle reste dans la salle ── */
   var dust=$('dust'), dctx=dust.getContext('2d'), parts=[];
-  for(var di=0;di<(small?70:140);di++)parts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.004,vy:-.003-Math.random()*.006,s:.5+Math.random()*1.9,ph:Math.random()*6.28,sp:.8+Math.random()*2.4,gold:Math.random()<.72,keep:Math.random()<.4});
+  for(var di=0;di<(small?40:80);di++)parts.push({x:Math.random(),y:Math.random(),vx:(Math.random()-.5)*.004,vy:-.003-Math.random()*.006,s:.5+Math.random()*1.9,ph:Math.random()*6.28,sp:.8+Math.random()*2.4,gold:Math.random()<.72,keep:Math.random()<.4});
   function drawDust(t){
     var w=innerWidth,h=innerHeight; if(dust.width!==w||dust.height!==h){dust.width=w;dust.height=h}
     dctx.clearRect(0,0,w,h);
@@ -819,12 +823,13 @@ html,body{overflow-x:hidden}
   }
 
   // position de la lumière à l'écran (suit la souris, sinon balaie doucement)
-  var light={x:0,y:0};
+  var light={x:0,y:0}, matTick=false, pfTick=false;
   function renderMaterials(t,G){
     var lx=G.left+G.W*(.5+Math.sin(t*.42)*.45), ly=G.top-G.H*.25;
     if(tilt.has){lx=lerp(lx,(tilt.ty+.5)*innerWidth,.85); ly=Math.min(lerp(ly,(tilt.tx+.5)*innerHeight-G.H*.4,.85),G.top+G.H*.25)}   // la lumière reste au-dessus, comme un projecteur
     light.x+=(lx-light.x)*.08; light.y+=(ly-light.y)*.08;
-    if(t>T.load)Object.keys(LAYERS).forEach(function(k){
+    matTick=!matTick;   // la lumière bouge lentement : on la recalcule une image sur deux
+    if(t>T.load&&matTick)Object.keys(LAYERS).forEach(function(k){
       var L=LAYERS[k]; if(L.el.style.opacity==='0')return;
       drawMat(L,light.x,light.y,G.H*.55,t);
     });
@@ -849,7 +854,7 @@ html,body{overflow-x:hidden}
 
   /* ── Affiches ── */
   var TITLES=['VICTOIRE','COIN ROUGE','PIED-POING','LE DIRECT','RESPECT','COIN BLEU','ROUND 3','L’ESQUIVE','HIGH KICK'];
-  var RINGS=[9,14,20], cardsEl=$('cards'), cards=[], n=0;
+  var RINGS=[7,10,13], cardsEl=$('cards'), cards=[], n=0;
   RINGS.forEach(function(count,ri){
     for(var k=0;k<count;k++){
       var d=document.createElement('div');d.className='card';
@@ -880,12 +885,14 @@ html,body{overflow-x:hidden}
     [.94,.58,.17,4,-12,1],
     [.40,.92,.20,5,6,1]
   ];
-  var si=0;
-  cards.forEach(function(c,i){ c.slot=(i%4===0&&si<SLOTS.length)?SLOTS[si++]:null; });
+  // Affiches retenues pour la composition finale : choisies pour montrer des photos variées
+  // (l'affiche n° i utilise la photo i % 9)
+  var SLOT_CARDS=[0,4,8,12,16,20,24,28,2,14,26];
+  cards.forEach(function(c,i){ var k=SLOT_CARDS.indexOf(i); c.slot=(k>=0&&k<SLOTS.length)?SLOTS[k]:null; });
 
 
   var stage=$('stage'),heroT=$('heroT'),bar=$('bar'),loader=$('loader');
-  var T={load:3.8, bg:4.4, strip:4.9, ring1:5.6, rings:6.4, spiral:7.6, scatter:8.0, settle:9.4, title:9.0, end:11.2};
+  var T={load:2.4, bg:2.9, strip:3.3, ring1:3.8, rings:4.3, spiral:5.1, scatter:5.4, settle:6.6, title:6.0, end:7.8};   // intro raccourcie (11 s -> 7,8 s)
   var start=performance.now(), done=false;
   // Déjà vue pendant cette visite (retour sur la page, rechargement) : on arrive directement à la fin
   var seen=false; try{seen=sessionStorage.getItem('bt20-intro-gala')==='1'}catch(e){}
@@ -1006,7 +1013,8 @@ html,body{overflow-x:hidden}
       var sl=c.slot, fx, fy, ws, blur, tilt;
       if(sl){ fx=sl[0]*vw; fy=sl[1]*vh; ws=sl[2]*vmin/cw; blur=sl[3]; tilt=sl[4]; }
       else { fx=cx+c.sx*vw*1.4; fy=vh*.5+c.sy*vh*1.4; ws=.6; blur=4; tilt=c.tilt; }
-      var bob=Math.sin(t*.6+c.ph)*6, bob2=Math.cos(t*.5+c.ph)*5;
+      var still=sl&&sl[3]>0;   // les affiches floues restent immobiles : un flou qui bouge est recalculé à chaque image
+      var bob=still?0:Math.sin(t*.6+c.ph)*6, bob2=still?0:Math.cos(t*.5+c.ph)*5;
       blur*=sc;
       var X=lerp(rx,fx+bob2,sc), Y=lerp(ry,fy+bob,sc), S=lerp(rs,ws,sc), Rz=lerp(rr,tilt,sc);
       var O=op*(sl?1:1-sc);
