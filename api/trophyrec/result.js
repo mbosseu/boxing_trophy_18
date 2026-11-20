@@ -44,7 +44,12 @@ module.exports = async function handler(req, res) {
     if (['a_win', 'b_win', 'draw', 'nc'].indexOf(result) === -1) {
       return json(res, 400, { error: 'Resultat invalide' });
     }
-    const method = String(body.method || 'decision').trim();
+    // Decision des juges : unanime (ud), majoritaire (md) ou partagee (sd). Pas de methode pour un nul.
+    const isWin = result === 'a_win' || result === 'b_win';
+    const method = isWin ? String(body.method || 'ud').trim() : null;
+    if (isWin && ['ud', 'md', 'sd'].indexOf(method) === -1) {
+      return json(res, 400, { error: 'Décision invalide : unanime (UD), majoritaire (MD) ou partagée (SD)' });
+    }
     const row = {
       edition_id: body.edition_id || 't20',
       source_match_id: body.source_match_id ? String(body.source_match_id) : null,

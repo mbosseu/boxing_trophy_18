@@ -410,14 +410,11 @@
                             <option value="nc">Sans decision</option>
                         </select>
                     </label>
-                    <label>Methode
+                    <label>Décision des juges
                         <select id="trMethod">
-                            <option value="decision">Decision</option>
-                            <option value="ko">KO</option>
-                            <option value="tko">TKO</option>
-                            <option value="abandon">Abandon</option>
-                            <option value="dq">Disqualification</option>
-                            <option value="forfeit">Forfait</option>
+                            <option value="ud">Décision unanime (UD)</option>
+                            <option value="md">Décision majoritaire (MD)</option>
+                            <option value="sd">Décision partagée (SD)</option>
                         </select>
                     </label>
                     <label>Discipline
@@ -530,7 +527,7 @@
         <section id="tab-t19" class="tab-content">
             <div class="section-header">
                 <h2>Trophy 19 — archives</h2>
-                <p class="section-desc">Inscrits et carte des combats du Trophy 19. Cliquez sur un combat pour saisir sa décision (victoire, nul, KO, TKO…). Le reste du back office ne gère que le Trophy 20.</p>
+                <p class="section-desc">Inscrits et carte des combats du Trophy 19. Cliquez sur un combat pour saisir sa décision (victoire, nul, unanime, majoritaire, partagée). Le reste du back office ne gère que le Trophy 20.</p>
                 <div class="section-actions">
                     <button type="button" class="btn btn-outline btn-sm" id="t19Refresh">Actualiser</button>
                     <button type="button" class="btn btn-outline btn-sm" id="t19Export">Exporter les inscrits (CSV)</button>
@@ -561,14 +558,11 @@
                         </div>
                     </fieldset>
                     <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;">
-                        <label>Méthode de victoire
+                        <label>Décision des juges
                             <select id="t19Method" class="form-select">
-                                <option value="decision">Décision (aux points)</option>
-                                <option value="ko">KO</option>
-                                <option value="tko">TKO (arrêt de l'arbitre)</option>
-                                <option value="abandon">Abandon</option>
-                                <option value="dq">Disqualification</option>
-                                <option value="forfeit">Forfait</option>
+                                <option value="ud">Décision unanime (UD)</option>
+                                <option value="md">Décision majoritaire (MD)</option>
+                                <option value="sd">Décision partagée (SD)</option>
                             </select>
                         </label>
                         <label>Round
@@ -1166,7 +1160,7 @@ create policy "Accès public total" on match_metadata
     <script src="poster.js?v=9"></script>
     <script src="trophyrec.js"></script>
     <script src="admin.js?v=26"></script>
-    <script src="admin-trophyrec.js?v=4"></script>
-    <script src="admin-t19.js?v=4"></script>
+    <script src="admin-trophyrec.js?v=5"></script>
+    <script src="admin-t19.js?v=5"></script>
 </body>
 </html>

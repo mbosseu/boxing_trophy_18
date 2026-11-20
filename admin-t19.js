@@ -1,5 +1,5 @@
 /* Back office — onglet Trophy 19 : archives (inscrits, carte des combats) et saisie des décisions.
-   Un clic sur un combat ouvre la décision : victoire, nul ou sans décision, méthode (KO, TKO...) et round.
+   Un clic sur un combat ouvre la décision : victoire, nul ou sans décision, décision des juges (unanime, majoritaire, partagée) et round.
    Enregistrer met à jour TrophyRec (gala Trophy 19) et le vainqueur sur la carte archivée. */
 (function () {
   'use strict';
@@ -10,7 +10,7 @@
   var data = { registrations: [], matches: [], bouts: {}, fighters: [] };
   var current = null;
 
-  var METHODS = { decision: 'Décision', ko: 'KO', tko: 'TKO', abandon: 'Abandon', dq: 'Disqualification', forfeit: 'Forfait' };
+  var METHODS = { ud: 'Unanime (UD)', md: 'Majoritaire (MD)', sd: 'Partagée (SD)', decision: 'Décision', ko: 'KO', tko: 'TKO' };
 
   function $(id) { return document.getElementById(id); }
   function esc(v) {
@@ -81,8 +81,7 @@
     if (!b) return '<span class="badge badge-warning">À saisir</span>';
     if (b.result === 'draw') return '<span class="badge badge-info">Nul</span>';
     if (b.result === 'nc') return '<span class="badge">Sans décision</span>';
-    var ko = b.method === 'ko' || b.method === 'tko';
-    return '<span class="badge ' + (ko ? 'badge-danger' : 'badge-success') + '">' + esc(METHODS[b.method] || b.method || '') + (b.round ? ' · R' + b.round : '') + '</span>';
+    return '<span class="badge badge-success">' + esc(METHODS[b.method] || b.method || '') + (b.round ? ' · R' + b.round : '') + '</span>';
   }
 
   function render() {
@@ -146,7 +145,7 @@
       ' &nbsp;vs&nbsp; <strong>' + esc(fullName(m.fighter2)) + '</strong> <span style="color:var(--text-dim)">(' + esc(m.fighter2.club || '—') + ')</span>';
     var res = b ? b.result : (m.winner === 'fighter1' ? 'a_win' : m.winner === 'fighter2' ? 'b_win' : '');
     document.querySelectorAll('input[name="t19Res"]').forEach(function (r) { r.checked = r.value === res; });
-    $('t19Method').value = (b && b.method) || 'decision';
+    $('t19Method').value = (b && METHODS[b.method] && /^(ud|md|sd)$/.test(b.method)) ? b.method : 'ud';
     $('t19Round').value = (b && b.round) || '';
     $('t19DlgDelete').hidden = !b;
     $('t19DlgMsg').textContent = '';
@@ -192,7 +191,7 @@
         id: b ? b.id : undefined,
         fighter_a: ids.a, fighter_b: ids.b,
         result: res,
-        method: win ? $('t19Method').value : 'decision',
+        method: win ? $('t19Method').value : null,
         round: win && $('t19Round').value ? $('t19Round').value : null,
         discipline: d.discipline, sexe: d.sexe, categorie_poids: d.poids,
         bout_date: T19_DATE, edition_id: 't19',

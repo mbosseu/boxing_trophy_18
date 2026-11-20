@@ -313,7 +313,7 @@
   }
 
   var RES_LABEL = { a_win: 'Victoire', b_win: 'Victoire', draw: 'Nul', nc: 'Sans décision' };
-  var METHOD_LABEL = { decision: 'Décision', ko: 'KO', tko: 'TKO', abandon: 'Abandon', dq: 'Disqualification', forfeit: 'Forfait' };
+  var METHOD_LABEL = { ud: 'Unanime (UD)', md: 'Majoritaire (MD)', sd: 'Partagée (SD)', decision: 'Décision', ko: 'KO', tko: 'TKO' };
 
   function renderBouts() {
     var tb = document.getElementById('trBoutsBody');
@@ -328,7 +328,7 @@
       var right = aWin ? b.fighter_b : b.fighter_a;
       var res = b.result === 'draw' || b.result === 'nc'
         ? '<span class="badge">' + RES_LABEL[b.result] + '</span>'
-        : '<span class="badge ' + (b.method === 'ko' || b.method === 'tko' ? 'badge-danger' : 'badge-success') + '">V · ' + esc(METHOD_LABEL[b.method] || b.method || '') + (b.round ? ' R' + b.round : '') + '</span>';
+        : '<span class="badge badge-success">V · ' + esc(METHOD_LABEL[b.method] || b.method || '') + (b.round ? ' R' + b.round : '') + '</span>';
       var ed = /^t(\d+)$/.exec(b.edition_id || '');
       return '<tr><td>' + esc(b.bout_date || '') + '</td><td>' + esc(ed ? 'Trophy ' + ed[1] : (b.edition_id || '')) + '</td>' +
         '<td><strong>' + esc(nameOf(left)) + '</strong></td><td>' + res + '</td><td>' + esc(nameOf(right)) + '</td>' +
@@ -355,7 +355,7 @@
     if (!b) return;
     var set = function (elId, v) { var el = document.getElementById(elId); if (el && v != null) el.value = v; };
     set('trBoutId', b.id); set('trFighterA', b.fighter_a); set('trFighterB', b.fighter_b);
-    set('trResult', b.result); set('trMethod', b.method || 'decision'); set('trDiscipline', b.discipline);
+    set('trResult', b.result); set('trMethod', /^(ud|md|sd)$/.test(b.method || '') ? b.method : 'ud'); set('trDiscipline', b.discipline);
     set('trSexe', b.sexe); set('trPoids', b.categorie_poids); set('trRound', b.round || '');
     set('trBoutDate', b.bout_date || today()); set('trEdition', b.edition_id || 't20'); set('trMatchId', b.source_match_id || '');
     document.getElementById('trBoutTitle').textContent = 'Corriger le résultat';

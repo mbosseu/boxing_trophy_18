@@ -124,9 +124,9 @@
                   <th scope="col">Combattant</th>
                   <th scope="col" class="hide-m">Club · Coach</th>
                   <th scope="col"><button type="button" data-sort="record">Bilan</button></th>
-                  <th scope="col" class="hide-m"><button type="button" data-sort="koPct">KO</button></th>
+                  <th scope="col" class="hide-m"><button type="button" data-sort="koPct">UD</button></th>
                   <th scope="col" class="hide-m">Forme</th>
-                  <th scope="col" class="num"><button type="button" data-sort="points" class="is-sort">Pts</button></th>
+                  <th scope="col" class="num"><button type="button" data-sort="points" class="is-sort">Cote</button></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -135,14 +135,15 @@
           <div id="trEmpty" class="tr-empty" hidden></div>
         </section>
         <aside class="rx-box">
-          <h2 class="rx-h">Comment on compte</h2>
+          <h2 class="rx-h">Comment on monte</h2>
           <ul class="tr-rules">
-            <li>Victoire aux points <b>+3 pts</b></li>
-            <li>Victoire par KO ou TKO <b>+5 pts</b></li>
-            <li>Match nul <b>+1 pt</b></li>
-            <li>Défaite <b>0 pt</b></li>
+            <li>Le mieux classé gagne <b>rien ne bouge</b></li>
+            <li>Victoire à l'unanimité (UD) <b>+60 % de l'écart</b></li>
+            <li>Décision majoritaire (MD) <b>+45 % de l'écart</b></li>
+            <li>Décision partagée (SD) <b>+30 % de l'écart</b></li>
+            <li>Match nul <b>+20 % de l'écart</b></li>
           </ul>
-          <p class="tr-note" style="margin-top:14px">À points égaux : le plus de victoires passe devant, puis le plus de KO, puis la victoire la plus récente. Seuls les résultats saisis par l'organisation comptent.</p>
+          <p class="tr-note" style="margin-top:14px">Exemple : le 10e bat le 2e à l'unanimité, il passe 5e et le perdant 6e. À la majoritaire il ne passe que 6e. Le perdant se place toujours juste en dessous du vainqueur. La cote (base 1000) sert au P4P : battre plus fort rapporte plus.</p>
         </aside>
       </div>
     </section>
@@ -185,12 +186,12 @@
     <section class="rx-view" data-v="clubs" hidden>
       <div class="rx-view-head">
         <div><p class="tr-cap">Entre salles</p><h2 class="tr-h1">Le classement des <span class="tr-gold">clubs</span></h2></div>
-        <p class="tr-note" style="max-width:42ch">Les points de tous les combattants d'un club additionnés. Ta salle n'est pas la bonne ? Change-la depuis ton espace.</p>
+        <p class="tr-note" style="max-width:42ch">3 points par victoire, 1 par nul, 1 de plus pour une décision unanime. Ta salle n'est pas la bonne ? Change-la depuis ton espace.</p>
       </div>
       <section class="tr-panel">
         <div class="tr-table-wrap">
           <table class="tr-table">
-            <thead><tr><th scope="col">#</th><th scope="col">Club</th><th scope="col" class="hide-m">Combattants</th><th scope="col">Bilan</th><th scope="col" class="hide-m">KO</th><th scope="col" class="hide-m">Meilleur combattant</th><th scope="col" class="num">Pts</th></tr></thead>
+            <thead><tr><th scope="col">#</th><th scope="col">Club</th><th scope="col" class="hide-m">Combattants</th><th scope="col">Bilan</th><th scope="col" class="hide-m">UD</th><th scope="col" class="hide-m">Meilleur combattant</th><th scope="col" class="num">Pts</th></tr></thead>
             <tbody id="rxClubs"></tbody>
           </table>
         </div>
@@ -209,7 +210,7 @@
   <script src="/poster.js?v=9"></script>
   <script src="/published-matches.js?v=2"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-public.js?v=4"></script>
-  <script src="/trophyrec-portal.js?v=1"></script>
+  <script src="/trophyrec-public.js?v=5"></script>
+  <script src="/trophyrec-portal.js?v=2"></script>
 </body>
 </html>

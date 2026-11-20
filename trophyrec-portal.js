@@ -55,9 +55,11 @@
     Object.keys(boards).filter(keyFilter).forEach(function (k) {
       boards[k].forEach(function (r) {
         var id = r.fighter.id;
-        if (!acc[id]) acc[id] = { fighter: r.fighter, w: 0, l: 0, d: 0, ko: 0, points: 0, lastWinAt: '', best: null };
+        if (!acc[id]) acc[id] = { fighter: r.fighter, w: 0, l: 0, d: 0, ud: 0, ko: 0, points: 0, rating: 0, lastWinAt: '', best: null };
         var a = acc[id];
-        a.w += r.w; a.l += r.l; a.d += r.d; a.ko += r.ko; a.points += r.points;
+        a.w += r.w; a.l += r.l; a.d += r.d; a.ud += r.ud || 0; a.ko = a.ud;
+        // P4P : la meilleure cote du combattant, toutes categories
+        if (r.rating > a.rating) { a.rating = r.rating; a.points = r.points; }
         if (String(r.lastWinAt) > String(a.lastWinAt)) a.lastWinAt = r.lastWinAt;
         if (!a.best || r.rank < a.best.rank) a.best = { key: k, rank: r.rank };
       });
@@ -115,13 +117,10 @@
   }
 
   /* ───────── Badges résultat ───────── */
-  var CODES = { ko: 'KO', tko: 'TKO', decision: 'DEC', abandon: 'ABD', dq: 'DQ', forfeit: 'FFT' };
   function resBadge(b) {
     if (b.result === 'draw') return '<span class="rx-res nul" title="Match nul">NUL</span>';
     if (b.result === 'nc') return '<span class="rx-res nc" title="Sans décision">S.D.</span>';
-    var code = CODES[b.method] || 'V';
-    var ko = b.method === 'ko' || b.method === 'tko';
-    return '<span class="rx-res' + (ko ? ' ko' : '') + '" title="Victoire, ' + esc(TR.methodLabel(b.method)) + '">V-' + code + '</span>';
+    return '<span class="rx-res' + (b.method === 'ud' ? ' ko' : '') + '" title="Victoire, ' + esc(TR.methodLabel(b.method)) + '">V-' + esc(TR.methodShort(b.method)) + '</span>';
   }
   function fighterCell(f, cls, rank) {
     if (!f) return '<div class="' + cls + '"><span class="nm">À venir</span></div>';
@@ -189,7 +188,7 @@
       '<a class="rx-star-ph" href="' + link(f) + '">' + (f.photo_url ? '<img src="' + esc(f.photo_url) + '" alt="' + esc(nm(f)) + '" />' : '<span class="tr-gold">' + esc(P.initials(f).toUpperCase()) + '</span>') + '</a>' +
       '<p class="rx-star-name">N°1 toutes catégories</p><p class="rx-star-sub">' + esc(sub) + '</p>' +
       '<div class="rx-star-stats"><div class="w"><b>' + top.w + '</b><span>Victoires</span></div><div class="l"><b>' + top.l + '</b><span>Défaites</span></div>' +
-      '<div><b>' + top.ko + '</b><span>KO</span></div><div><b class="tr-gold">' + top.points + '</b><span>Points</span></div></div>' +
+      '<div><b>' + top.ud + '</b><span>Unanimes</span></div><div><b class="tr-gold">' + top.points + '</b><span>Cote</span></div></div>' +
       '<a class="rx-more" href="' + link(f) + '">Ouvrir sa fiche</a>';
     el.hidden = false;
   }
@@ -280,13 +279,13 @@
   function renderP4PFull() {
     $('rxP4PFull').innerHTML = SEXES.map(function (s) {
       var rows = S.p4p[s[0]];
-      var body = rows.length ? '<div class="tr-table-wrap"><table class="tr-table"><thead><tr><th scope="col">#</th><th scope="col"></th><th scope="col">Combattant</th><th scope="col">Bilan</th><th scope="col" class="hide-m">KO</th><th scope="col" class="num">Pts</th></tr></thead><tbody>' +
+      var body = rows.length ? '<div class="tr-table-wrap"><table class="tr-table"><thead><tr><th scope="col">#</th><th scope="col"></th><th scope="col">Combattant</th><th scope="col">Bilan</th><th scope="col" class="hide-m">UD</th><th scope="col" class="num">Cote</th></tr></thead><tbody>' +
         rows.map(function (r) {
           var t = trendOf(r, S.p4pPrev[s[0]]);
           var f = r.fighter;
           return '<tr class="' + (r.rank <= 3 ? 'top3' : '') + '"><td class="tr-rank">' + r.rank + '</td><td><span class="rx-tr ' + t.cls + '">' + t.txt + '</span></td>' +
             '<td><a class="tr-who" href="' + link(f) + '">' + photo(f, r.rank === 1 ? 'gold' : '') + '<span><b>' + esc(nm(f)) + '</b><small>' + (r.best ? esc(divShort(r.best.key)) : '') + '</small></span></a></td>' +
-            '<td>' + P.recHtml(r.w, r.l, r.d) + '</td><td class="hide-m tr-dim">' + r.ko + '</td><td class="num"><span class="tr-pts">' + r.points + '</span></td></tr>';
+            '<td>' + P.recHtml(r.w, r.l, r.d) + '</td><td class="hide-m tr-dim">' + r.ud + '</td><td class="num"><span class="tr-pts">' + r.points + '</span></td></tr>';
         }).join('') + '</tbody></table></div>' : empty('Pas encore de classement.');
       return '<section class="rx-box"><h2 class="rx-h">' + s[2] + ' ' + s[1] + '</h2>' + body + '</section>';
     }).join('');
@@ -317,9 +316,9 @@
       groups[idx[g]].bouts.push(b);
     });
     el.innerHTML = groups.map(function (g) {
-      var ko = g.bouts.filter(function (b) { return b.method === 'ko' || b.method === 'tko'; }).length;
+      var ko = g.bouts.filter(function (b) { return b.method === 'ud'; }).length;
       return '<section class="rx-box rx-gala"><h2 class="rx-h">' + esc(P.editionLabel(g.ed) || 'Gala') + '</h2>' +
-        '<p class="rx-sub">' + esc(P.fmtDate(g.date)) + ' · ' + g.bouts.length + ' combat' + (g.bouts.length > 1 ? 's' : '') + (ko ? ' · ' + ko + ' avant la limite' : '') + '</p>' +
+        '<p class="rx-sub">' + esc(P.fmtDate(g.date)) + ' · ' + g.bouts.length + ' combat' + (g.bouts.length > 1 ? 's' : '') + (ko ? ' · ' + ko + ' à l\'unanimité' : '') + '</p>' +
         '<ul class="rx-bouts">' + g.bouts.map(resultRow).join('') + '</ul></section>';
     }).join('');
   }
@@ -330,20 +329,21 @@
     S.overall.forEach(function (r) {
       var f = r.fighter;
       var name = P.gymName(f) || 'Club non renseigné';
-      if (!clubs[name]) clubs[name] = { name: name, gym: f.gym_id, n: 0, w: 0, l: 0, d: 0, ko: 0, points: 0, best: null };
+      if (!clubs[name]) clubs[name] = { name: name, gym: f.gym_id, n: 0, w: 0, l: 0, d: 0, ud: 0, points: 0, best: null };
       var c = clubs[name];
-      c.n++; c.w += r.w; c.l += r.l; c.d += r.d; c.ko += r.ko; c.points += r.points;
-      if (!c.best || r.points > c.best.points) c.best = r;
+      // Points club : 3 par victoire, 1 par nul, +1 si decision unanime
+      c.n++; c.w += r.w; c.l += r.l; c.d += r.d; c.ud += r.ud || 0; c.points += r.w * 3 + r.d + (r.ud || 0);
+      if (!c.best || r.rating > c.best.rating) c.best = r;
     });
     var rows = Object.keys(clubs).map(function (k) { return clubs[k]; })
-      .sort(function (a, b) { return b.points - a.points || b.w - a.w || b.ko - a.ko; });
+      .sort(function (a, b) { return b.points - a.points || b.w - a.w || b.ud - a.ud; });
     if (!rows.length) { el.innerHTML = '<tr><td colspan="7">' + empty('Le classement des clubs démarre avec les premiers résultats.') + '</td></tr>'; return; }
     el.innerHTML = rows.map(function (c, i) {
       var color = CLUB_COLORS[c.gym || 'autre'] || CLUB_COLORS.autre;
       return '<tr class="' + (i < 3 ? 'top3' : '') + '"><td class="tr-rank">' + (i + 1) + '</td>' +
         '<td><span class="rx-club" style="--c:' + color + ';font-size:12px;color:var(--g-text)">' + esc(c.name) + '</span></td>' +
-        '<td class="hide-m tr-dim">' + c.n + '</td><td>' + P.recHtml(c.w, c.l, c.d) + '</td><td class="hide-m tr-dim">' + c.ko + '</td>' +
-        '<td class="hide-m">' + (c.best ? '<a class="tr-who" href="' + link(c.best.fighter) + '" style="min-width:0">' + photo(c.best.fighter) + '<span><b>' + esc(nm(c.best.fighter)) + '</b><small>' + c.best.points + ' pts</small></span></a>' : '') + '</td>' +
+        '<td class="hide-m tr-dim">' + c.n + '</td><td>' + P.recHtml(c.w, c.l, c.d) + '</td><td class="hide-m tr-dim">' + c.ud + '</td>' +
+        '<td class="hide-m">' + (c.best ? '<a class="tr-who" href="' + link(c.best.fighter) + '" style="min-width:0">' + photo(c.best.fighter) + '<span><b>' + esc(nm(c.best.fighter)) + '</b><small>' + esc(c.best.record || (c.best.w + '-' + c.best.l + '-' + c.best.d)) + '</small></span></a>' : '') + '</td>' +
         '<td class="num"><span class="tr-pts">' + c.points + '</span></td></tr>';
     }).join('');
   }

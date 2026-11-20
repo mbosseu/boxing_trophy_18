@@ -47,14 +47,13 @@
     return m ? 'Trophy ' + m[1] : (id || '');
   }
   function methodTag(method) {
-    if (method === 'ko' || method === 'tko') return '<span class="tr-tag ko">' + esc(TR.methodLabel(method)) + '</span>';
-    return '<span class="tr-tag dec">' + esc(TR.methodLabel(method)) + '</span>';
+    return '<span class="tr-tag ' + (method === 'ud' ? 'ko' : 'dec') + '">' + esc(TR.methodShort(method)) + '</span>';
   }
   function sortRows(rows) {
     return rows.sort(function (x, y) {
       if (y.points !== x.points) return y.points - x.points;
       if (y.w !== x.w) return y.w - x.w;
-      if (y.ko !== x.ko) return y.ko - x.ko;
+      if ((y.ud || 0) !== (x.ud || 0)) return (y.ud || 0) - (x.ud || 0);
       return String(y.lastWinAt || '').localeCompare(String(x.lastWinAt || ''));
     });
   }
@@ -73,14 +72,14 @@
       return { id: 'd' + i, slug: TR.slugify(n[0] + ' ' + n[1]), prenom: n[0], nom: n[1], alias: n[2] || null, gym_id: n[3], sexe: n[4], stance: i % 3 ? 'orthodoxe' : 'southpaw', height_cm: 165 + (i * 3) % 25, coach_id: null };
     });
     var plan = [
-      [0, 1, 'a_win', 'ko', 'Boxe Anglaise', 'Homme', '-69kg', 1], [2, 3, 'a_win', 'decision', 'Boxe Anglaise', 'Homme', '-69kg', 3],
-      [0, 2, 'a_win', 'decision', 'Boxe Anglaise', 'Homme', '-69kg', 3], [1, 3, 'draw', 'decision', 'Boxe Anglaise', 'Homme', '-69kg', 3],
-      [5, 1, 'b_win', 'tko', 'Boxe Anglaise', 'Homme', '-69kg', 2], [5, 3, 'a_win', 'decision', 'Boxe Anglaise', 'Homme', '-69kg', 3],
-      [4, 10, 'a_win', 'tko', 'Boxe Anglaise', 'Homme', '-75kg', 2], [9, 11, 'a_win', 'ko', 'Boxe Anglaise', 'Homme', '-75kg', 1],
-      [4, 9, 'b_win', 'decision', 'Boxe Anglaise', 'Homme', '-75kg', 3], [10, 11, 'a_win', 'decision', 'Boxe Anglaise', 'Homme', '-75kg', 3],
-      [6, 7, 'a_win', 'decision', 'Boxe Anglaise', 'Femme', '-60kg', 3], [7, 8, 'a_win', 'tko', 'Boxe Anglaise', 'Femme', '-60kg', 2],
-      [6, 8, 'a_win', 'ko', 'Boxe Anglaise', 'Femme', '-60kg', 1], [9, 4, 'a_win', 'decision', 'Pied-Poing', 'Homme', '-75kg', 3],
-      [11, 2, 'b_win', 'abandon', 'Pied-Poing', 'Homme', '-75kg', 2]
+      [0, 1, 'a_win', 'ud', 'Boxe Anglaise', 'Homme', '-69kg', 1], [2, 3, 'a_win', 'sd', 'Boxe Anglaise', 'Homme', '-69kg', 3],
+      [0, 2, 'a_win', 'sd', 'Boxe Anglaise', 'Homme', '-69kg', 3], [1, 3, 'draw', null, 'Boxe Anglaise', 'Homme', '-69kg', 3],
+      [5, 1, 'b_win', 'ud', 'Boxe Anglaise', 'Homme', '-69kg', 2], [5, 3, 'a_win', 'sd', 'Boxe Anglaise', 'Homme', '-69kg', 3],
+      [4, 10, 'a_win', 'md', 'Boxe Anglaise', 'Homme', '-75kg', 2], [9, 11, 'a_win', 'ud', 'Boxe Anglaise', 'Homme', '-75kg', 1],
+      [4, 9, 'b_win', 'md', 'Boxe Anglaise', 'Homme', '-75kg', 3], [10, 11, 'a_win', 'sd', 'Boxe Anglaise', 'Homme', '-75kg', 3],
+      [6, 7, 'a_win', 'sd', 'Boxe Anglaise', 'Femme', '-60kg', 3], [7, 8, 'a_win', 'md', 'Boxe Anglaise', 'Femme', '-60kg', 2],
+      [6, 8, 'a_win', 'ud', 'Boxe Anglaise', 'Femme', '-60kg', 1], [9, 4, 'a_win', 'sd', 'Pied-Poing', 'Homme', '-75kg', 3],
+      [11, 2, 'b_win', 'ud', 'Pied-Poing', 'Homme', '-75kg', 2]
     ];
     var bouts = plan.map(function (p, i) {
       return { id: 'b' + i, edition_id: i < 8 ? 't19' : 't20', fighter_a: 'd' + p[0], fighter_b: 'd' + p[1], result: p[2], method: p[3], discipline: p[4], sexe: p[5], categorie_poids: p[6], round: p[7], bout_date: i < 8 ? '2026-05-16' : '2026-12-12' };
@@ -145,7 +144,7 @@
     var stats = {
       fighters: Object.keys(ranked).length,
       bouts: counted.length,
-      ko: counted.filter(function (b) { return (b.result === 'a_win' || b.result === 'b_win') && (b.method === 'ko' || b.method === 'tko'); }).length,
+      ko: counted.filter(function (b) { return (b.result === 'a_win' || b.result === 'b_win') && b.method === 'ud'; }).length,
       divs: keys.length
     };
     document.querySelectorAll('#trStats [data-k]').forEach(function (el) { countUp(el, stats[el.getAttribute('data-k')] || 0); });
@@ -225,9 +224,10 @@
         mk.forEach(function (k) {
           boards[k].forEach(function (r) {
             var id = r.fighter.id;
-            if (!acc[id]) acc[id] = { fighter: r.fighter, w: 0, l: 0, d: 0, ko: 0, points: 0, lastWinAt: '' };
+            if (!acc[id]) acc[id] = { fighter: r.fighter, w: 0, l: 0, d: 0, ud: 0, ko: 0, points: 0, rating: 0, lastWinAt: '' };
             var a = acc[id];
-            a.w += r.w; a.l += r.l; a.d += r.d; a.ko += r.ko; a.points += r.points;
+            a.w += r.w; a.l += r.l; a.d += r.d; a.ud += r.ud || 0; a.ko = a.ud;
+            if (r.rating > a.rating) { a.rating = r.rating; a.points = r.points; }
             if (String(r.lastWinAt) > String(a.lastWinAt)) a.lastWinAt = r.lastWinAt;
           });
         });
@@ -235,7 +235,7 @@
         rows.forEach(function (r, i) { r.rank = i + 1; });
       }
       rows.forEach(function (r) {
-        r.koPct = r.w ? Math.round((r.ko / r.w) * 100) : 0;
+        r.koPct = r.w ? Math.round(((r.ud || 0) / r.w) * 100) : 0;
         r.form = formFor(r.fighter.id, keySet);
         r.gym = gymName(r.fighter);
         r.coach = coachName(r.fighter.coach_id, data.coaches);
@@ -262,7 +262,7 @@
             '<span class="tr-pod-name">' + esc(TR.displayName(f)) + '</span>' +
             '<span class="tr-pod-gym">' + esc(r.gym || 'Club non renseigné') + '</span>' +
             '<span class="tr-pod-rec">' + recHtml(r.w, r.l, r.d) + '</span>' +
-            '<span class="tr-pod-pts">' + r.points + ' pts' + (r.ko ? ' · ' + r.ko + ' KO' : '') + '</span></a>';
+            '<span class="tr-pod-pts">' + (r.ud ? r.ud + ' décision' + (r.ud > 1 ? 's' : '') + ' unanime' + (r.ud > 1 ? 's' : '') : 'Cote ' + r.points) + '</span></a>';
         }).join('');
         pod.hidden = false;
       } else {
@@ -280,7 +280,7 @@
         list.sort(function (x, y) {
           var v;
           if (state.sort === 'record') v = (y.w - x.w) || (x.l - y.l) || (y.d - x.d);
-          else if (state.sort === 'koPct') v = (y.koPct - x.koPct) || (y.ko - x.ko);
+          else if (state.sort === 'koPct') v = (y.koPct - x.koPct) || ((y.ud || 0) - (x.ud || 0));
           else v = x.rank - y.rank;
           return state.asc ? -v : v;
         });
@@ -427,9 +427,9 @@
       boards[k].forEach(function (r, i) { r.rank = i + 1; });
     });
 
-    var rec = { w: 0, l: 0, d: 0, ko: 0 };
+    var rec = { w: 0, l: 0, d: 0, ko: 0 }; // ko = victoires par decision unanime // ko = victoires par decision unanime
     history.forEach(function (h) {
-      if (h.outcome === 'V') { rec.w += 1; if (h.bout.method === 'ko' || h.bout.method === 'tko') rec.ko += 1; }
+      if (h.outcome === 'V') { rec.w += 1; if (h.bout.method === 'ud') rec.ko += 1; }
       else if (h.outcome === 'D') rec.l += 1;
       else if (h.outcome === 'N') rec.d += 1;
     });
@@ -437,7 +437,7 @@
     var divs = [];
     Object.keys(boards).forEach(function (k) {
       var row = boards[k].find(function (r) { return r.fighter.id === f.id; });
-      if (row) { points += row.points; divs.push({ key: k, rank: row.rank, size: boards[k].length, row: row }); }
+      if (row) { points = Math.max(points, row.points); divs.push({ key: k, rank: row.rank, size: boards[k].length, row: row }); }
     });
     divs.sort(function (x, y) { return x.rank - y.rank; });
 
@@ -488,8 +488,8 @@
       '</section>';
 
     html += '<div class="tr-kpis tr-in d1">' +
-      '<div class="tr-stat"><b>' + points + '</b><span>Points TrophyRec</span></div>' +
-      '<div class="tr-stat"><b>' + rec.ko + (rec.w ? ' <small style="font-size:.5em;color:var(--g-muted)">' + Math.round(rec.ko / rec.w * 100) + '%</small>' : '') + '</b><span>Victoires par KO</span></div>' +
+      '<div class="tr-stat"><b>' + points + '</b><span>Cote TrophyRec</span></div>' +
+      '<div class="tr-stat"><b>' + rec.ko + (rec.w ? ' <small style="font-size:.5em;color:var(--g-muted)">' + Math.round(rec.ko / rec.w * 100) + '%</small>' : '') + '</b><span>Décisions unanimes</span></div>' +
       '<div class="tr-stat"><b>' + counted.length + '</b><span>Combats officiels</span></div>' +
       '<div class="tr-stat"><b>' + esc(streak || '—') + '</b><span>Série en cours</span></div>' +
       '</div>';
@@ -499,7 +499,7 @@
         divs.map(function (d) {
           var a = d.key.split('|');
           var q = new URLSearchParams({ discipline: a[0], sexe: a[1], poids: a[2] }).toString();
-          return '<a class="tr-div" href="/classement?' + esc(q) + '"><b>#' + d.rank + '</b><span>' + esc(TR.divisionLabel(d.key)) + '<br><small style="color:var(--g-muted)">sur ' + d.size + ' · ' + d.row.points + ' pts</small></span></a>';
+          return '<a class="tr-div" href="/classement?' + esc(q) + '"><b>#' + d.rank + '</b><span>' + esc(TR.divisionLabel(d.key)) + '<br><small style="color:var(--g-muted)">sur ' + d.size + ' · ' + esc(d.row.record) + '</small></span></a>';
         }).join('') + '</div></section>';
     }
 
