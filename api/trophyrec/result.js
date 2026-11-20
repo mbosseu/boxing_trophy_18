@@ -67,6 +67,20 @@ module.exports = async function handler(req, res) {
       return json(res, 400, { error: 'Date invalide' });
     }
 
+    // Gala absent de trophyrec_editions (Trophy 19, 18...) : on le declare avant d'enregistrer le combat
+    const EDITIONS = {
+      t20: ['Boxing Trophy 20', '2026-12-12', 'Garage Moteka, Fenouillet'],
+      t19: ['Boxing Trophy 19', '2026-11-13', null],
+      t18: ['Boxing Trophy 18', null, null]
+    };
+    if (!/^t\d{1,3}$/.test(String(row.edition_id))) return json(res, 400, { error: 'Gala invalide' });
+    const ed = EDITIONS[row.edition_id] || ['Boxing Trophy ' + row.edition_id.slice(1), null, null];
+    const edUp = await supabase.from('trophyrec_editions').upsert(
+      { id: row.edition_id, label: ed[0], event_date: ed[1], venue: ed[2] },
+      { onConflict: 'id', ignoreDuplicates: true }
+    );
+    if (edUp.error) throw edUp.error;
+
     let q;
     if (body.id) {
       // Correction d'un resultat deja saisi

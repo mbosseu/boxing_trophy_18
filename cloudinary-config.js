@@ -164,11 +164,16 @@
         }
     }
 
-    global.BT19Cloudinary = {
+    var api = {
         getCloudinaryConfig: getCloudinaryConfig,
         saveCloudinaryConfig: saveCloudinaryConfig,
         clearCloudinaryConfig: clearCloudinaryConfig,
         uploadFile: uploadFile,
         pickFighterPhoto: pickFighterPhoto
     };
+    // Même module sous tous les noms utilisés (inscription = BT18, admin = BT19, Trophy 20).
+    // Sans ça, l'inscription avec photo était bloquée sur « Cloudinary non configuré ».
+    global.BT20Cloudinary = api;
+    global.BT19Cloudinary = api;
+    global.BT18Cloudinary = api;
 })(typeof window !== 'undefined' ? window : global);
