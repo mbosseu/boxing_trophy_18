@@ -4,24 +4,45 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Fiche combattant — TrophyRec</title>
-  <meta name="description" content="Fiche TrophyRec : palmares, salle Boxing Center et coach." />
-  <link rel="stylesheet" href="/trophyrec.css" />
+  <meta name="description" content="Fiche TrophyRec : bilan, KO, combats, salle Boxing Center et coach du combattant." />
+  <meta name="theme-color" content="#0a0807" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/trophyrec.css?v=2" />
   <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
 </head>
 <body>
-  <nav class="tr-nav">
-    <a class="tr-brand" href="/">Boxing Trophy 20</a>
-    <a href="/classement">TrophyRec</a>
-    <a href="/connexion">Mon espace</a>
-  </nav>
+  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <header class="tr-top">
+    <a class="tr-brand" href="/"><img src="/image/logo_boxing_center.png" alt="" width="30" height="30" /><span><b>Boxing Trophy <span>20</span></b><small>TrophyRec</small></span></a>
+    <nav class="tr-links" aria-label="Navigation">
+      <a href="/">Le Trophy</a>
+      <a href="/classement" class="is-on">Classement</a>
+      <a href="/connexion">Mon espace</a>
+      <a href="/#infos">Billetterie</a>
+      <a href="/#licence" class="tr-cta">S'inscrire</a>
+    </nav>
+  </header>
+
   <main class="tr-wrap" data-page="boxeur">
-    <p id="trStatus" class="tr-note">Chargement…</p>
-    <article id="trFiche" hidden></article>
+    <a class="tr-back" href="/classement">← Retour au classement</a>
+    <div id="trStatus" class="tr-panel">
+      <div class="tr-skel"></div><div class="tr-skel"></div><div class="tr-skel"></div>
+    </div>
+    <article id="trFiche" class="tr-stack" hidden></article>
   </main>
+
+  <footer class="tr-foot">
+    <span>Boxing Trophy 20 · Samedi 12 décembre 2026 · Garage Moteka, Fenouillet</span>
+    <span><a href="/">Accueil</a><a href="/classement">Classement</a><a href="/connexion">Mon espace</a></span>
+  </footer>
+
   <script src="/env-loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-public.js"></script>
+  <script src="/trophyrec-public.js?v=2"></script>
 </body>
 </html>

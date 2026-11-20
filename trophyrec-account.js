@@ -37,7 +37,7 @@
       if (!gymId) return true;
       return c.gym_id === gymId || c.gym_id === 'autre';
     });
-    sel.innerHTML = '<option value="">— Choisir un coach —</option>' + list.map(function (c) {
+    sel.innerHTML = '<option value="">Choisir un coach</option>' + list.map(function (c) {
       return '<option value="' + c.id + '"' + (c.id === current ? ' selected' : '') + '>' +
         String(c.name).replace(/</g, '') + '</option>';
     }).join('');
@@ -52,27 +52,77 @@
       return;
     }
     var err = document.getElementById('authMsg');
+    var mode = 'login';
+    var submitBtn = document.getElementById('loginBtn');
+    var pass = document.getElementById('password');
+    var hint = document.getElementById('authHint');
+    var tabLogin = document.getElementById('tabLogin');
+    var tabSignup = document.getElementById('tabSignup');
+
+    function setMode(m) {
+      mode = m;
+      if (tabLogin) { tabLogin.classList.toggle('is-on', m === 'login'); tabLogin.setAttribute('aria-selected', m === 'login'); }
+      if (tabSignup) { tabSignup.classList.toggle('is-on', m === 'signup'); tabSignup.setAttribute('aria-selected', m === 'signup'); }
+      if (submitBtn) submitBtn.textContent = m === 'login' ? 'Se connecter' : 'Créer mon accès';
+      pass.setAttribute('autocomplete', m === 'login' ? 'current-password' : 'new-password');
+      if (hint) hint.textContent = m === 'login'
+        ? 'Pas encore d\'accès ? Passe sur « Créer mon accès ».'
+        : 'Utilise l\'e-mail de ton inscription au Trophy : ta fiche sera reliée toute seule.';
+      err.hidden = true;
+    }
+    if (tabLogin) tabLogin.addEventListener('click', function () { setMode('login'); });
+    if (tabSignup) tabSignup.addEventListener('click', function () { setMode('signup'); });
+    var toggle = document.getElementById('togglePass');
+    if (toggle) toggle.addEventListener('click', function () {
+      var show = pass.type === 'password';
+      pass.type = show ? 'text' : 'password';
+      toggle.textContent = show ? 'Cacher' : 'Voir';
+      toggle.setAttribute('aria-label', show ? 'Cacher le mot de passe' : 'Afficher le mot de passe');
+    });
+
+    function frError(e) {
+      var m = String((e && e.message) || '');
+      if (/invalid login credentials/i.test(m)) return 'E-mail ou mot de passe incorrect.';
+      if (/email not confirmed/i.test(m)) return 'Confirme d\'abord ton e-mail avec le lien reçu, puis reconnecte-toi.';
+      if (/already registered|already exists/i.test(m)) return 'Un accès existe déjà avec cet e-mail. Connecte-toi plutôt.';
+      if (/rate limit|too many/i.test(m)) return 'Trop d\'essais d\'un coup. Attends une minute et réessaie.';
+      if (/password/i.test(m)) return 'Mot de passe trop court : 6 caractères minimum.';
+      return m || 'Ça n\'a pas marché, réessaie.';
+    }
+
+    async function doLogin(email, password) {
+      var sb = client();
+      if (!sb) return msg(err, 'Connexion indisponible pour le moment.');
+      var r = await sb.auth.signInWithPassword({ email: email, password: password });
+      if (r.error) return msg(err, frError(r.error));
+      location.replace('/compte');
+    }
+
+    async function doSignup(email, password) {
+      var sb = client();
+      if (!sb) return msg(err, 'Inscription indisponible pour le moment.');
+      var r = await sb.auth.signUp({ email: email, password: password });
+      if (r.error) return msg(err, frError(r.error));
+      if (r.data.session) location.replace('/compte');
+      else msg(err, 'Accès créé. Ouvre le lien reçu par e-mail pour le confirmer, puis connecte-toi.', true);
+    }
+
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
-      var sb = client();
-      if (!sb) return msg(err, 'Connexion indisponible.');
       var email = document.getElementById('email').value.trim();
-      var password = document.getElementById('password').value;
-      var r = await sb.auth.signInWithPassword({ email: email, password: password });
-      if (r.error) return msg(err, r.error.message);
-      location.replace('/compte');
+      var password = pass.value;
+      if (!/^\S+@\S+\.\S+$/.test(email)) return msg(err, 'Entre une adresse e-mail valide.');
+      if (password.length < 6) return msg(err, 'Mot de passe : 6 caractères minimum.');
+      if (submitBtn) submitBtn.disabled = true;
+      try {
+        if (mode === 'signup') await doSignup(email, password);
+        else await doLogin(email, password);
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
     });
-    document.getElementById('signupBtn').addEventListener('click', async function () {
-      var sb = client();
-      if (!sb) return msg(err, 'Inscription indisponible.');
-      var email = document.getElementById('email').value.trim();
-      var password = document.getElementById('password').value;
-      if (password.length < 6) return msg(err, 'Mot de passe : 6 caracteres minimum.');
-      var r = await sb.auth.signUp({ email: email, password: password });
-      if (r.error) return msg(err, r.error.message);
-      if (r.data.session) location.replace('/compte');
-      else msg(err, 'Compte cree. Confirmez l e-mail si demande, puis reconnectez-vous.', true);
-    });
+    var signupBtn = document.getElementById('signupBtn');
+    if (signupBtn) signupBtn.addEventListener('click', function () { setMode('signup'); });
   }
 
   async function initCompte() {
@@ -107,7 +157,7 @@
     var fighterQ = await sb.from('trophyrec_fighters').select('*').eq('user_id', sess.user.id).maybeSingle();
     var fighter = fighterQ.data;
     if (!fighter) {
-      status.textContent = (claimed && claimed.message) || 'Indiquez nom et prenom, enregistrez, puis rechargez.';
+      status.textContent = (claimed && claimed.message) || 'Indique ton prénom et ton nom, enregistre, puis recharge la page.';
       form.hidden = false;
     } else {
       status.hidden = true;
@@ -130,6 +180,33 @@
     }
     applyFighter(fighter);
 
+    // En-tête : nom et avatar suivent la saisie
+    function refreshHead() {
+      var alias = document.getElementById('alias').value.trim();
+      var prenom = document.getElementById('prenom').value.trim();
+      var nom = document.getElementById('nom').value.trim();
+      var title = alias || (prenom + ' ' + nom).trim() || 'Mon profil';
+      var nameEl = document.getElementById('accName');
+      if (nameEl) nameEl.textContent = title;
+      var av = document.getElementById('accAvatar');
+      if (!av) return;
+      var url = document.getElementById('photo_url').value.trim();
+      if (/^https?:\/\//.test(url)) {
+        av.textContent = '';
+        av.style.backgroundImage = 'url("' + url.replace(/["\\]/g, '') + '")';
+        av.style.backgroundSize = 'cover';
+        av.style.backgroundPosition = 'center';
+      } else {
+        av.style.backgroundImage = '';
+        var p = title.split(/\s+/);
+        av.textContent = (((p[0] || '')[0] || '') + ((p[1] || '')[0] || '')).toUpperCase() || 'BC';
+      }
+    }
+    ['alias', 'prenom', 'nom', 'photo_url'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', refreshHead);
+    });
+    refreshHead();
+
     document.getElementById('gym_id').addEventListener('change', function () {
       fillCoaches(document.getElementById('coach_id'), coaches, document.getElementById('gym_id').value, document.getElementById('coach_id').value);
     });
@@ -142,8 +219,9 @@
         try {
           var url = await BT18Cloudinary.uploadFile(file);
           document.getElementById('photo_url').value = url;
+          refreshHead();
         } catch (e) {
-          msg(document.getElementById('saveMsg'), e.message || 'Upload photo impossible');
+          msg(document.getElementById('saveMsg'), e.message || 'Envoi de la photo impossible.');
         }
       });
     }
@@ -155,7 +233,7 @@
         claimed = await claim();
         fighterQ = await sb.from('trophyrec_fighters').select('*').eq('user_id', sess.user.id).maybeSingle();
         fighter = fighterQ.data;
-        if (!fighter) return msg(saveMsg, (claimed && claimed.error) || 'Fiche pas encore liee. Inscrivez-vous d abord au Trophy avec le meme e-mail, ou demandez a l organisation.');
+        if (!fighter) return msg(saveMsg, (claimed && claimed.error) || "Ta fiche n'est pas encore reliée. Inscris-toi au Trophy avec le même e-mail, ou demande à l'organisation.");
       }
       var payload = {
         prenom: document.getElementById('prenom').value.trim(),
@@ -171,7 +249,7 @@
       };
       var up = await sb.from('trophyrec_fighters').update(payload).eq('id', fighter.id).eq('user_id', sess.user.id);
       if (up.error) return msg(saveMsg, up.error.message);
-      msg(saveMsg, 'Profil enregistre.', true);
+      msg(saveMsg, 'Profil enregistré.', true);
     });
 
     document.getElementById('logoutBtn').addEventListener('click', async function () {
@@ -180,13 +258,13 @@
     });
 
     document.getElementById('deleteBtn').addEventListener('click', async function () {
-      if (!confirm('Supprimer le compte TrophyRec ? Le palmares officiel reste.')) return;
+      if (!confirm('Supprimer ton compte TrophyRec ? Tes combats restent dans le classement.')) return;
       var r = await fetch('/api/trophyrec/delete-account', {
         method: 'POST',
         headers: { Authorization: 'Bearer ' + sess.access_token }
       });
       var body = await r.json().catch(function () { return {}; });
-      if (!r.ok) return msg(document.getElementById('saveMsg'), body.error || 'Suppression impossible');
+      if (!r.ok) return msg(document.getElementById('saveMsg'), body.error || 'Suppression impossible pour le moment.');
       await sb.auth.signOut();
       location.replace('/');
     });

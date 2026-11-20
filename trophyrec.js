@@ -18,7 +18,7 @@
   ];
 
   var METHODS = [
-    { id: 'decision', label: 'Decision' },
+    { id: 'decision', label: 'Décision' },
     { id: 'ko', label: 'KO' },
     { id: 'tko', label: 'TKO' },
     { id: 'abandon', label: 'Abandon' },
@@ -30,7 +30,7 @@
     { id: 'a_win', label: 'Victoire A' },
     { id: 'b_win', label: 'Victoire B' },
     { id: 'draw', label: 'Nul' },
-    { id: 'nc', label: 'Sans decision' }
+    { id: 'nc', label: 'Sans décision' }
   ];
 
   var SEED_COACHES = [

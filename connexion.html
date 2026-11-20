@@ -3,40 +3,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Connexion TrophyRec — Boxing Trophy</title>
-  <meta name="description" content="Creez votre acces TrophyRec pour renseigner salle, coach, photo et alias. Le palmares ne se modifie pas." />
-  <link rel="stylesheet" href="/trophyrec.css" />
+  <title>Mon espace combattant — Boxing Trophy 20</title>
+  <meta name="description" content="Connecte-toi à ton espace TrophyRec pour compléter ta fiche : surnom, photo, garde, salle Boxing Center et coach. Le palmarès reste officiel." />
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#0a0807" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/trophyrec.css?v=2" />
   <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
 </head>
 <body>
-  <nav class="tr-nav">
-    <a class="tr-brand" href="/">Boxing Trophy 20</a>
-    <a href="/classement">TrophyRec</a>
-    <a href="/connexion" class="is-on">Mon espace</a>
-  </nav>
+  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <header class="tr-top">
+    <a class="tr-brand" href="/"><img src="/image/logo_boxing_center.png" alt="" width="30" height="30" /><span><b>Boxing Trophy <span>20</span></b><small>TrophyRec</small></span></a>
+    <nav class="tr-links" aria-label="Navigation">
+      <a href="/">Le Trophy</a>
+      <a href="/classement">Classement</a>
+      <a href="/connexion" class="is-on" aria-current="page">Mon espace</a>
+      <a href="/#infos">Billetterie</a>
+      <a href="/#licence" class="tr-cta">S'inscrire</a>
+    </nav>
+  </header>
+
   <main class="tr-wrap">
-    <h1 class="tr-h1">Espace combattant</h1>
-    <p class="tr-lead">Creez un acces pour completer votre fiche : alias, photo, taille, gaucher ou droitier, salle Boxing Center et coach. Le classement et le palmares restent officiels.</p>
-    <div class="tr-card">
-      <form id="loginForm" class="tr-grid-2">
-        <div>
-          <label for="email">E-mail</label>
-          <input id="email" type="email" required autocomplete="email" />
+    <div class="tr-auth">
+      <section class="tr-in">
+        <p class="tr-cap">Espace combattant</p>
+        <h1 class="tr-h1">Ta fiche, <span class="tr-gold">ton nom</span> de ring.</h1>
+        <p class="tr-lead">Tu as boxé au Trophy ? Ta fiche existe déjà dans le classement. Crée ton accès avec l'e-mail de ton inscription et complète-la.</p>
+        <ol class="tr-steps">
+          <li><b>Ton nom de ring</b><span>Le surnom qui s'affiche dans le classement à la place de ton nom.</span></li>
+          <li><b>Ta photo et ta garde</b><span>Droitier ou gaucher, ta taille, une photo en tenue.</span></li>
+          <li><b>Ta salle et ton coach</b><span>Pour que ton club récupère les points de tes victoires.</span></li>
+        </ol>
+        <p class="tr-note" style="margin-top:18px">Le palmarès, lui, ne bouge pas : seuls les résultats saisis par l'organisation comptent.</p>
+      </section>
+
+      <section class="tr-panel tr-in d1" aria-label="Connexion">
+        <div class="tr-tabs" role="tablist">
+          <button type="button" role="tab" id="tabLogin" class="is-on" aria-selected="true">Se connecter</button>
+          <button type="button" role="tab" id="tabSignup" aria-selected="false">Créer mon accès</button>
         </div>
-        <div>
-          <label for="password">Mot de passe</label>
-          <input id="password" type="password" required minlength="6" autocomplete="current-password" />
-        </div>
-        <button class="tr-btn" type="submit">Se connecter</button>
-        <button class="tr-btn ghost" type="button" id="signupBtn">Creer un acces</button>
-      </form>
-      <p id="authMsg" class="tr-error" hidden></p>
+        <form id="loginForm" class="tr-auth-form" novalidate>
+          <div class="tr-field">
+            <label for="email">E-mail</label>
+            <input id="email" type="email" required autocomplete="email" placeholder="celui de ton inscription" />
+          </div>
+          <div class="tr-field">
+            <label for="password">Mot de passe</label>
+            <div class="tr-pass">
+              <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="6 caractères minimum" />
+              <button type="button" id="togglePass" aria-label="Afficher le mot de passe">Voir</button>
+            </div>
+          </div>
+          <button class="tr-btn block" type="submit" id="loginBtn">Se connecter</button>
+          <button class="tr-btn ghost block" type="button" id="signupBtn" hidden>Créer mon accès</button>
+          <p class="tr-note" id="authHint">Pas encore d'accès ? Passe sur « Créer mon accès ».</p>
+        </form>
+        <p id="authMsg" class="tr-error" hidden></p>
+      </section>
     </div>
   </main>
+
+  <footer class="tr-foot">
+    <span>Boxing Trophy 20 · Samedi 12 décembre 2026 · Garage Moteka, Fenouillet</span>
+    <span><a href="/">Accueil</a><a href="/classement">Classement</a><a href="/#licence">Inscription combat</a></span>
+  </footer>
+
   <script src="/env-loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-account.js"></script>
+  <script src="/trophyrec-account.js?v=2"></script>
 </body>
 </html>
