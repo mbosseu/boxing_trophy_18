@@ -10,7 +10,7 @@
 <!-- Premier écran de l'intro : chargé en priorité -->
 <link rel="preload" as="image" href="image/intro/pf-plate.webp" fetchpriority="high">
 <link rel="preload" as="image" href="image/intro/pf-logo.webp" fetchpriority="high">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Montserrat:wght@900&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&family=Montserrat:wght@900&family=Anton&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800;1,900&family=Barlow:wght@400;500;600&display=swap">
 <style>
 :root{
   --bg-0:#1c0f0d; --bg-1:#120a09; --bg-2:#0a0807;
@@ -137,9 +137,21 @@ html,body{overflow-x:hidden}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
 <link rel="stylesheet" href="gala.css?v=4">
+<link rel="stylesheet" href="night.css?v=9">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
-<meta name="theme-color" content="#0a0807">
+<meta name="theme-color" content="#05060b">
+<link rel="canonical" href="https://boxing-trophy-20.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://boxing-trophy-20.vercel.app/">
+<meta property="og:title" content="Boxing Trophy 20 · samedi 12 décembre, garage Moteka">
+<meta property="og:description" content="Boxe anglaise et pieds-poings, le samedi du week-end FIGHT and Furious. Dès 19h au garage Moteka, Fenouillet. Place public 10 €.">
+<meta property="og:image" content="https://boxing-trophy-20.vercel.app/image/night/og-trophy20.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="FIGHT and Furious, inauguration du garage Moteka : Boxing Trophy 20, boxe anglaise et boxe pieds-poings">
+<meta property="og:locale" content="fr_FR">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body class="lock">
 
@@ -166,6 +178,7 @@ html,body{overflow-x:hidden}
 <button class="skip" id="skipIntro" type="button">Passer l'intro <span aria-hidden="true">›</span></button>
 
 <div class="stage" id="stage" aria-hidden="true">
+  <canvas class="smoke" id="smoke"></canvas>
   <div class="cards" id="cards"></div>
   <div class="stage-dim" id="stageDim"></div>
 </div>
@@ -203,11 +216,12 @@ html,body{overflow-x:hidden}
     <a href="#infos-cles"><small>01</small>La soirée</a>
     <a href="#event"><small>02</small>Le week-end</a>
     <a href="#disciplines"><small>03</small>Disciplines</a>
-    <a href="#galerie"><small>04</small>Galerie</a>
-    <a href="#carte-combats" id="navCarteCombats"><small>05</small>Carte des combats</a>
-    <a href="#infos"><small>06</small>Billetterie</a>
-    <a href="#licence"><small>07</small>Licence</a>
-    <a href="/classement"><small>08</small>TrophyRec</a>
+    <a href="#le-film"><small>04</small>Le film</a>
+    <a href="#galerie"><small>05</small>Galerie</a>
+    <a href="#carte-combats" id="navCarteCombats"><small>06</small>Carte des combats</a>
+    <a href="#infos"><small>07</small>Billetterie</a>
+    <a href="#licence"><small>08</small>Licence</a>
+    <a href="/classement"><small>09</small>TrophyRec</a>
     <a href="#licence" class="nav-cta">S'inscrire au combat</a>
   </div>
   <p class="gnav-foot">Samedi 12 décembre 2026 · 19h · Garage Moteka, Fenouillet</p>
@@ -219,152 +233,238 @@ html,body{overflow-x:hidden}
 <!-- ═════════════ CONTENU (défile par-dessus la scène de l'intro) ═════════════ -->
 <main class="g-main">
 
-  <!-- 01 · Infos clés -->
-  <section class="g-panel g-key reveal" id="infos-cles">
-    <div class="g-key-head">
-      <p class="g-cap">La coupe de gala · 20<sup>e</sup> édition</p>
-      <h2 class="g-title">Boxing Trophy <span class="g-gold">20</span></h2>
-      <p class="g-lead">Le samedi du week-end <b>FIGHT &amp; Furious</b> : un ring monté au cœur du garage Moteka, deux disciplines, une salle pleine pour porter chaque combattant.</p>
-    </div>
-    <dl class="g-facts">
-      <div><dt>Date</dt><dd>Samedi 12 déc. 2026</dd></div>
-      <div><dt>Portes</dt><dd>19h00</dd></div>
-      <div><dt>Lieu</dt><dd>Garage Moteka</dd><dd class="g-sub">14 rue Seveso, Fenouillet</dd></div>
-      <div><dt>Place public</dt><dd>10 €</dd></div>
-    </dl>
-    <div class="g-key-foot">
-      <div id="countdown" class="countdown" aria-label="Compte à rebours avant l'événement">
-        <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
-        <span class="countdown-sep" aria-hidden="true">:</span>
-        <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
-        <span class="countdown-sep" aria-hidden="true">:</span>
-        <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
-        <div class="countdown-finished-msg">C'est ce soir&nbsp;!</div>
+  <!-- 01 · L'affiche : la soirée en un coup d'œil -->
+  <section class="n-sec n-key" id="infos-cles" data-smoke="0,1">
+    <div class="n-wrap">
+      <p class="n-road reveal">Toutes les routes mènent au ring.</p>
+      <h2 class="n-mark reveal" aria-label="Boxing Trophy 20">
+        <span class="n-chrome" aria-hidden="true">Boxing Trophy</span>
+        <span class="n-20" aria-hidden="true">20</span>
+      </h2>
+      <p class="n-disc reveal">Boxe anglaise <i>&amp;</i> boxe pieds-poings</p>
+      <p class="n-banner reveal"><b><span>Samedi 12 décembre · Dès 19h · Garage Moteka</span></b></p>
+      <p class="n-lead reveal">Le samedi du week-end <b>FIGHT &amp; Furious</b> : un ring monté au cœur du garage Moteka, deux disciplines, une salle pleine pour porter chaque combattant.</p>
+      <dl class="n-tape reveal">
+        <div><dt>Date</dt><dd>Sam. 12 déc. 2026</dd></div>
+        <div><dt>Portes</dt><dd>19h00</dd></div>
+        <div><dt>Lieu</dt><dd>Garage Moteka</dd><dd class="n-sub">14 rue Seveso, Fenouillet</dd></div>
+        <div><dt>Place public</dt><dd>10 €</dd></div>
+      </dl>
+      <div class="n-key-foot reveal">
+        <div id="countdown" class="countdown" aria-label="Compte à rebours avant l'événement">
+          <div class="countdown-item"><span class="countdown-value" id="cd-days">00</span><span class="countdown-label">Jours</span></div>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <div class="countdown-item"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-label">Heures</span></div>
+          <span class="countdown-sep" aria-hidden="true">:</span>
+          <div class="countdown-item"><span class="countdown-value" id="cd-minutes">00</span><span class="countdown-label">Min</span></div>
+          <div class="countdown-finished-msg">C'est ce soir&nbsp;!</div>
+        </div>
+        <div class="g-actions hero-cta-group">
+          <a href="#licence" class="btn btn-primary btn-urgent">S'inscrire au combat</a>
+          <a href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" class="btn btn-ghost" target="_blank" rel="noopener">Réserver ma place · 10 €</a>
+        </div>
       </div>
-      <div class="g-actions hero-cta-group">
-        <a href="#licence" class="btn btn-primary btn-urgent">S'inscrire au combat</a>
-        <a href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" class="btn btn-ghost" target="_blank" rel="noopener">Réserver ma place · 10 €</a>
-      </div>
-    </div>
-    <p class="reg-urgency" id="regDeadline">
-      <span class="reg-urgency-pulse" aria-hidden="true"></span>
-      <span class="reg-urgency-copy">
-        <strong id="regDeadlineTitle">Inscriptions ouvertes</strong>
-        <span class="reg-urgency-clock" id="regDeadlineClock" aria-hidden="true"><b id="rd-hours">00</b><span>:</span><b id="rd-min">00</b><span>:</span><b id="rd-sec">00</b></span>
-      </span>
-    </p>
-  </section>
-
-  <!-- 02 · Le week-end -->
-  <section class="g-panel" id="event">
-    <div class="g-head reveal">
-      <p class="g-cap">Le week-end FIGHT &amp; Furious</p>
-      <h2 class="g-title">Trois soirs, <span class="g-gold">un seul ring</span></h2>
-      <p class="g-lead">Le Boxing Center inaugure le garage Moteka à Fenouillet avec trois jours de boxe. Le Trophy, c'est le samedi.</p>
-    </div>
-    <div class="g-nights">
-      <article class="g-night reveal">
-        <img src="image/trophy20/gala-elites.webp" alt="Boxeur portant un direct pendant un gala" loading="lazy">
-        <div><span class="g-day">Ven. 11 déc. · 19h</span><h3>Gala Élites</h3><p>Les meilleurs amateurs sous les projecteurs.</p></div>
-      </article>
-      <article class="g-night g-night--on reveal">
-        <img src="image/trophy20/heros-garage.webp" alt="Boxeur en garde dans l'atelier du garage Moteka" loading="lazy">
-        <div><span class="g-day">Sam. 12 déc. · 19h</span><h3>Boxing Trophy 20</h3><p>Boxe anglaise et pied-poing, débutants et intermédiaires.</p><span class="g-badge">Notre soirée</span></div>
-      </article>
-      <article class="g-night reveal">
-        <img src="image/gala/garde-casque-bleu.webp" alt="Boxeur au casque bleu en garde" loading="lazy">
-        <div><span class="g-day">Dim. 13 déc. · 11h</span><h3>Boxe éducative</h3><p>La relève monte sur le ring.</p></div>
-      </article>
+      <p class="reg-urgency" id="regDeadline">
+        <span class="reg-urgency-pulse" aria-hidden="true"></span>
+        <span class="reg-urgency-copy">
+          <strong id="regDeadlineTitle">Inscriptions ouvertes</strong>
+          <span class="reg-urgency-clock" id="regDeadlineClock" aria-hidden="true"><b id="rd-hours">00</b><span>:</span><b id="rd-min">00</b><span>:</span><b id="rd-sec">00</b></span>
+        </span>
+      </p>
     </div>
   </section>
 
-  <!-- 03 · Disciplines -->
-  <section class="g-panel" id="disciplines">
-    <div class="g-head reveal">
-      <p class="g-cap">Les disciplines</p>
-      <h2 class="g-title">Coin rouge <span class="g-gold">contre</span> coin bleu</h2>
+  <!-- 02 · Le film : montage des éditions précédentes -->
+  <section class="n-sec n-film" id="le-film" data-smoke="0,.75">
+    <div class="n-wrap">
+      <header class="n-head n-head--center reveal">
+        <p class="n-cap">Le film · Boxing Center Trophy</p>
+        <h2 class="n-title"><span class="n-chrome-t">On ne raconte pas un gala.</span><br><span class="n-red">On le vit.</span></h2>
+      </header>
     </div>
-    <div class="g-versus">
-      <article class="g-corner g-corner--red reveal">
-        <img src="image/gala/garde-casque-rouge.webp" alt="Boxeur en garde, casque rouge" loading="lazy">
-        <div><span class="g-day">Discipline 01</span><h3>Boxe anglaise</h3><p>Le noble art. Technique, puissance et stratégie : les poings uniquement, dans les règles classiques.</p></div>
-      </article>
-      <span class="g-vs" aria-hidden="true">VS</span>
-      <article class="g-corner g-corner--blue reveal">
-        <img src="image/trophy20/pied-poing-kick.webp" alt="Combattant portant un high kick" loading="lazy">
-        <div><span class="g-day">Discipline 02</span><h3>Pied-poing</h3><p>La frappe intégrale. Poings et pieds en jeu pour des échanges dynamiques et spectaculaires.</p></div>
-      </article>
-    </div>
-  </section>
-
-  <!-- 04 · Galerie -->
-  <section class="g-panel" id="galerie">
-    <div class="g-head g-head--split reveal">
-      <div><p class="g-cap">Galerie</p><h2 class="g-title">L'intensité, <span class="g-gold">en images</span></h2></div>
-      <p class="g-lead">Gardes hautes, échanges, verdict : quelques instants des éditions précédentes.</p>
-    </div>
-    <div class="gallery-grid reveal" data-gallery>
-      <button class="g-item g-hero" type="button" data-full="image/gala/victoire.webp" aria-label="Agrandir : la victoire"><img src="image/gala/victoire.webp" alt="L'arbitre lève le bras du vainqueur" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/garde-casque-rouge.webp" aria-label="Agrandir : garde haute, casque rouge"><img src="image/gala/garde-casque-rouge.webp" alt="Boxeur en garde, casque rouge" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/direct.webp" aria-label="Agrandir : le direct"><img src="image/gala/direct.webp" alt="Boxeur au casque rouge lançant un direct" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/esquive-arbitre.webp" aria-label="Agrandir : esquive sous l'œil de l'arbitre"><img src="image/gala/esquive-arbitre.webp" alt="Boxeur esquivant un coup sous l'œil de l'arbitre" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/garde-casque-bleu.webp" aria-label="Agrandir : garde, casque bleu"><img src="image/gala/garde-casque-bleu.webp" alt="Boxeur au casque bleu en garde" loading="lazy"></button>
-      <button class="g-item" type="button" data-full="image/gala/accolade.webp" aria-label="Agrandir : l'accolade"><img src="image/gala/accolade.webp" alt="Deux combattants se donnent l'accolade sur le ring" loading="lazy"></button>
-      <button class="g-item g-band" type="button" data-full="image/gala/echange-union-jack.webp" aria-label="Agrandir : l'échange"><img src="image/gala/echange-union-jack.webp" alt="Échange sur le ring devant un drapeau britannique" loading="lazy"></button>
-    </div>
-  </section>
-
-  <!-- 05 · Vidéo Trophy 18 -->
-  <section class="g-panel film-section" id="edition-18">
-    <canvas class="film-ambient" width="36" height="64" aria-hidden="true"></canvas>
-    <div class="g-head g-head--center reveal">
-      <p class="g-cap">Dans le rétro</p>
-      <h2 class="g-title">Revivez <span class="g-gold">le Trophy 18</span></h2>
-    </div>
-    <div class="film-stage">
-      <div class="film-marquee" aria-hidden="true">
-        <div class="fm-row fm-row-a" data-marquee="-1"><span>Trophy 18 — St Cyprien — 5 juin 2026 — </span><span>Trophy 18 — St Cyprien — 5 juin 2026 — </span></div>
-        <div class="fm-row fm-row-b" data-marquee="1"><span>Salle comble — Combats engagés — </span><span>Salle comble — Combats engagés — </span></div>
-      </div>
-      <figure class="film" data-film data-clips="videos/gala/clip-1.mp4,videos/gala/clip-2.mp4,videos/gala/clip-3.mp4,videos/gala/clip-4.mp4,videos/gala/clip-5.mp4,videos/gala/clip-6.mp4">
-        <div class="film-tilt">
-          <div class="film-frame">
-            <video class="film-video is-active" muted playsinline preload="metadata" aria-label="Images de la soirée du Boxing Trophy 18"></video>
-            <video class="film-video" muted playsinline preload="none" aria-hidden="true"></video>
-            <div class="film-shade" aria-hidden="true"></div>
-            <div class="film-top" aria-hidden="true">
-              <span class="film-tag"><span class="film-dot"></span>Trophy 18</span>
-              <span class="film-time"><span data-film-time>0:00</span><span class="film-time-sep">/</span><span data-film-total>1:27</span></span>
-            </div>
-            <button class="film-toggle" type="button" data-film-toggle aria-label="Lire la vidéo"><span class="film-toggle-icon" aria-hidden="true"></span></button>
-            <div class="film-bottom">
-              <div class="film-progress" data-film-progress aria-hidden="true"></div>
-              <button class="film-mute" type="button" data-film-sound aria-pressed="false" aria-label="Activer le son">
-                <svg class="icon-muted" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6" fill="none"/></svg>
-                <svg class="icon-sound" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
-              </button>
-            </div>
+    <figure class="cine" data-cine>
+      <div class="cine-screen">
+        <video class="cine-video" data-src="videos/night/reel.mp4" poster="videos/night/reel-poster.webp" muted playsinline loop preload="none" aria-label="Montage des soirées Boxing Center Trophy : vestiaire, entrée des combattants, combats, public, verdict"></video>
+        <div class="cine-grade" aria-hidden="true"></div>
+        <div class="cine-hud">
+          <span class="cine-corner c1" aria-hidden="true"></span><span class="cine-corner c2" aria-hidden="true"></span><span class="cine-corner c3" aria-hidden="true"></span><span class="cine-corner c4" aria-hidden="true"></span>
+          <div class="cine-hud-row cine-hud-row--top" aria-hidden="true">
+            <span class="cine-rec"><i></i>Rec · Boxing Center Trophy</span>
+            <span class="cine-tc" data-tc>00:00:00</span>
+          </div>
+          <div class="cine-hud-row cine-hud-row--bot">
+            <p class="cine-label" data-label aria-live="off"><small>Chapitre</small><span>L'avant-combat</span></p>
+            <button class="cine-sound" type="button" data-sound aria-pressed="false">
+              <svg class="ic-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M17 9l5 6M22 9l-5 6" fill="none"/></svg>
+              <svg class="ic-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none"/></svg>
+              <span data-sound-txt>Mettre le son</span>
+            </button>
           </div>
         </div>
-        <span class="film-chip film-chip-1"><small>Date</small>5 juin 2026</span>
-        <span class="film-chip film-chip-2"><small>Lieu</small>Boxing Center St Cyprien</span>
-        <span class="film-chip film-chip-3"><small>Discipline</small>Boxe anglaise</span>
-      </figure>
+      </div>
+      <figcaption class="cine-chapters" aria-label="Chapitres du film">
+        <button class="cine-ch is-on" type="button" data-t="0" data-label="L'avant-combat"><i></i><b>01</b>L'avant-combat</button>
+        <button class="cine-ch" type="button" data-t="5" data-label="L'entrée"><i></i><b>02</b>L'entrée</button>
+        <button class="cine-ch" type="button" data-t="11.2" data-label="Le combat"><i></i><b>03</b>Le combat</button>
+        <button class="cine-ch" type="button" data-t="24.2" data-label="La salle"><i></i><b>04</b>La salle</button>
+        <button class="cine-ch" type="button" data-t="29.2" data-label="Le verdict"><i></i><b>05</b>Le verdict</button>
+      </figcaption>
+    </figure>
+    <div class="n-wrap">
+      <div class="cine-films reveal">
+        <p class="cine-films-k">Les films complets, avec le son</p>
+        <button class="film-card" type="button" data-film-src="videos/night/finale-2018.mp4" data-film-poster="videos/night/finale-2018-poster.webp" data-film-title="Boxing Center Trophy · la finale du 1er décembre 2018">
+          <span class="film-card-thumb"><img src="videos/night/finale-2018-poster.webp" alt="" loading="lazy"></span>
+          <span><strong>La finale 2018</strong><small>Le film · 2 min</small></span>
+        </button>
+        <button class="film-card" type="button" data-film-src="videos/night/trophy-viii.mp4" data-film-poster="videos/night/trophy-viii-poster.webp" data-film-title="Boxing Trophy VIII · l'entrée et les combats">
+          <span class="film-card-thumb"><img src="videos/night/trophy-viii-poster.webp" alt="" loading="lazy"></span>
+          <span><strong>Boxing Trophy VIII</strong><small>L'entrée et les combats · 1 min</small></span>
+        </button>
+        <button class="film-card" type="button" data-film-src="videos/night/combats.mp4" data-film-poster="videos/night/combats-poster.webp" data-film-title="Boxing Center · les combats au ralenti">
+          <span class="film-card-thumb"><img src="videos/night/combats-poster.webp" alt="" loading="lazy"></span>
+          <span><strong>Les combats</strong><small>Au ralenti · 2 min 30</small></span>
+        </button>
+      </div>
     </div>
   </section>
 
-  <!-- 06 · Expérience -->
-  <section class="g-panel" id="concept">
-    <div class="g-head reveal">
-      <p class="g-cap">L'expérience combattant</p>
-      <h2 class="g-title">Traité comme <span class="g-gold">un champion</span></h2>
+  <!-- 03 · Les disciplines : coin rouge contre coin bleu -->
+  <section class="n-sec n-corners" id="disciplines" data-smoke="0,1">
+    <div class="n-wrap">
+      <header class="n-head n-head--center reveal">
+        <p class="n-cap">Les disciplines</p>
+        <h2 class="n-title"><span class="n-red">Coin rouge</span> <span class="n-chrome-t">contre</span> <span class="n-blue">coin bleu</span></h2>
+      </header>
     </div>
-    <ol class="g-exp">
-      <li class="reveal"><h3>Ring professionnel</h3><p>Un vrai ring au milieu de l'atelier, sous les projecteurs.</p></li>
-      <li class="reveal"><h3>Encadrement pro</h3><p>Entraîneurs certifiés et arbitre expérimenté : votre sécurité passe avant tout.</p></li>
-      <li class="reveal"><h3>Appariement juste</h3><p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p></li>
-      <li class="reveal"><h3>Mise en lumière</h3><p>Photos et vidéos professionnelles, et votre nom sur la carte officielle.</p></li>
-    </ol>
+    <div class="vs" data-vs>
+      <article class="vs-side vs-red">
+        <img src="image/night/t-sparring-1800.webp" srcset="image/night/t-sparring-900.webp 900w, image/night/t-sparring-1800.webp 1800w" sizes="(max-width: 760px) 100vw, 55vw" alt="Combat amateur au Boxing Center : le casque rouge porte un direct sur la garde du casque bleu, devant la fresque du club" loading="lazy">
+        <div class="vs-copy">
+          <span class="vs-k">Discipline 01 · Coin rouge</span>
+          <h3>Boxe anglaise</h3>
+          <p>Le noble art. Les poings, rien que les poings : technique, puissance et stratégie, dans les règles classiques.</p>
+        </div>
+      </article>
+      <article class="vs-side vs-blue">
+        <img src="image/night/eu-kick-sparring-1800.webp" srcset="image/night/eu-kick-sparring-900.webp 900w, image/night/eu-kick-sparring-1800.webp 1800w" sizes="(max-width: 760px) 100vw, 55vw" alt="Sparring pieds-poings entre deux adhérents du Boxing Center, protège-tibias aux jambes, devant la cage du club" loading="lazy">
+        <div class="vs-copy">
+          <span class="vs-k">Discipline 02 · Coin bleu</span>
+          <h3>Pieds-poings</h3>
+          <p>La frappe intégrale. Poings et pieds entrent en jeu, pour des échanges dynamiques et spectaculaires.</p>
+        </div>
+      </article>
+      <span class="vs-seam" aria-hidden="true"></span>
+      <span class="vs-badge" aria-hidden="true"><span>VS</span></span>
+    </div>
+  </section>
+
+  <!-- 04 · Le week-end : les trois affiches officielles, comme sur un mur du garage -->
+  <section class="n-sec n-week" id="event" data-smoke="0,.85">
+    <div class="n-wrap">
+      <header class="n-head n-head--split reveal">
+        <div>
+          <p class="n-cap">Le week-end FIGHT &amp; Furious</p>
+          <h2 class="n-title"><span class="n-chrome-t">Trois soirs,</span><br><span class="n-red">un seul ring</span></h2>
+        </div>
+        <p class="n-lead">Le Boxing Center inaugure le garage Moteka à Fenouillet avec trois jours de boxe. Le Trophy, c'est le samedi.</p>
+      </header>
+    </div>
+    <div class="wk" data-week>
+      <div class="wk-stage" data-week-stage>
+        <article class="wk-night wk-fri">
+          <button class="wk-poster" type="button" data-poster="image/night/nuit-11-gala-1200.webp" aria-label="Agrandir l'affiche du gala boxe amateur Élites">
+            <img src="image/night/nuit-11-gala-720.webp" srcset="image/night/nuit-11-gala-720.webp 720w, image/night/nuit-11-gala-1200.webp 1200w" sizes="(max-width: 760px) 74vw, 28vw" alt="Affiche FIGHT and Furious : gala boxe amateur Élites, vendredi 11 décembre 2026 dès 19h" width="720" height="900" loading="lazy">
+            <span class="wk-glare" aria-hidden="true"></span>
+          </button>
+          <div class="wk-copy">
+            <span class="wk-num" aria-hidden="true">11</span>
+            <div><p class="wk-day">Vendredi · 19h</p><h3>Gala boxe amateur Élites</h3><p>Les meilleurs amateurs sous les projecteurs.</p></div>
+          </div>
+        </article>
+        <article class="wk-night wk-sat">
+          <p class="n-banner wk-ours"><b><span>Notre soirée</span></b></p>
+          <button class="wk-poster" type="button" data-poster="image/night/nuit-12-trophy-1200.webp" aria-label="Agrandir l'affiche du Boxing Trophy 20">
+            <img src="image/night/nuit-12-trophy-720.webp" srcset="image/night/nuit-12-trophy-720.webp 720w, image/night/nuit-12-trophy-1200.webp 1200w" sizes="(max-width: 760px) 74vw, 28vw" alt="Affiche du Boxing Trophy 20 : toutes les routes mènent au ring. Boxe anglaise et boxe pieds-poings, le 12 décembre dès 19h au garage Moteka" width="720" height="900" loading="lazy">
+            <span class="wk-glare" aria-hidden="true"></span>
+          </button>
+          <div class="wk-copy">
+            <span class="wk-num" aria-hidden="true">12</span>
+            <div><p class="wk-day">Samedi · 19h</p><h3>Boxing Trophy 20</h3><p>Boxe anglaise et pieds-poings, débutants et intermédiaires.</p></div>
+          </div>
+        </article>
+        <article class="wk-night wk-sun">
+          <button class="wk-poster" type="button" data-poster="image/night/nuit-13-educative-1200.webp" aria-label="Agrandir l'affiche de la compétition de boxe éducative">
+            <img src="image/night/nuit-13-educative-720.webp" srcset="image/night/nuit-13-educative-720.webp 720w, image/night/nuit-13-educative-1200.webp 1200w" sizes="(max-width: 760px) 74vw, 28vw" alt="Affiche FIGHT and Furious : compétition de boxe éducative, dimanche 13 décembre 2026 dès 11h" width="720" height="900" loading="lazy">
+            <span class="wk-glare" aria-hidden="true"></span>
+          </button>
+          <div class="wk-copy">
+            <span class="wk-num" aria-hidden="true">13</span>
+            <div><p class="wk-day">Dimanche · 11h</p><h3>Compétition boxe éducative</h3><p>Les jeunes boxeurs à l'honneur.</p></div>
+          </div>
+        </article>
+      </div>
+      <nav class="wk-tabs" aria-label="Choisir un soir">
+        <button type="button" data-wk-go="0">Ven. 11</button>
+        <button type="button" data-wk-go="1" class="is-on">Sam. 12</button>
+        <button type="button" data-wk-go="2">Dim. 13</button>
+      </nav>
+    </div>
+    <div class="n-wrap">
+      <div class="wk-offer reveal">
+        <p><b>10 €</b> la place du samedi <i aria-hidden="true">·</i> <b>20 €</b> le pack 3 jours FIGHT &amp; Furious</p>
+        <div class="g-actions">
+          <a class="btn btn-primary" href="https://boutique.boxingcenter.fr/billetterie?produit=samedi" target="_blank" rel="noopener">Ma place du samedi · 10 €</a>
+          <a class="btn btn-ghost" href="https://boutique.boxingcenter.fr/billetterie?src=trp" target="_blank" rel="noopener">Pack 3 jours · 20 €</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 · Galerie -->
+  <section class="n-sec n-gallery" id="galerie" data-smoke="0,.6">
+    <div class="n-wrap">
+      <header class="n-head n-head--split reveal">
+        <div><p class="n-cap">Galerie</p><h2 class="n-title"><span class="n-chrome-t">L'intensité,</span><br><span class="n-red">en images</span></h2></div>
+        <p class="n-lead">Débutants et intermédiaires, casque rouge contre casque bleu : les combats du Trophy, au plus près du ring. Survolez une photo, elle reprend ses couleurs.</p>
+      </header>
+      <div class="mosaic reveal" data-gallery>
+        <button class="g-item m-item m-w8" type="button" data-full="image/night/t-faceoff-1800.webp" data-cap="Trophy · face à face, salle comble" aria-label="Agrandir : face à face, salle comble"><img src="image/night/t-faceoff-1800.webp" alt="Casque rouge contre casque bleu, face à face sur le ring du Trophy, public autour" loading="lazy"></button>
+        <button class="g-item m-item m-w4t" type="button" data-full="image/night/t-red-guard-v-1800.webp" data-cap="Trophy · garde haute" aria-label="Agrandir : garde haute"><img src="image/night/t-red-guard-v-900.webp" alt="Boxeur amateur au casque rouge, garde haute" loading="lazy"></button>
+        <button class="g-item m-item m-blue" type="button" data-full="image/night/t-jabs-1800.webp" data-cap="Trophy · l'échange" aria-label="Agrandir : l'échange"><img src="image/night/t-jabs-900.webp" alt="Casque bleu et casque rouge échangent des directs" loading="lazy"></button>
+        <button class="g-item m-item m-blue" type="button" data-full="image/night/t-guard-blue-1800.webp" data-cap="Trophy · coin bleu" aria-label="Agrandir : coin bleu"><img src="image/night/t-guard-blue-900.webp" alt="Boxeur au casque bleu en garde, drapeaux du club derrière" loading="lazy"></button>
+        <button class="g-item m-item" type="button" data-full="image/night/t-red-close-1800.webp" data-cap="Trophy · concentration" aria-label="Agrandir : concentration"><img src="image/night/t-red-close-900.webp" alt="Gros plan d'un boxeur au casque rouge, gants devant le visage" loading="lazy"></button>
+        <button class="g-item m-item m-w6 m-blue" type="button" data-full="image/night/eu-kick-sparring-1800.webp" data-cap="Pieds-poings · sparring au club" aria-label="Agrandir : sparring au club"><img src="image/night/eu-kick-sparring-1800.webp" alt="Sparring pieds-poings entre deux adhérents, devant la cage du Boxing Center" loading="lazy"></button>
+        <button class="g-item m-item m-w6" type="button" data-full="image/night/t-throw-1800.webp" data-cap="Trophy · le direct" aria-label="Agrandir : le direct"><img src="image/night/t-throw-1800.webp" alt="Le casque rouge lance un direct vers le casque bleu" loading="lazy"></button>
+        <button class="g-item m-item m-blue" type="button" data-full="image/night/t-blue-close-1800.webp" data-cap="Trophy · regard" aria-label="Agrandir : regard"><img src="image/night/t-blue-close-900.webp" alt="Boxeur au casque bleu, regard fixé sur l'adversaire" loading="lazy"></button>
+        <button class="g-item m-item" type="button" data-full="image/night/t-block-1800.webp" data-cap="Trophy · la parade" aria-label="Agrandir : la parade"><img src="image/night/t-block-900.webp" alt="Un boxeur au casque rouge pare un direct, l'arbitre derrière" loading="lazy"></button>
+        <button class="g-item m-item m-blue" type="button" data-full="image/night/t-embrace-1800.webp" data-cap="Trophy · le respect" aria-label="Agrandir : le respect"><img src="image/night/t-embrace-900.webp" alt="Casque rouge et casque bleu s'enlacent après le combat" loading="lazy"></button>
+        <button class="g-item m-item m-w12" type="button" data-full="image/night/t-crowd-1800.webp" data-cap="Trophy · la salle autour du ring" aria-label="Agrandir : la salle autour du ring"><img src="image/night/t-crowd-1800.webp" alt="Vue large du ring du Boxing Center pendant un combat du Trophy, public tout autour" loading="lazy"></button>
+      </div>
+      <p class="n-credit">Combats amateurs du Trophy au Boxing Center · Sparring pieds-poings : B.M.Photographie</p>
+    </div>
+  </section>
+
+  <!-- 06 · L'expérience combattant : quatre rounds -->
+  <section class="n-sec n-rounds" id="concept" data-smoke="0,.8">
+    <div class="n-wrap">
+      <header class="n-head reveal">
+        <p class="n-cap">L'expérience combattant</p>
+        <h2 class="n-title"><span class="n-chrome-t">Traité comme</span> <span class="n-red">un champion</span></h2>
+      </header>
+      <div class="rounds-wrap">
+        <figure class="rounds-photo reveal-left">
+          <img src="image/night/t-hand-raised-900.webp" srcset="image/night/t-hand-raised-900.webp 900w, image/night/t-hand-raised-1800.webp 1800w" sizes="(max-width: 960px) 100vw, 45vw" alt="Au Trophy, l'arbitre lève le bras du vainqueur, qui serre le poing" loading="lazy">
+          <figcaption>Le verdict : l'arbitre lève ton bras.</figcaption>
+        </figure>
+        <ol class="rounds">
+          <li><span class="rd"><small>Round</small><b>1</b></span><h3>Ring professionnel</h3><p>Un vrai ring au milieu de l'atelier, sous les projecteurs.</p></li>
+          <li><span class="rd"><small>Round</small><b>2</b></span><h3>Encadrement pro</h3><p>Entraîneurs certifiés et arbitre expérimenté : votre sécurité passe avant tout.</p></li>
+          <li><span class="rd"><small>Round</small><b>3</b></span><h3>Appariement juste</h3><p>Même niveau, même poids, même discipline. Des combats équilibrés pour tous.</p></li>
+          <li><span class="rd"><small>Round</small><b>4</b></span><h3>Mise en lumière</h3><p>Photos et vidéos professionnelles, et votre nom sur la carte officielle.</p></li>
+        </ol>
+      </div>
+    </div>
   </section>
 
   <!-- 07 · Carte des combats -->
@@ -375,7 +475,11 @@ html,body{overflow-x:hidden}
       <p class="g-lead section-desc" id="homeCombatsDesc">Les affrontements du Boxing Trophy 20 — garage Moteka, Fenouillet.</p>
     </div>
     <div class="g-soon reveal" id="homeCombatsSoon">
-      <img src="image/intro/lk-trophy.webp" alt="" class="g-soon-cup" loading="lazy">
+      <div class="fc-tease" aria-hidden="true">
+        <div class="fc-row"><span class="fc-side fc-r"><i>Coin rouge</i><b></b></span><span class="fc-vs">VS</span><span class="fc-side fc-b"><i>Coin bleu</i><b></b></span></div>
+        <div class="fc-row"><span class="fc-side fc-r"><i>Coin rouge</i><b></b></span><span class="fc-vs">VS</span><span class="fc-side fc-b"><i>Coin bleu</i><b></b></span></div>
+        <div class="fc-row"><span class="fc-side fc-r"><i>Coin rouge</i><b></b></span><span class="fc-vs">VS</span><span class="fc-side fc-b"><i>Coin bleu</i><b></b></span></div>
+      </div>
       <h3>Bientôt dévoilée</h3>
       <p>La carte officielle sera publiée ici dès la fin des appariements.</p>
       <a href="affiche.html" class="btn btn-ghost">Page programme</a>
@@ -390,10 +494,10 @@ html,body{overflow-x:hidden}
   <section class="g-panel" id="infos">
     <div class="g-tickets">
       <figure class="g-poster reveal">
-        <button class="g-poster-btn" type="button" data-poster="image/trophy20/affiche-trophy-20.webp" aria-label="Agrandir l'affiche officielle">
-          <img src="image/trophy20/affiche-trophy-20.webp" alt="Affiche officielle du Boxing Trophy 20 : FIGHT and Furious, inauguration du garage Moteka. Boxe anglaise et boxe pieds-poings, samedi 12 décembre 2026 dès 19h" loading="lazy" width="1122" height="1402">
+        <button class="g-poster-btn" type="button" data-poster="image/night/affiche-t20.webp" aria-label="Agrandir l'affiche officielle">
+          <img src="image/night/affiche-t20.webp" alt="Affiche officielle du Boxing Trophy 20 : FIGHT and Furious, inauguration du garage Moteka. Boxe anglaise et boxe pieds-poings, le 12 décembre dès 19h au garage Moteka" loading="lazy" width="1200" height="1500">
         </button>
-        <figcaption><span>Affiche officielle</span><a href="image/trophy20/affiche-trophy-20.jpg" download="affiche-boxing-trophy-20.jpg">Télécharger</a></figcaption>
+        <figcaption><span>Affiche officielle</span><a href="image/night/affiche-t20.jpg" download="affiche-boxing-trophy-20.jpg">Télécharger</a></figcaption>
       </figure>
       <div class="reveal">
         <p class="g-cap">Billetterie</p>
@@ -462,36 +566,43 @@ html,body{overflow-x:hidden}
           </div>
         </div>
       </div>
-      <div class="t3d reveal" id="trophy3d" aria-hidden="true">
-        <div class="t3d-glow"></div>
-        <div class="t3d-tilt">
-          <div class="t3d-orbit t3d-orbit-1"><i></i></div>
-          <div class="t3d-orbit t3d-orbit-2"><i></i></div>
-          <div class="t3d-orbit t3d-orbit-3"><i></i></div>
-          <div class="t3d-float">
-            <div class="t3d-coin">
-              <div class="t3d-edge"></div>
-              <div class="t3d-face t3d-front">
-                <span class="t3d-ring"></span>
-                <span class="t3d-kicker">Boxing</span>
-                <span class="t3d-num">20</span>
-                <span class="t3d-name">Trophy</span>
-                <span class="t3d-date">12 · 12 · 2026</span>
-                <span class="t3d-shine"></span>
-              </div>
-              <div class="t3d-face t3d-back">
-                <span class="t3d-ring"></span>
-                <span class="t3d-kicker">Fenouillet</span>
-                <span class="t3d-num t3d-num-sm">BC</span>
-                <span class="t3d-name">Licence</span>
-                <span class="t3d-date">FFB · FFKMDA</span>
-                <span class="t3d-shine"></span>
-              </div>
+      <!-- Le pass combattant : il s'écrit pendant qu'on remplit le sas licence -->
+      <div class="pass reveal" id="fightPass" data-state="idle" aria-hidden="true">
+        <div class="pass-aura"></div>
+        <div class="pass-tilt">
+          <div class="pass-card">
+            <div class="pass-edge"></div>
+            <div class="pass-face pass-front">
+              <div class="pf-bg"></div>
+              <div class="pf-window"><span class="pf-window-light"></span><span class="pf-ring" aria-hidden="true"><i></i><i></i><i></i><b></b></span></div>
+              <div class="pf-fighter"><img src="image/night/pass-fighter.webp" alt="" width="640" height="554" decoding="async" fetchpriority="low"></div>
+              <div class="pf-top"><span class="pf-k"><i></i>Fight pass</span><img class="pf-bc" src="image/night/logo-bc.webp" alt="" width="330" height="160" loading="lazy"></div>
+              <div class="pf-title"><span class="pf-chrome">Trophy</span><span class="pf-20">20</span></div>
+              <span class="pf-seal"><b>20</b></span>
+              <div class="pf-num"><small>Licence n°</small><span class="pf-digits" data-pass-digits><i>–</i><i>–</i><i>–</i><i>–</i><i>–</i><i>–</i><i>–</i></span></div>
+              <div class="pf-meta"><span>FFB · FFKMDA</span><span>12 · 12 · 2026</span></div>
+              <div class="pf-stamp"><b>Validée</b><small>Prêt pour le ring</small></div>
+              <div class="pf-sec"></div>
+              <div class="pf-holo"></div>
+              <div class="pf-glare"></div>
+            </div>
+            <div class="pass-face pass-back">
+              <div class="pf-bg pb-bg"></div>
+              <span class="pb-stripe"></span>
+              <div class="pf-top"><span class="pf-k"><i></i>Fight pass · verso</span><img class="pf-bc" src="image/night/logo-bc.webp" alt="" width="330" height="160" loading="lazy"></div>
+              <div class="pb-title"><span class="pf-chrome">Licence</span><span class="pb-red">loisir</span></div>
+              <div class="pb-price"><span>50</span><small>€</small></div>
+              <ol class="pb-steps"><li>Payer la licence</li><li>Formulaire médical</li><li>Tampon du médecin</li><li>Dépôt sur FFBoxe</li></ol>
+              <div class="pf-meta"><span>Boxe loisirs · FFBoxe</span><span>Trophy 20</span></div>
+              <div class="pf-stamp pb-stamp"><b>Réglée</b><small>Inscription ouverte</small></div>
+              <div class="pf-sec"></div>
+              <div class="pf-holo"></div>
+              <div class="pf-glare"></div>
             </div>
           </div>
         </div>
-        <div class="t3d-floor"></div>
-        <div class="t3d-sparks"></div>
+        <div class="pass-floor"></div>
+        <div class="pass-burst"></div>
       </div>
     </div>
   </section>
@@ -510,6 +621,10 @@ html,body{overflow-x:hidden}
           <li>Appariement par sexe, poids et niveau</li>
           <li>Ta photo sur l'affiche officielle (optionnel)</li>
         </ul>
+        <figure class="ringwalk">
+          <video data-src="videos/night/ringwalk.mp4" poster="videos/night/ringwalk-poster.jpg" muted playsinline loop preload="none" aria-label="Entrée d'un combattant sur le tapis rouge, entre deux gerbes d'étincelles"></video>
+          <figcaption>L'entrée des combattants<small>Boxing Trophy VIII</small></figcaption>
+        </figure>
       </aside>
 
       <div class="form-container reveal" id="combatFormWrap" hidden>
@@ -649,17 +764,34 @@ html,body{overflow-x:hidden}
     </div>
   </section>
 
-  <!-- FIGHT & Furious : liens vers le site de l'événement (suivi src=trp) -->
-  <section class="g-panel g-ff reveal" id="fight-and-furious" aria-label="FIGHT and Furious">
-    <div>
-      <p class="g-cap">11 au 13 décembre 2026</p>
-      <h2 class="g-title">FIGHT <span class="g-gold">&amp;</span> Furious</h2>
-      <p class="g-lead">Gala de boxe Boxing Center × Moteka. Billets en ligne et jeu concours avec tirages jusqu'au 28 novembre.</p>
-    </div>
-    <div class="g-actions">
-      <a class="btn btn-primary" href="https://fight-and-furious.boxingcenter.fr/?src=trp">Voir l'événement</a>
-      <a class="btn btn-ghost" href="https://boutique.boxingcenter.fr/billetterie?src=trp">Acheter un billet</a>
-      <a class="btn btn-ghost" href="https://fight-and-furious.boxingcenter.fr/?src=trp#concours">Jeu concours</a>
+  <!-- FIGHT and Furious + jeu concours (suivi src=trp) -->
+  <section class="n-sec n-ff" id="fight-and-furious" data-smoke="0,1" aria-label="FIGHT and Furious">
+    <div class="n-wrap">
+      <p class="n-cap reveal" style="justify-content:center">11 au 13 décembre 2026 · Boxing Center × Moteka</p>
+      <h2 class="ff-logo reveal" aria-label="FIGHT and Furious"><span class="n-chrome" aria-hidden="true">Fight</span><span class="ff-and" aria-hidden="true">and</span><span class="n-chrome" aria-hidden="true">Furious</span></h2>
+      <p class="n-banner reveal"><b><span>Inauguration du garage <strong>Moteka</strong></span></b></p>
+      <p class="n-lead reveal">Trois jours de boxe pour ouvrir le garage Moteka à Fenouillet. Et avant le gala, un jeu concours gratuit, sans obligation d'achat : deux lots, deux tirages en story.</p>
+      <div class="prizes">
+        <a class="prize reveal" href="https://fight-and-furious.boxingcenter.fr/?src=trp#concours">
+          <img src="image/night/lot-golf8r.webp" alt="Lot premium du jeu concours : 24 heures de location d'une Golf 8 R, 320 chevaux, transmission intégrale. Tirage le vendredi 27 novembre en story." loading="lazy" width="960" height="1200">
+          <span class="prize-bar"><span class="prize-k"><b>Lot premium</b>Tirage ven. 27 novembre, en story</span><span class="prize-go">Je participe</span></span>
+        </a>
+        <a class="prize prize--blue reveal" href="https://fight-and-furious.boxingcenter.fr/?src=trp#concours">
+          <img src="image/night/lot-gta6.webp" alt="Lot masterclass du jeu concours : le jeu GTA 6 sur PS5. Tirage le samedi 28 novembre en story." loading="lazy" width="960" height="1200">
+          <span class="prize-bar"><span class="prize-k"><b>Lot masterclass</b>Tirage sam. 28 novembre, en story</span><span class="prize-go">Je participe</span></span>
+        </a>
+      </div>
+      <div class="g-actions reveal">
+        <a class="btn btn-primary" href="https://fight-and-furious.boxingcenter.fr/?src=trp#concours">Participer au jeu concours</a>
+        <a class="btn btn-ghost" href="https://fight-and-furious.boxingcenter.fr/?src=trp">Voir l'événement</a>
+        <a class="btn btn-ghost" href="https://boutique.boxingcenter.fr/billetterie?src=trp">Acheter un billet</a>
+      </div>
+      <p class="ff-legal">Jeu gratuit, sans obligation d'achat · Règlement sur le site FIGHT and Furious</p>
+      <div class="ff-duo" aria-label="Boxing Center × Moteka">
+        <img class="ff-bc" src="image/night/logo-bc.webp" alt="Boxing Center" width="330" height="160" loading="lazy">
+        <span aria-hidden="true">×</span>
+        <img class="ff-mo" src="image/night/logo-moteka.webp" alt="Moteka, centre automobile" width="984" height="120" loading="lazy">
+      </div>
     </div>
   </section>
 
@@ -674,6 +806,13 @@ html,body{overflow-x:hidden}
     <p class="ai-dev-credit" aria-hidden="true">chef equipe dev : <a href="https://fr.linkedin.com/in/germain-raphael-angoula-onambele-a6b858395" rel="noopener noreferrer">Angoula Onambele Germain Raphael</a> · dev : mbosseu brad bruel</p>
   </footer>
 </main>
+
+<!-- Visionneuse vidéo (films complets) -->
+<div class="vbox" id="vbox" role="dialog" aria-modal="true" aria-label="Lecteur vidéo" hidden>
+  <p class="vbox-title"></p>
+  <button class="vbox-close" type="button" aria-label="Fermer la vidéo">✕</button>
+  <video controls playsinline preload="none"></video>
+</div>
 
 <!-- Visionneuse (galerie + affiche) -->
 <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse" hidden>
@@ -854,7 +993,8 @@ html,body{overflow-x:hidden}
       p.x+=p.vx/60; p.y+=p.vy/60; if(p.y<-.02){p.y=1.02;p.x=Math.random()} if(p.x<0)p.x+=1; if(p.x>1)p.x-=1;
       var tw=.35+.65*Math.pow(Math.max(0,Math.sin(t*p.sp+p.ph)),3);
       var a=tw*(dark>.5?.55:.85)*fadeOut;
-      var col=p.gold?(dark>.5?'255,205,120':'184,134,48'):(dark>.5?'255,255,255':'150,150,160');
+      // dans la salle : braises rouges côté coin rouge, étincelles bleues côté coin bleu (comme l'affiche)
+      var col=p.gold?(dark>.5?(p.x<.5?'255,96,64':'110,165,255'):'184,134,48'):(dark>.5?'255,236,220':'150,150,160');
       var X=p.x*w,Y=p.y*h,S=p.s*(dark>.5?1.1:1);
       dctx.fillStyle='rgba('+col+','+a.toFixed(3)+')';
       dctx.beginPath();dctx.arc(X,Y,S,0,6.283);dctx.fill();
@@ -929,6 +1069,8 @@ html,body{overflow-x:hidden}
   // (l'affiche n° i utilise la photo i % 9)
   var SLOT_CARDS=[0,4,8,12,16,20,24,28,2,14,26];
   cards.forEach(function(c,i){ var k=SLOT_CARDS.indexOf(i); c.slot=(k>=0&&k<SLOTS.length)?SLOTS[k]:null; });
+  // ADN de l'affiche : les affiches côté gauche prennent la fumée rouge, côté droit la fumée bleue
+  cards.forEach(function(c,i){ var left=c.slot?c.slot[0]<.5:(i%2===0); c.el.classList.add(left?'card-r':'card-b'); });
 
 
   var stage=$('stage'),heroT=$('heroT'),bar=$('bar'),loader=$('loader');
@@ -998,7 +1140,9 @@ html,body{overflow-x:hidden}
   function applyScroll(p,vh){
     if(p===lastP)return; lastP=p;
     stage.style.transform='scale('+(1-p*.06).toFixed(3)+')';
-    stageDim.style.opacity=(p*.5).toFixed(3);
+    stageDim.style.opacity=(p*.3).toFixed(3);
+    // les affiches s'effacent : sous le contenu, il ne reste que la fumée rouge et bleue
+    cardsEl.style.opacity=Math.max(0,1-p*1.6).toFixed(3);
     heroT.style.transform='translate3d(0,'+(-p*vh*.25).toFixed(1)+'px,0) scale('+(1-p*.08).toFixed(3)+')';
     heroT.style.opacity=Math.max(0,1-p*1.2).toFixed(3);
   }
@@ -1093,10 +1237,11 @@ html,body{overflow-x:hidden}
 <script src="registration-gate.js"></script>
 <script src="home-combats.js"></script>
 <script src="licence-gate.js?v=1"></script>
-<script src="trophy3d.js?v=1" defer></script>
+<script src="pass.js?v=2" defer></script>
 <script src="app.js?v=11"></script>
 <script src="gallery.js?v=2"></script>
-<script src="film.js?v=3"></script>
+<script src="smoke.js?v=1"></script>
+<script src="night.js?v=3"></script>
 <script>
   // Masque l'indication « Découvrir la soirée » dès qu'on défile
   addEventListener('scroll', function () {
