@@ -5,7 +5,6 @@
  *  - provision : appelee apres l'inscription combat. Si l'e-mail correspond a une inscription
  *                avec licence (numero 6-7 chiffres) ou cotisation 50 EUR, cree l'acces avec un
  *                mot de passe provisoire et envoie identifiant + mot de passe par Brevo.
- *  - signup    : creation d'acces depuis /connexion, seulement pour un e-mail deja inscrit au Trophy.
  *  - forgot    : envoie par Brevo un lien pour choisir un nouveau mot de passe.
  *
  * Actions admin (en-tete x-admin-password) :
@@ -228,25 +227,6 @@ async function actProvision(supabase, body) {
   return [200, { ok: true, status: 'created', mail: mail.sent }];
 }
 
-async function actSignup(supabase, body) {
-  const email = cleanEmail(body.email);
-  const password = String(body.password || '');
-  if (!email.includes('@')) return [400, { error: 'E-mail invalide.' }];
-  if (password.length < 6) return [400, { error: 'Mot de passe : 6 caractères minimum.' }];
-  const reg = await findRegistration(supabase, email);
-  if (!reg || !licenceOf(reg)) {
-    return [403, { error: 'Cet e-mail ne correspond à aucune inscription au Trophy avec licence ou cotisation 50 €. Inscris-toi d\'abord (étape Licence sur la page d\'accueil), avec le même e-mail.' }];
-  }
-  const fighter = await ensureFighter(supabase, email, reg);
-  if (fighter.account_status === 'ferme') return [403, { error: 'Ce compte a été fermé par l\'organisation.' }];
-  if (fighter.user_id || await findUserByEmail(supabase, email)) {
-    return [409, { error: 'Un accès existe déjà pour cet e-mail. Connecte-toi, ou utilise « Mot de passe oublié ».' }];
-  }
-  await createAccess(supabase, email, password, fighter);
-  try { await sendWelcome(email, fighter.prenom); } catch (e) { /* le compte est cree, le mail n'est pas bloquant */ }
-  return [200, { ok: true }];
-}
-
 async function actForgot(supabase, body) {
   const email = cleanEmail(body.email);
   const done = [200, { ok: true }]; // meme reponse que le compte existe ou non
@@ -415,7 +395,7 @@ async function actDelete(supabase, body) {
   return [200, { ok: true, kept: false }];
 }
 
-const PUBLIC = { provision: actProvision, signup: actSignup, forgot: actForgot };
+const PUBLIC = { provision: actProvision, forgot: actForgot };
 const ADMIN = {
   list: actList,
   create: actCreate,

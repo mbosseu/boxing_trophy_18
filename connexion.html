@@ -32,7 +32,7 @@
       <section class="tr-in">
         <p class="tr-cap">Espace combattant</p>
         <h1 class="tr-h1">Ta fiche, <span class="tr-gold">ton nom</span> de ring.</h1>
-        <p class="tr-lead">Dès ton inscription au Trophy validée (licence ou cotisation 50&nbsp;€), tu reçois par mail ton identifiant et un mot de passe provisoire. Pas reçu ? Crée ton accès ici avec le même e-mail.</p>
+        <p class="tr-lead">Dès ton inscription au Trophy validée (licence ou cotisation 50&nbsp;€), tu reçois par mail ton identifiant et un mot de passe provisoire. Connecte-toi avec, puis change-le depuis ton espace.</p>
         <ol class="tr-steps">
           <li><b>Ton nom de ring</b><span>Le surnom qui s'affiche dans le classement à la place de ton nom.</span></li>
           <li><b>Ta photo et ta garde</b><span>Droitier ou gaucher, ta taille, une photo en tenue.</span></li>
@@ -42,10 +42,7 @@
       </section>
 
       <section class="tr-panel tr-in d1" aria-label="Connexion">
-        <div class="tr-tabs" role="tablist">
-          <button type="button" role="tab" id="tabLogin" class="is-on" aria-selected="true">Se connecter</button>
-          <button type="button" role="tab" id="tabSignup" aria-selected="false">Créer mon accès</button>
-        </div>
+        <h2 class="tr-h2" style="margin-bottom:20px">Se connecter</h2>
         <form id="loginForm" class="tr-auth-form" novalidate>
           <div class="tr-field">
             <label for="email">E-mail</label>
@@ -54,13 +51,12 @@
           <div class="tr-field">
             <label for="password">Mot de passe</label>
             <div class="tr-pass">
-              <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="6 caractères minimum" />
+              <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="reçu par mail" />
               <button type="button" id="togglePass" aria-label="Afficher le mot de passe">Voir</button>
             </div>
           </div>
           <button class="tr-btn block" type="submit" id="loginBtn">Se connecter</button>
-          <button class="tr-btn ghost block" type="button" id="signupBtn" hidden>Créer mon accès</button>
-          <p class="tr-note" id="authHint">Pas encore d'accès ? Passe sur « Créer mon accès ».</p>
+          <p class="tr-note">Tes identifiants arrivent par mail après ton inscription au Trophy. Pas reçu ? Regarde dans les spams ou écris à <a href="mailto:boxingcenter31@gmail.com" style="color:var(--g-gold-2)">boxingcenter31@gmail.com</a>.</p>
           <button type="button" class="tr-linkbtn" id="forgotBtn">Mot de passe oublié ?</button>
         </form>
         <p id="authMsg" class="tr-error" hidden></p>
@@ -77,6 +73,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-account.js?v=3"></script>
+  <script src="/trophyrec-account.js?v=4"></script>
 </body>
 </html>

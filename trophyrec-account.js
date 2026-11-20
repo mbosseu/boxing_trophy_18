@@ -52,26 +52,8 @@
       return;
     }
     var err = document.getElementById('authMsg');
-    var mode = 'login';
     var submitBtn = document.getElementById('loginBtn');
     var pass = document.getElementById('password');
-    var hint = document.getElementById('authHint');
-    var tabLogin = document.getElementById('tabLogin');
-    var tabSignup = document.getElementById('tabSignup');
-
-    function setMode(m) {
-      mode = m;
-      if (tabLogin) { tabLogin.classList.toggle('is-on', m === 'login'); tabLogin.setAttribute('aria-selected', m === 'login'); }
-      if (tabSignup) { tabSignup.classList.toggle('is-on', m === 'signup'); tabSignup.setAttribute('aria-selected', m === 'signup'); }
-      if (submitBtn) submitBtn.textContent = m === 'login' ? 'Se connecter' : 'Créer mon accès';
-      pass.setAttribute('autocomplete', m === 'login' ? 'current-password' : 'new-password');
-      if (hint) hint.textContent = m === 'login'
-        ? 'Pas encore d\'accès ? Passe sur « Créer mon accès ».'
-        : 'Utilise l\'e-mail de ton inscription au Trophy : ta fiche sera reliée toute seule.';
-      err.hidden = true;
-    }
-    if (tabLogin) tabLogin.addEventListener('click', function () { setMode('login'); });
-    if (tabSignup) tabSignup.addEventListener('click', function () { setMode('signup'); });
     var toggle = document.getElementById('togglePass');
     if (toggle) toggle.addEventListener('click', function () {
       var show = pass.type === 'password';
@@ -84,10 +66,8 @@
       var m = String((e && e.message) || '');
       if (/invalid login credentials/i.test(m)) return 'E-mail ou mot de passe incorrect.';
       if (/banned/i.test(m)) return 'Ton compte a été fermé par l\'organisation. Pour toute question : boxingcenter31@gmail.com.';
-      if (/email not confirmed/i.test(m)) return 'Reconnecte-toi : le mail de confirmation passe par Brevo, pas par un lien Supabase.';
-      if (/already registered|already exists/i.test(m)) return 'Un accès existe déjà avec cet e-mail. Connecte-toi plutôt.';
+      if (/email not confirmed/i.test(m)) return "Ton accès n'est pas encore activé. Écris à boxingcenter31@gmail.com.";
       if (/rate limit|too many/i.test(m)) return 'Trop d\'essais d\'un coup. Attends une minute et réessaie.';
-      if (/password/i.test(m)) return 'Mot de passe trop court : 6 caractères minimum.';
       return m || 'Ça n\'a pas marché, réessaie.';
     }
 
@@ -99,37 +79,19 @@
       location.replace('/compte');
     }
 
-    async function doSignup(email, password) {
-      var sb = client();
-      if (!sb) return msg(err, 'Inscription indisponible pour le moment.');
-      var created = await fetch('/api/trophyrec/accounts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'signup', email: email, password: password })
-      });
-      var body = await created.json().catch(function () { return {}; });
-      if (!created.ok) return msg(err, body.error || 'Inscription impossible.');
-      var r = await sb.auth.signInWithPassword({ email: email, password: password });
-      if (r.error) return msg(err, 'Accès créé, e-mail envoyé. Connecte-toi.', true);
-      location.replace('/compte');
-    }
-
     form.addEventListener('submit', async function (e) {
       e.preventDefault();
       var email = document.getElementById('email').value.trim();
       var password = pass.value;
       if (!/^\S+@\S+\.\S+$/.test(email)) return msg(err, 'Entre une adresse e-mail valide.');
-      if (password.length < 6) return msg(err, 'Mot de passe : 6 caractères minimum.');
+      if (!password) return msg(err, 'Entre ton mot de passe.');
       if (submitBtn) submitBtn.disabled = true;
       try {
-        if (mode === 'signup') await doSignup(email, password);
-        else await doLogin(email, password);
+        await doLogin(email, password);
       } finally {
         if (submitBtn) submitBtn.disabled = false;
       }
     });
-    var signupBtn = document.getElementById('signupBtn');
-    if (signupBtn) signupBtn.addEventListener('click', function () { setMode('signup'); });
 
     var forgot = document.getElementById('forgotBtn');
     if (forgot) forgot.addEventListener('click', async function () {
