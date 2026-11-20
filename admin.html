@@ -530,11 +530,10 @@
         <section id="tab-t19" class="tab-content">
             <div class="section-header">
                 <h2>Trophy 19 — archives</h2>
-                <p class="section-desc">Inscrits et carte des combats du Trophy 19, en lecture seule. Le reste du back office ne gère plus que le Trophy 20.</p>
+                <p class="section-desc">Inscrits et carte des combats du Trophy 19. Cliquez sur un combat pour saisir sa décision (victoire, nul, KO, TKO…). Le reste du back office ne gère que le Trophy 20.</p>
                 <div class="section-actions">
                     <button type="button" class="btn btn-outline btn-sm" id="t19Refresh">Actualiser</button>
                     <button type="button" class="btn btn-outline btn-sm" id="t19Export">Exporter les inscrits (CSV)</button>
-                    <button type="button" class="btn btn-primary btn-sm" id="t19Import">Importer les vainqueurs dans TrophyRec</button>
                 </div>
             </div>
             <p id="t19Status" style="font-size:13px;color:var(--text-dim);margin-bottom:12px;"></p>
@@ -542,10 +541,53 @@
             <div class="card" style="margin-bottom:16px;padding:16px;">
                 <h3>Carte des combats</h3>
                 <div class="table-wrapper">
-                    <table class="data-table"><thead><tr><th>N°</th><th>Coin 1</th><th></th><th>Coin 2</th><th>Catégorie</th></tr></thead>
+                    <table class="data-table"><thead><tr><th>N°</th><th>Coin 1</th><th></th><th>Coin 2</th><th>Catégorie</th><th>Décision</th></tr></thead>
                     <tbody id="t19Matches"></tbody></table>
                 </div>
             </div>
+            <dialog id="t19Dlg" style="max-width:560px;width:calc(100% - 32px);border:1px solid rgba(255,255,255,.15);border-radius:16px;background:#141010;color:inherit;padding:0;">
+                <form id="t19DlgForm" method="dialog" style="padding:20px;display:grid;gap:14px;">
+                    <div>
+                        <h3 id="t19DlgTitle" style="margin:0 0 6px;">Décision du combat</h3>
+                        <p id="t19DlgFighters" style="margin:0;font-size:14px;"></p>
+                    </div>
+                    <fieldset style="border:0;padding:0;margin:0;display:grid;gap:8px;">
+                        <legend style="font-size:13px;color:var(--text-dim);margin-bottom:6px;">Résultat</legend>
+                        <label style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;cursor:pointer;"><input type="radio" name="t19Res" value="a_win"> <span id="t19ResA">Victoire coin 1</span></label>
+                        <label style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;cursor:pointer;"><input type="radio" name="t19Res" value="b_win"> <span id="t19ResB">Victoire coin 2</span></label>
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+                            <label style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;cursor:pointer;"><input type="radio" name="t19Res" value="draw"> Match nul</label>
+                            <label style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;cursor:pointer;"><input type="radio" name="t19Res" value="nc"> Sans décision</label>
+                        </div>
+                    </fieldset>
+                    <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;">
+                        <label>Méthode de victoire
+                            <select id="t19Method" class="form-select">
+                                <option value="decision">Décision (aux points)</option>
+                                <option value="ko">KO</option>
+                                <option value="tko">TKO (arrêt de l'arbitre)</option>
+                                <option value="abandon">Abandon</option>
+                                <option value="dq">Disqualification</option>
+                                <option value="forfeit">Forfait</option>
+                            </select>
+                        </label>
+                        <label>Round
+                            <select id="t19Round" class="form-select">
+                                <option value="">—</option><option value="1">R1</option><option value="2">R2</option><option value="3">R3</option>
+                                <option value="4">R4</option><option value="5">R5</option><option value="6">R6</option>
+                            </select>
+                        </label>
+                    </div>
+                    <p id="t19DlgMsg" style="margin:0;font-size:13px;color:var(--text-dim);"></p>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;">
+                        <button type="button" class="btn btn-danger-outline btn-sm" id="t19DlgDelete" hidden>Effacer la décision</button>
+                        <div style="display:flex;gap:8px;margin-left:auto;">
+                            <button type="button" class="btn btn-ghost" id="t19DlgCancel">Annuler</button>
+                            <button type="submit" class="btn btn-primary" id="t19DlgSave">Enregistrer</button>
+                        </div>
+                    </div>
+                </form>
+            </dialog>
             <div class="card" style="padding:16px;">
                 <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:10px;">
                     <h3 style="margin:0;">Inscrits</h3>
@@ -1125,6 +1167,6 @@ create policy "Accès public total" on match_metadata
     <script src="trophyrec.js"></script>
     <script src="admin.js?v=26"></script>
     <script src="admin-trophyrec.js?v=4"></script>
-    <script src="admin-t19.js?v=3"></script>
+    <script src="admin-t19.js?v=4"></script>
 </body>
 </html>

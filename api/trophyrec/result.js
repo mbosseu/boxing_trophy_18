@@ -29,6 +29,9 @@ module.exports = async function handler(req, res) {
       if (!body.id) return json(res, 400, { error: 'Combat introuvable' });
       const del = await supabase.from('trophyrec_bouts').delete().eq('id', String(body.id));
       if (del.error) throw del.error;
+      if (body.affiche_match_id != null) {
+        await supabase.from('matches').update({ winner: null }).eq('id', body.affiche_match_id);
+      }
       return json(res, 200, { ok: true });
     }
 
@@ -77,9 +80,13 @@ module.exports = async function handler(req, res) {
     }
     if (q.error) throw q.error;
 
-    if (body.sync_affiche && body.source_match_id && (result === 'a_win' || result === 'b_win')) {
-      const winner = result === 'a_win' ? 'fighter1' : 'fighter2';
-      await supabase.from('matches').update({ winner: winner }).eq('id', body.source_match_id);
+    // Carte des combats : vainqueur reporte sur le combat de l'affiche (id distinct possible pour les archives)
+    const afficheId = body.affiche_match_id != null ? body.affiche_match_id : body.source_match_id;
+    if (body.sync_affiche && afficheId != null) {
+      const winner = result === 'a_win' ? 'fighter1' : result === 'b_win' ? 'fighter2' : null;
+      if (winner || body.affiche_match_id != null) {
+        await supabase.from('matches').update({ winner: winner }).eq('id', afficheId);
+      }
     }
 
     return json(res, 200, { ok: true });

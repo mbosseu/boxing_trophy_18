@@ -1,9 +1,16 @@
-/* Back office — onglet Trophy 19 : archives en lecture seule (inscrits, carte des combats, vainqueurs). */
+/* Back office — onglet Trophy 19 : archives (inscrits, carte des combats) et saisie des décisions.
+   Un clic sur un combat ouvre la décision : victoire, nul ou sans décision, méthode (KO, TKO...) et round.
+   Enregistrer met à jour TrophyRec (gala Trophy 19) et le vainqueur sur la carte archivée. */
 (function () {
   'use strict';
 
+  var T19_DATE = '2026-11-13';
   var loaded = false;
-  var data = { registrations: [], matches: [] };
+  var fightersSynced = false;
+  var data = { registrations: [], matches: [], bouts: {}, fighters: [] };
+  var current = null;
+
+  var METHODS = { decision: 'Décision', ko: 'KO', tko: 'TKO', abandon: 'Abandon', dq: 'Disqualification', forfeit: 'Forfait' };
 
   function $(id) { return document.getElementById(id); }
   function esc(v) {
@@ -11,6 +18,8 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  function pw() { return sessionStorage.getItem('bt20_admin_pw') || ''; }
+
   /* Mot de passe change sur Vercel depuis la connexion : on deconnecte proprement. */
   function sessionExpired() {
     sessionStorage.removeItem('boxingtrophy20_admin_auth');
@@ -20,16 +29,34 @@
   }
   window.BT20AdminExpired = sessionExpired;
 
+  async function post(path, body) {
+    var r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': pw() }, body: JSON.stringify(body) });
+    var j = await r.json().catch(function () { return {}; });
+    if (r.status === 401) { sessionExpired(); throw new Error('Session expirée'); }
+    if (!r.ok) throw new Error(j.error || 'Erreur ' + r.status);
+    return j;
+  }
+
   function fullName(f) { return f ? ((f.prenom || '') + ' ' + (f.nom || '')).trim() || '—' : '—'; }
+  function sourceId(m) { return 't19-' + m.id; }
+  function divOf(m) {
+    var f1 = m.fighter1 || {};
+    return { discipline: m.discipline || f1.discipline || null, sexe: m.sexe || f1.sexe || null, poids: m.categoriePoids || f1.categoriePoids || null };
+  }
+
+  /* ───────── Chargement ───────── */
+  async function loadBouts() {
+    data.bouts = {};
+    if (typeof supabaseClient === 'undefined' || !supabaseClient) return;
+    var r = await supabaseClient.from('trophyrec_bouts').select('*').eq('edition_id', 't19');
+    (r.data || []).forEach(function (b) { if (b.source_match_id) data.bouts[b.source_match_id] = b; });
+  }
 
   async function load() {
     var status = $('t19Status');
     status.textContent = 'Chargement des archives…';
     try {
-      var res = await fetch('/api/admin/sync?edition=t19', {
-        cache: 'no-store',
-        headers: { 'x-admin-password': sessionStorage.getItem('bt20_admin_pw') || '' }
-      });
+      var res = await fetch('/api/admin/sync?edition=t19', { cache: 'no-store', headers: { 'x-admin-password': pw() } });
       var body = await res.json().catch(function () { return {}; });
       if (res.status === 401) return sessionExpired();
       if (!res.ok) throw new Error(body.error || 'Archives indisponibles');
@@ -39,35 +66,52 @@
       }
       data.registrations = body.registrations || [];
       data.matches = (body.matches || []).filter(function (m) { return m.fighter1 && m.fighter2; });
+      await loadBouts();
       loaded = true;
       render();
-      status.textContent = '';
+      status.textContent = 'Cliquez sur un combat pour saisir la décision.';
     } catch (e) {
       status.textContent = e.message;
     }
   }
 
+  /* ───────── Affichage ───────── */
+  function resultBadge(m) {
+    var b = data.bouts[sourceId(m)];
+    if (!b) return '<span class="badge badge-warning">À saisir</span>';
+    if (b.result === 'draw') return '<span class="badge badge-info">Nul</span>';
+    if (b.result === 'nc') return '<span class="badge">Sans décision</span>';
+    var ko = b.method === 'ko' || b.method === 'tko';
+    return '<span class="badge ' + (ko ? 'badge-danger' : 'badge-success') + '">' + esc(METHODS[b.method] || b.method || '') + (b.round ? ' · R' + b.round : '') + '</span>';
+  }
+
   function render() {
     var regs = data.registrations.slice().sort(function (a, b) { return String(a.nom || '').localeCompare(String(b.nom || ''), 'fr'); });
     var matches = data.matches.slice().sort(function (a, b) { return (a.match_number || a.sort_order || 0) - (b.match_number || b.sort_order || 0); });
-    var winners = matches.filter(function (m) { return m.winner === 'fighter1' || m.winner === 'fighter2'; }).length;
+    var decided = matches.filter(function (m) { return data.bouts[sourceId(m)]; }).length;
     var clubs = {};
     regs.forEach(function (r) { if (r.club) clubs[String(r.club).trim().toLowerCase()] = 1; });
     $('t19Stats').innerHTML = [
-      ['Inscrits', regs.length, 'gold'], ['Combats', matches.length, 'blue'], ['Vainqueurs saisis', winners, 'green'], ['Clubs', Object.keys(clubs).length, 'red']
+      ['Inscrits', regs.length, 'gold'], ['Combats', matches.length, 'blue'], ['Décisions saisies', decided + ' / ' + matches.length, 'green'], ['Clubs', Object.keys(clubs).length, 'red']
     ].map(function (c) {
       return '<div class="stat-card ' + c[2] + '"><div class="stat-value">' + c[1] + '</div><div class="stat-label">' + c[0] + '</div></div>';
     }).join('');
 
     $('t19Matches').innerHTML = matches.length ? matches.map(function (m) {
-      var w1 = m.winner === 'fighter1', w2 = m.winner === 'fighter2';
-      var side = function (f, win) {
-        return '<td style="' + (win ? 'font-weight:700;color:var(--gold);' : '') + '">' + esc(fullName(f)) + (win ? ' <span class="badge badge-success">V</span>' : '') +
-          '<div style="font-size:12px;color:var(--text-dim);">' + esc(f.club || '') + '</div></td>';
+      var b = data.bouts[sourceId(m)];
+      var w1 = b ? b.result === 'a_win' : m.winner === 'fighter1';
+      var w2 = b ? b.result === 'b_win' : m.winner === 'fighter2';
+      var lost = function (win, other) { return b && (b.result === 'a_win' || b.result === 'b_win') && !win && other; };
+      var side = function (f, win, lose) {
+        return '<td style="' + (win ? 'font-weight:700;color:var(--gold);' : lose ? 'opacity:.6;' : '') + '">' + esc(fullName(f)) +
+          (win ? ' <span class="badge badge-success">V</span>' : lose ? ' <span class="badge badge-danger">D</span>' : '') +
+          '<div style="font-size:12px;color:var(--text-dim);font-weight:400;">' + esc(f.club || '') + '</div></td>';
       };
-      return '<tr><td>' + esc(m.match_number || '') + '</td>' + side(m.fighter1, w1) + '<td style="text-align:center;color:var(--text-dim);">VS</td>' + side(m.fighter2, w2) +
-        '<td style="font-size:13px;">' + esc([m.discipline || m.fighter1.discipline, m.sexe || m.fighter1.sexe, m.categoriePoids || m.fighter1.categoriePoids].filter(Boolean).join(' · ')) + '</td></tr>';
-    }).join('') : '<tr><td colspan="5" style="color:var(--text-dim)">Aucun combat archivé.</td></tr>';
+      var d = divOf(m);
+      return '<tr class="t19-row" data-mid="' + esc(m.id) + '" tabindex="0" role="button" style="cursor:pointer;" title="Saisir la décision">' +
+        '<td>' + esc(m.match_number || '') + '</td>' + side(m.fighter1, w1, lost(w1, w2)) + '<td style="text-align:center;color:var(--text-dim);">VS</td>' + side(m.fighter2, w2, lost(w2, w1)) +
+        '<td style="font-size:13px;">' + esc([d.discipline, d.sexe, d.poids].filter(Boolean).join(' · ')) + '</td><td>' + resultBadge(m) + '</td></tr>';
+    }).join('') : '<tr><td colspan="6" style="color:var(--text-dim)">Aucun combat archivé.</td></tr>';
 
     var q = ($('t19Search').value || '').trim().toLowerCase();
     var list = regs.filter(function (r) {
@@ -80,8 +124,112 @@
     }).join('') : '<tr><td colspan="7" style="color:var(--text-dim)">Aucun inscrit.</td></tr>';
   }
 
-  function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
+  /* ───────── Fenêtre de décision ───────── */
+  function updateMethodState() {
+    var res = (document.querySelector('input[name="t19Res"]:checked') || {}).value || '';
+    var win = res === 'a_win' || res === 'b_win';
+    $('t19Method').disabled = !win;
+    $('t19Round').disabled = !win;
+    $('t19DlgSave').disabled = !res;
+  }
 
+  function openDecision(id) {
+    var m = data.matches.find(function (x) { return String(x.id) === String(id); });
+    if (!m) return;
+    current = m;
+    var b = data.bouts[sourceId(m)];
+    var d = divOf(m);
+    $('t19DlgTitle').textContent = 'Combat n°' + (m.match_number || '') + ' · ' + [d.discipline, d.sexe, d.poids].filter(Boolean).join(' · ');
+    $('t19ResA').textContent = 'Victoire ' + fullName(m.fighter1);
+    $('t19ResB').textContent = 'Victoire ' + fullName(m.fighter2);
+    $('t19DlgFighters').innerHTML = '<strong>' + esc(fullName(m.fighter1)) + '</strong> <span style="color:var(--text-dim)">(' + esc(m.fighter1.club || '—') + ')</span>' +
+      ' &nbsp;vs&nbsp; <strong>' + esc(fullName(m.fighter2)) + '</strong> <span style="color:var(--text-dim)">(' + esc(m.fighter2.club || '—') + ')</span>';
+    var res = b ? b.result : (m.winner === 'fighter1' ? 'a_win' : m.winner === 'fighter2' ? 'b_win' : '');
+    document.querySelectorAll('input[name="t19Res"]').forEach(function (r) { r.checked = r.value === res; });
+    $('t19Method').value = (b && b.method) || 'decision';
+    $('t19Round').value = (b && b.round) || '';
+    $('t19DlgDelete').hidden = !b;
+    $('t19DlgMsg').textContent = '';
+    updateMethodState();
+    var dlg = $('t19Dlg');
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+
+  /* Fiche TrophyRec du combattant : même id, même inscription ou même e-mail */
+  async function resolveFighters(m) {
+    if (!fightersSynced) {
+      $('t19DlgMsg').textContent = 'Préparation des fiches combattants…';
+      await post('/api/trophyrec/sync-fighters', {});
+      var list = await post('/api/trophyrec/accounts', { action: 'list' });
+      data.fighters = list.accounts || [];
+      fightersSynced = true;
+    }
+    function find(f) {
+      var email = String(f.email || '').trim().toLowerCase();
+      var hit = data.fighters.find(function (x) { return String(x.id) === String(f.id); }) ||
+        data.fighters.find(function (x) { return x.registration_id && String(x.registration_id) === String(f.id); }) ||
+        (email && data.fighters.find(function (x) { return String(x.email || '').toLowerCase() === email; }));
+      if (!hit) throw new Error('Fiche TrophyRec introuvable pour ' + fullName(f) + '.');
+      return hit.id;
+    }
+    return { a: find(m.fighter1), b: find(m.fighter2) };
+  }
+
+  async function saveDecision(e) {
+    e.preventDefault();
+    var m = current;
+    var res = (document.querySelector('input[name="t19Res"]:checked') || {}).value;
+    if (!m || !res) return;
+    var win = res === 'a_win' || res === 'b_win';
+    var btn = $('t19DlgSave');
+    btn.disabled = true;
+    try {
+      var ids = await resolveFighters(m);
+      var d = divOf(m);
+      var b = data.bouts[sourceId(m)];
+      $('t19DlgMsg').textContent = 'Enregistrement…';
+      await post('/api/trophyrec/result', {
+        id: b ? b.id : undefined,
+        fighter_a: ids.a, fighter_b: ids.b,
+        result: res,
+        method: win ? $('t19Method').value : 'decision',
+        round: win && $('t19Round').value ? $('t19Round').value : null,
+        discipline: d.discipline, sexe: d.sexe, categorie_poids: d.poids,
+        bout_date: T19_DATE, edition_id: 't19',
+        source_match_id: sourceId(m),
+        affiche_match_id: m.id,
+        sync_affiche: true
+      });
+      m.winner = res === 'a_win' ? 'fighter1' : res === 'b_win' ? 'fighter2' : null;
+      await loadBouts();
+      render();
+      $('t19Dlg').close();
+      $('t19Status').textContent = 'Décision enregistrée pour le combat n°' + (m.match_number || '') + '. TrophyRec est à jour.';
+    } catch (err) {
+      $('t19DlgMsg').textContent = err.message;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  async function deleteDecision() {
+    var m = current;
+    var b = m && data.bouts[sourceId(m)];
+    if (!b || !confirm('Effacer la décision de ce combat ? Le classement TrophyRec sera recalculé.')) return;
+    try {
+      await post('/api/trophyrec/result', { action: 'delete', id: b.id, affiche_match_id: m.id });
+      m.winner = null;
+      await loadBouts();
+      render();
+      $('t19Dlg').close();
+      $('t19Status').textContent = 'Décision effacée pour le combat n°' + (m.match_number || '') + '.';
+    } catch (err) {
+      $('t19DlgMsg').textContent = err.message;
+    }
+  }
+
+  /* ───────── Export ───────── */
+  function csvCell(v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; }
   function exportCsv() {
     if (!loaded) return;
     var head = ['Prénom', 'Nom', 'Club', 'Discipline', 'Sexe', 'Catégorie', 'Niveau', 'E-mail', 'Téléphone', 'Date inscription'];
@@ -95,59 +243,8 @@
     a.click();
   }
 
-  /* Vainqueurs du Trophy 19 -> resultats officiels TrophyRec (methode notee Decision, a corriger si KO). */
-  var T19_DATE = '2026-11-13';
-  async function importTrophyRec() {
-    var status = $('t19Status');
-    if (!loaded) { status.textContent = 'Chargez d\'abord les archives.'; return; }
-    var withWinner = data.matches.filter(function (m) { return m.winner === 'fighter1' || m.winner === 'fighter2'; });
-    if (!withWinner.length) { status.textContent = 'Aucun vainqueur saisi sur la carte du Trophy 19.'; return; }
-    if (!confirm('Importer ' + withWinner.length + ' résultat(s) du Trophy 19 dans TrophyRec ?\n\nLa méthode sera notée « Décision » : corrigez ensuite les KO dans TrophyRec > Résultat officiel.\nVous pouvez relancer l\'import sans créer de doublons.')) return;
-    var pw = sessionStorage.getItem('bt20_admin_pw') || '';
-    async function post(path, body) {
-      var r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': pw }, body: JSON.stringify(body) });
-      var j = await r.json().catch(function () { return {}; });
-      if (r.status === 401) { sessionExpired(); throw new Error('Session expirée'); }
-      if (!r.ok) throw new Error(j.error || 'Erreur ' + r.status);
-      return j;
-    }
-    var btn = $('t19Import');
-    btn.disabled = true;
-    try {
-      status.textContent = 'Création des fiches combattants…';
-      await post('/api/trophyrec/sync-fighters', {});
-      var ok = 0, fails = [];
-      for (var i = 0; i < withWinner.length; i++) {
-        var m = withWinner[i], f1 = m.fighter1 || {}, f2 = m.fighter2 || {};
-        status.textContent = 'Import des résultats… ' + (i + 1) + ' / ' + withWinner.length;
-        try {
-          await post('/api/trophyrec/result', {
-            fighter_a: f1.id, fighter_b: f2.id,
-            result: m.winner === 'fighter1' ? 'a_win' : 'b_win',
-            method: 'decision',
-            discipline: m.discipline || f1.discipline || null,
-            sexe: m.sexe || f1.sexe || null,
-            categorie_poids: m.categoriePoids || f1.categoriePoids || null,
-            bout_date: T19_DATE,
-            edition_id: 't19',
-            source_match_id: 't19-' + (m.id != null ? m.id : (m.match_number || i))
-          });
-          ok++;
-        } catch (e) {
-          fails.push(fullName(f1) + ' vs ' + fullName(f2) + ' : ' + e.message);
-        }
-      }
-      status.textContent = ok + ' résultat(s) importé(s) dans TrophyRec.' + (fails.length ? ' ' + fails.length + ' en échec : ' + fails.join(' | ') : ' Pensez à corriger les victoires par KO.');
-    } catch (e) {
-      status.textContent = e.message;
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
   document.addEventListener('DOMContentLoaded', function () {
     if (!$('tab-t19')) return;
-    $('t19Import').addEventListener('click', importTrophyRec);
     document.querySelectorAll('.tab-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         if (btn.getAttribute('data-tab') === 't19' && !loaded) load();
@@ -156,5 +253,19 @@
     $('t19Search').addEventListener('input', function () { if (loaded) render(); });
     $('t19Export').addEventListener('click', exportCsv);
     $('t19Refresh').addEventListener('click', load);
+
+    var tbody = $('t19Matches');
+    tbody.addEventListener('click', function (e) {
+      var row = e.target.closest('.t19-row');
+      if (row) openDecision(row.getAttribute('data-mid'));
+    });
+    tbody.addEventListener('keydown', function (e) {
+      var row = e.target.closest('.t19-row');
+      if (row && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); openDecision(row.getAttribute('data-mid')); }
+    });
+    document.querySelectorAll('input[name="t19Res"]').forEach(function (r) { r.addEventListener('change', updateMethodState); });
+    $('t19DlgForm').addEventListener('submit', saveDecision);
+    $('t19DlgCancel').addEventListener('click', function () { $('t19Dlg').close(); });
+    $('t19DlgDelete').addEventListener('click', deleteDecision);
   });
 })();
