@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Classement TrophyRec — Boxing Trophy 20</title>
-  <meta name="description" content="Le classement officiel du Boxing Trophy : bilans, KO, forme du moment et fiches de chaque combattant, catégorie par catégorie. Boxe anglaise et pied-poing, salles Boxing Center." />
+  <title>TrophyRec — Classements, P4P et résultats du Boxing Trophy</title>
+  <meta name="description" content="TrophyRec, les stats du Boxing Trophy : champions de chaque catégorie, P4P hommes et femmes, programme du gala, résultats, clubs et fiches de tous les combattants Boxing Center." />
   <link rel="canonical" href="https://boxing-trophy-20.vercel.app/classement" />
-  <meta property="og:title" content="Classement TrophyRec — Boxing Trophy 20" />
-  <meta property="og:description" content="Qui domine sa catégorie ? Bilans, KO et forme de tous les combattants du Boxing Trophy." />
+  <meta property="og:title" content="TrophyRec — Boxing Trophy 20" />
+  <meta property="og:description" content="Champions, P4P, programme et résultats de tous les combattants du Boxing Trophy." />
   <meta property="og:image" content="https://boxing-trophy-20.vercel.app/image/trophy20/affiche-trophy-20.jpg" />
   <meta name="theme-color" content="#0a0807" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
-  <link rel="stylesheet" href="/trophyrec.css?v=3" />
+  <link rel="stylesheet" href="/trophyrec.css?v=4" />
+  <link rel="stylesheet" href="/trophyrec-portal.css?v=1" />
   <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
 </head>
 <body>
@@ -23,105 +24,179 @@
     <a class="tr-brand" href="/"><img src="/image/logo_boxing_center.png" alt="" width="30" height="30" /><span><b>Boxing Trophy <span>20</span></b><small>TrophyRec</small></span></a>
     <nav class="tr-links" aria-label="Navigation">
       <a href="/">Le Trophy</a>
-      <a href="/classement" class="is-on" aria-current="page">Classement</a>
+      <a href="/classement" class="is-on" aria-current="page">TrophyRec</a>
       <a href="/connexion">Mon espace</a>
       <a href="/#infos">Billetterie</a>
       <a href="/#licence" class="tr-cta">S'inscrire</a>
     </nav>
   </header>
 
-  <main class="tr-wrap" data-page="classement">
-    <section class="tr-hero">
-      <div class="tr-in">
-        <p class="tr-cap">TrophyRec · Classement officiel</p>
-        <h1 class="tr-h1">Qui tient sa <span class="tr-gold">catégorie</span>&nbsp;?</h1>
-        <p class="tr-lead">Chaque résultat saisi au bord du ring met le classement à jour. Bilan, KO, forme du moment : tout est là, catégorie par catégorie. Clique sur un nom pour ouvrir sa fiche.</p>
+  <div class="rx-wrap" data-page="classement">
+    <h1 style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">TrophyRec, classements officiels du Boxing Trophy</h1>
+
+    <div class="rx-bar">
+      <a class="rx-brand" href="#accueil">Trophy<span>Rec</span></a>
+      <div class="rx-search">
+        <label for="rxSearch" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Chercher un combattant</label>
+        <input id="rxSearch" type="search" placeholder="Chercher un combattant, un club…" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="rxSuggest" />
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <div class="rx-suggest" id="rxSuggest" role="listbox" hidden></div>
       </div>
-      <div class="tr-stats tr-in d1" id="trStats">
-        <div class="tr-stat"><b data-k="fighters">–</b><span>Combattants classés</span></div>
-        <div class="tr-stat"><b data-k="bouts">–</b><span>Combats officiels</span></div>
-        <div class="tr-stat"><b data-k="ko">–</b><span>Victoires avant la limite</span></div>
-        <div class="tr-stat"><b data-k="divs">–</b><span>Catégories</span></div>
+      <nav class="rx-tabs" aria-label="Rubriques TrophyRec">
+        <a href="#accueil" data-view="accueil">Accueil</a>
+        <a href="#classements" data-view="classements">Classements</a>
+        <a href="#p4p" data-view="p4p">P4P</a>
+        <a href="#champions" data-view="champions">Champions</a>
+        <a href="#programme" data-view="programme">Programme</a>
+        <a href="#resultats" data-view="resultats">Résultats</a>
+        <a href="#clubs" data-view="clubs">Clubs</a>
+      </nav>
+    </div>
+
+    <!-- ═══ Accueil : 3 colonnes ═══ -->
+    <section class="rx-view" data-v="accueil">
+      <div class="rx-home">
+        <div class="rx-col left">
+          <section class="rx-box">
+            <h2 class="rx-h"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#ffc570" d="M3 7l4.5 4L12 4l4.5 7L21 7l-2 11H5z"/></svg>Les champions</h2>
+            <div id="rxChamps"><div class="tr-skel"></div><div class="tr-skel"></div><div class="tr-skel"></div></div>
+            <a class="rx-more" href="#champions">Toutes les catégories</a>
+          </section>
+        </div>
+
+        <div class="rx-col mid">
+          <section class="rx-box">
+            <h2 class="rx-h">Le P4P TrophyRec</h2>
+            <div class="rx-p4p" id="rxP4P"><div class="tr-skel"></div><div class="tr-skel"></div></div>
+            <a class="rx-more" href="#p4p">Voir tout le P4P</a>
+          </section>
+          <section class="rx-box rx-star" id="rxStar" hidden></section>
+          <section class="rx-box" id="rxHotBox" hidden>
+            <h2 class="rx-h">Ils sont en feu</h2>
+            <ul class="rx-hot" id="rxHot"></ul>
+          </section>
+        </div>
+
+        <div class="rx-col right">
+          <section class="rx-box">
+            <h2 class="rx-h">Programme</h2>
+            <div id="rxSchedule"><div class="tr-skel"></div></div>
+            <a class="rx-more" href="#programme">Toute la carte</a>
+          </section>
+          <section class="rx-box">
+            <h2 class="rx-h">Résultats</h2>
+            <div id="rxResults"><div class="tr-skel"></div><div class="tr-skel"></div></div>
+            <a class="rx-more" href="#resultats">Tous les résultats</a>
+          </section>
+        </div>
       </div>
     </section>
 
-    <section class="tr-panel tr-controls tr-in d2" aria-label="Filtres du classement">
-      <div class="tr-ctrl-row">
-        <span class="tr-label">Discipline</span>
-        <div class="tr-chips" id="fDiscipline" role="group" aria-label="Discipline"></div>
+    <!-- ═══ Classements par catégorie ═══ -->
+    <section class="rx-view" data-v="classements" hidden>
+      <div class="rx-view-head">
+        <div><p class="tr-cap">Classements officiels</p><h2 class="tr-h1">Catégorie par <span class="tr-gold">catégorie</span></h2></div>
       </div>
-      <div class="tr-ctrl-row">
-        <span class="tr-label">Tableau</span>
-        <div class="tr-chips" id="fSexe" role="group" aria-label="Tableau"></div>
-      </div>
-      <div class="tr-ctrl-row">
-        <span class="tr-label">Poids</span>
-        <div class="tr-chips scroll" id="fPoids" role="group" aria-label="Catégorie de poids"></div>
-      </div>
-      <div class="tr-ctrl-row">
-        <label class="tr-search">
-          <span class="tr-label" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Chercher un combattant</span>
-          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input type="search" id="fSearch" placeholder="Chercher un nom, une salle, un coach…" autocomplete="off" />
-        </label>
-      </div>
-    </section>
-
-    <div class="tr-layout">
-      <section class="tr-panel tr-in d3" aria-live="polite">
-        <div class="tr-board-head">
-          <div>
-            <p class="tr-mono" id="trBoardKicker">Classement</p>
-            <h2 class="tr-h2" id="trBoardTitle">Chargement…</h2>
-          </div>
-          <p class="tr-note" id="trStatus"></p>
+      <section class="tr-panel tr-controls" aria-label="Filtres du classement">
+        <div class="tr-ctrl-row"><span class="tr-label">Discipline</span><div class="tr-chips" id="fDiscipline" role="group" aria-label="Discipline"></div></div>
+        <div class="tr-ctrl-row"><span class="tr-label">Tableau</span><div class="tr-chips" id="fSexe" role="group" aria-label="Tableau"></div></div>
+        <div class="tr-ctrl-row"><span class="tr-label">Poids</span><div class="tr-chips scroll" id="fPoids" role="group" aria-label="Catégorie de poids"></div></div>
+        <div class="tr-ctrl-row">
+          <label class="tr-search">
+            <span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Filtrer le tableau</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+            <input type="search" id="fSearch" placeholder="Filtrer : nom, club, coach…" autocomplete="off" />
+          </label>
         </div>
-        <div id="trPodium" class="tr-podium" hidden></div>
-        <div id="trSkeleton"><div class="tr-skel"></div><div class="tr-skel"></div><div class="tr-skel"></div><div class="tr-skel"></div></div>
-        <div class="tr-table-wrap">
-          <table class="tr-table" id="trTable" hidden>
-            <thead>
-              <tr>
-                <th scope="col">#</th>
-                <th scope="col">Combattant</th>
-                <th scope="col" class="hide-m">Salle · Coach</th>
-                <th scope="col"><button type="button" data-sort="record">Bilan</button></th>
-                <th scope="col" class="hide-m"><button type="button" data-sort="koPct">KO</button></th>
-                <th scope="col" class="hide-m">Forme</th>
-                <th scope="col" class="num"><button type="button" data-sort="points" class="is-sort">Pts</button></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-        <div id="trEmpty" class="tr-empty" hidden></div>
       </section>
-
-      <aside class="tr-side">
-        <section class="tr-panel">
-          <p class="tr-mono">Au bord du ring</p>
-          <h2 class="tr-h2">Derniers résultats</h2>
-          <ul class="tr-feed" id="trFeed"><li class="tr-note">Pas encore de résultat.</li></ul>
+      <div class="rx-board-layout" style="margin-top:18px">
+        <section class="tr-panel" aria-live="polite">
+          <div class="tr-board-head">
+            <div><p class="tr-mono" id="trBoardKicker">Classement</p><h2 class="tr-h2" id="trBoardTitle">Chargement…</h2></div>
+            <p class="tr-note" id="trStatus"></p>
+          </div>
+          <div id="trPodium" class="tr-podium" hidden></div>
+          <div class="tr-table-wrap">
+            <table class="tr-table" id="trTable" hidden>
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Combattant</th>
+                  <th scope="col" class="hide-m">Club · Coach</th>
+                  <th scope="col"><button type="button" data-sort="record">Bilan</button></th>
+                  <th scope="col" class="hide-m"><button type="button" data-sort="koPct">KO</button></th>
+                  <th scope="col" class="hide-m">Forme</th>
+                  <th scope="col" class="num"><button type="button" data-sort="points" class="is-sort">Pts</button></th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div id="trEmpty" class="tr-empty" hidden></div>
         </section>
-        <section class="tr-panel">
-          <p class="tr-mono">Entre salles</p>
-          <h2 class="tr-h2">Victoires par club</h2>
-          <ul class="tr-gyms" id="trGyms"><li class="tr-note">Pas encore de résultat.</li></ul>
-        </section>
-        <section class="tr-panel">
-          <p class="tr-mono">Le barème</p>
-          <h2 class="tr-h2">Comment on compte</h2>
+        <aside class="rx-box">
+          <h2 class="rx-h">Comment on compte</h2>
           <ul class="tr-rules">
             <li>Victoire aux points <b>+3 pts</b></li>
             <li>Victoire par KO ou TKO <b>+5 pts</b></li>
             <li>Match nul <b>+1 pt</b></li>
             <li>Défaite <b>0 pt</b></li>
           </ul>
-          <p class="tr-note" style="margin-top:14px">À points égaux : le plus de victoires passe devant, puis le plus de KO, puis la victoire la plus récente. Le palmarès est saisi par l'organisation, personne ne peut le modifier depuis son compte.</p>
-        </section>
-      </aside>
-    </div>
-  </main>
+          <p class="tr-note" style="margin-top:14px">À points égaux : le plus de victoires passe devant, puis le plus de KO, puis la victoire la plus récente. Seuls les résultats saisis par l'organisation comptent.</p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ═══ P4P complet ═══ -->
+    <section class="rx-view" data-v="p4p" hidden>
+      <div class="rx-view-head">
+        <div><p class="tr-cap">Toutes catégories confondues</p><h2 class="tr-h1">Pound for <span class="tr-gold">pound</span></h2></div>
+        <p class="tr-note" style="max-width:42ch">Tous les points d'un combattant, toutes catégories réunies. La flèche compare avec le classement d'avant le dernier gala.</p>
+      </div>
+      <div class="rx-two" id="rxP4PFull"></div>
+    </section>
+
+    <!-- ═══ Champions ═══ -->
+    <section class="rx-view" data-v="champions" hidden>
+      <div class="rx-view-head">
+        <div><p class="tr-cap">N°1 de chaque catégorie</p><h2 class="tr-h1">Les <span class="tr-gold">champions</span></h2></div>
+      </div>
+      <div class="rx-grid" id="rxChampsFull"></div>
+    </section>
+
+    <!-- ═══ Programme ═══ -->
+    <section class="rx-view" data-v="programme" hidden>
+      <div class="rx-view-head">
+        <div><p class="tr-cap">Samedi 12 décembre 2026 · Garage Moteka, Fenouillet</p><h2 class="tr-h1">La carte du <span class="tr-gold">Trophy 20</span></h2></div>
+        <a class="tr-btn ghost" href="/#infos">Prendre ma place</a>
+      </div>
+      <div class="rx-box" id="rxScheduleFull"></div>
+    </section>
+
+    <!-- ═══ Résultats ═══ -->
+    <section class="rx-view" data-v="resultats" hidden>
+      <div class="rx-view-head">
+        <div><p class="tr-cap">Gala par gala</p><h2 class="tr-h1">Tous les <span class="tr-gold">résultats</span></h2></div>
+      </div>
+      <div id="rxResultsFull"></div>
+    </section>
+
+    <!-- ═══ Clubs ═══ -->
+    <section class="rx-view" data-v="clubs" hidden>
+      <div class="rx-view-head">
+        <div><p class="tr-cap">Entre salles</p><h2 class="tr-h1">Le classement des <span class="tr-gold">clubs</span></h2></div>
+        <p class="tr-note" style="max-width:42ch">Les points de tous les combattants d'un club additionnés. Ta salle n'est pas la bonne ? Change-la depuis ton espace.</p>
+      </div>
+      <section class="tr-panel">
+        <div class="tr-table-wrap">
+          <table class="tr-table">
+            <thead><tr><th scope="col">#</th><th scope="col">Club</th><th scope="col" class="hide-m">Combattants</th><th scope="col">Bilan</th><th scope="col" class="hide-m">KO</th><th scope="col" class="hide-m">Meilleur combattant</th><th scope="col" class="num">Pts</th></tr></thead>
+            <tbody id="rxClubs"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </div>
 
   <footer class="tr-foot">
     <span>Boxing Trophy 20 · Samedi 12 décembre 2026 · Garage Moteka, Fenouillet</span>
@@ -131,7 +206,10 @@
   <script src="/env-loader.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
+  <script src="/poster.js?v=9"></script>
+  <script src="/published-matches.js?v=2"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-public.js?v=3"></script>
+  <script src="/trophyrec-public.js?v=4"></script>
+  <script src="/trophyrec-portal.js?v=1"></script>
 </body>
 </html>

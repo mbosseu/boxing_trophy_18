@@ -105,11 +105,11 @@
   }
 
   /* ───────── Classement ───────── */
-  async function renderClassement() {
+  async function renderClassement(preloaded) {
     var status = $('trStatus');
     var table = $('trTable');
     var empty = $('trEmpty');
-    var skel = $('trSkeleton');
+    var skel = $('trSkeleton') || { hidden: true };
 
     function showEmpty(title, text) {
       skel.hidden = true; table.hidden = true; $('trPodium').hidden = true;
@@ -118,9 +118,9 @@
       empty.hidden = false;
     }
 
-    var data;
+    var data = preloaded;
     try {
-      data = await loadAll();
+      if (!data) data = await loadAll();
     } catch (e) {
       showEmpty('Classement indisponible', 'On n\'arrive pas à charger le classement pour le moment. Réessaie dans quelques minutes.');
       return;
@@ -318,7 +318,7 @@
       if (state.s) p.set('sexe', state.s);
       if (state.p) p.set('poids', state.p);
       var qs = p.toString();
-      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + (/[?&]demo=1/.test(location.search) ? (qs ? '&' : '?') + 'demo=1' : ''));
+      history.replaceState(null, '', location.pathname + (qs ? '?' + qs : '') + (/[?&]demo=1/.test(location.search) ? (qs ? '&' : '?') + 'demo=1' : '') + location.hash);
     }
 
     table.querySelectorAll('th button[data-sort]').forEach(function (btn) {
@@ -528,10 +528,19 @@
     status.hidden = true;
   }
 
+  window.TRPublic = {
+    esc: esc, initials: initials, recHtml: recHtml, gymName: gymName, coachName: coachName,
+    boutDate: boutDate, fmtDate: fmtDate, editionLabel: editionLabel, sortRows: sortRows,
+    loadAll: loadAll, demoData: demoData, renderClassement: renderClassement
+  };
+
   document.addEventListener('DOMContentLoaded', function () {
     var page = document.querySelector('[data-page]');
     var kind = page ? page.getAttribute('data-page') : '';
-    if (kind === 'classement') renderClassement();
+    if (kind === 'classement') {
+      if (window.TRPortal) window.TRPortal.init();
+      else renderClassement();
+    }
     if (kind === 'boxeur') renderBoxeur();
   });
 })();
