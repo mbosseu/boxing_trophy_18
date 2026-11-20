@@ -7,8 +7,52 @@
 
   var GATE_KEY = 'bt20_gate';
   var LICENCE_RE = /^\d{6,7}$/;
-  var BOUTIQUE_BASE =
-    'https://boutique.boxingcenter.fr/inscription?product=licence-loisirs-trophy';
+  // Paiement licence : API du site Trophy, salle Portet → PayPal Noble Art Portésien.
+  var CHECKOUT_API = '/api/licence/checkout';
+
+  function isPaypalUrl(url) {
+    try {
+      var u = new URL(url);
+      return u.protocol === 'https:' &&
+        (u.hostname === 'paypal.com' || /\.paypal\.com$/.test(u.hostname));
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function adultAge(dateStr) {
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(dateStr || '');
+    if (!m) return null;
+    var y = +m[1], mo = +m[2], d = +m[3];
+    var now = new Date();
+    var age = now.getFullYear() - y;
+    if (now.getMonth() + 1 < mo || (now.getMonth() + 1 === mo && now.getDate() < d)) age -= 1;
+    return age;
+  }
+
+  function checkPayFields(v) {
+    var fields = [], messages = [];
+    if (!v.payPrenom) { fields.push('payPrenom'); messages.push('Prénom requis'); }
+    if (!v.payNom) { fields.push('payNom'); messages.push('Nom requis'); }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.payEmail)) {
+      fields.push('payEmail'); messages.push('E-mail invalide');
+    }
+    var tel = v.payTel.replace(/[\s.\-()]/g, '').replace(/^(\+33|0033)/, '0');
+    if (!/^0[67]\d{8}$/.test(tel)) {
+      fields.push('payTel'); messages.push('Téléphone mobile (06 ou 07) requis');
+    }
+    var age = adultAge(v.payNaissance);
+    if (age == null) { fields.push('payNaissance'); messages.push('Date de naissance requise'); }
+    else if (age < 18) { fields.push('payNaissance'); messages.push('Licence loisirs réservée aux majeurs'); }
+    return { fields: fields, messages: messages };
+  }
+
+  function setPayError(msg) {
+    var el = document.getElementById('licencePay-error');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.toggle('visible', !!msg);
+  }
 
   function readGate() {
     try {
@@ -159,10 +203,62 @@
     }
 
     if (payBtn) {
+      var payFields = ['payPrenom', 'payNom', 'payEmail', 'payTel', 'payNaissance'];
+      payFields.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', function () {
+          el.classList.remove('error');
+          setPayError('');
+        });
+      });
       payBtn.addEventListener('click', function () {
-        var gym = Math.random() < 0.5 ? 'portet' : 'minimes';
-        window.location.href =
-          BOUTIQUE_BASE + '&gym=' + encodeURIComponent(gym);
+        if (payBtn.disabled) return;
+        var v = {};
+        payFields.forEach(function (id) {
+          var el = document.getElementById(id);
+          v[id] = el ? el.value.trim() : '';
+        });
+        var bad = checkPayFields(v);
+        payFields.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (el) el.classList.toggle('error', bad.fields.indexOf(id) !== -1);
+        });
+        if (bad.messages.length) {
+          setPayError(bad.messages.join(' · '));
+          return;
+        }
+        setPayError('');
+        var label = payBtn.textContent;
+        payBtn.disabled = true;
+        payBtn.textContent = 'Redirection vers PayPal…';
+        fetch(CHECKOUT_API, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            first_name: v.payPrenom,
+            last_name: v.payNom,
+            email: v.payEmail,
+            phone: v.payTel,
+            birthdate: v.payNaissance,
+          }),
+        })
+          .then(function (r) {
+            return r.json().catch(function () { return {}; });
+          })
+          .then(function (data) {
+            if (data && data.ok && isPaypalUrl(data.url)) {
+              window.location.href = data.url;
+              return;
+            }
+            var msg = (data && (data.error || (data.errors && data.errors.join(' · ')))) ||
+              'Le paiement est momentanément indisponible. Réessayez dans un instant.';
+            throw new Error(msg);
+          })
+          .catch(function (err) {
+            setPayError(err && err.message ? err.message : 'Connexion impossible. Réessayez.');
+            payBtn.disabled = false;
+            payBtn.textContent = label;
+          });
       });
     }
   }

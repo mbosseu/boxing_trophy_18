@@ -136,7 +136,7 @@ html,body{overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){.ch-face,.hint-cue::after{animation:none}}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
-<link rel="stylesheet" href="gala.css?v=5">
+<link rel="stylesheet" href="gala.css?v=6">
 <link rel="stylesheet" href="night.css?v=14">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
@@ -536,7 +536,7 @@ html,body{overflow-x:hidden}
             <span class="form-label">Etes-vous titulaire d'une licence en cours de validité&nbsp;? <span class="required">*</span></span>
             <div class="form-radio-group">
               <label class="form-radio-label yes-license"><input type="radio" name="gateLicencie" value="Oui"><span class="radio-card-content"><span class="radio-card-title">Oui</span><span class="radio-card-desc">Licence FFB ou FFKMDA</span></span></label>
-              <label class="form-radio-label no-license"><input type="radio" name="gateLicencie" value="Non"><span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Paiement en maintenance</span></span></label>
+              <label class="form-radio-label no-license"><input type="radio" name="gateLicencie" value="Non"><span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Payer 50&nbsp;€ puis s'inscrire</span></span></label>
             </div>
             <div class="form-error" id="gateLicencie-error">Indiquez si vous etes licencie</div>
           </div>
@@ -552,28 +552,49 @@ html,body{overflow-x:hidden}
             </div>
           </div>
           <div class="licence-gate-panel" id="licenceGateNo">
-            <!-- Paiement des licences fermé (maintenance). Pour rouvrir : supprimer ce bloc
-                 et retirer l'attribut hidden du bloc licence-pay-content juste en dessous. -->
-            <div class="licence-maintenance" role="status">
-              <span class="licence-maintenance-icon" aria-hidden="true">⚙</span>
-              <div>
-                <p class="licence-maintenance-title">Paiement des licences en maintenance</p>
-                <p class="licence-maintenance-text">Le paiement de la licence loisirs (50&nbsp;€) est momentanément indisponible. Il rouvrira très bientôt.</p>
-              </div>
-            </div>
-            <div class="licence-pay-content" hidden>
-            <p class="g-note">Licence FFB Boxe Loisir : <b>50&nbsp;€</b> payés au club. Juste après le paiement, tu reçois un e-mail avec le certificat médical et la marche à suivre sur le site de la FFBoxe. Le paiement débloque l'inscription combat dans ce navigateur.</p>
+            <!-- Paiement licence : PayPal du club Noble Art Portésien (salle Portet), via l'API /api/licence/checkout. -->
+            <div class="licence-pay-content">
+            <p class="g-note">Licence FFB Boxe Loisir : <b>50&nbsp;€</b> payés au club <b>Noble Art Portésien</b>. Juste après le paiement, tu reçois un e-mail avec le certificat médical et la marche à suivre sur le site de la FFBoxe. Le paiement débloque l'inscription combat dans ce navigateur.</p>
             <ol class="g-steps">
-              <li><b>Payer</b><span>50&nbsp;€ au club sur la boutique Boxing Center (coût de ta licence Boxe Loisir).</span></li>
+              <li><b>Payer</b><span>50&nbsp;€ au club Noble Art Portésien par PayPal, carte bancaire acceptée sans compte PayPal (coût de ta licence Boxe Loisir).</span></li>
               <li><b>Recevoir le mail</b><span>Facture, certificat médical à télécharger et marche à suivre FFBoxe.</span></li>
               <li><b>Faire remplir</b><span>Le certificat médical, signé et tamponné par ton médecin.</span></li>
               <li><b>Faire ta licence en ligne</b><span>Sur Mon Espace FFBoxe, club <strong>NOBLE ART PORTÉSIEN</strong>, au plus tard le <strong>10 décembre 2026</strong>. Sinon, pas de combat.</span></li>
             </ol>
             <p class="g-note">Un <a href="/licence" style="color:var(--g-gold-2);font-weight:600">tutoriel pas à pas</a> t'explique chaque écran du site de la Fédération. Quand on te demande ton club, cherche <strong>Noble Art Portésien</strong>.</p>
+            <div class="licence-pay-form" id="licencePayForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="payPrenom">Prénom <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="payPrenom" autocomplete="given-name" maxlength="60">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="payNom">Nom <span class="required">*</span></label>
+                  <input type="text" class="form-input" id="payNom" autocomplete="family-name" maxlength="60">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="payEmail">E-mail <span class="required">*</span></label>
+                  <input type="email" class="form-input" id="payEmail" autocomplete="email" maxlength="120" placeholder="exemple@mail.com">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="payTel">Téléphone mobile <span class="required">*</span></label>
+                  <input type="tel" class="form-input" id="payTel" autocomplete="tel" maxlength="20" placeholder="06 12 34 56 78">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="payNaissance">Date de naissance <span class="required">*</span></label>
+                <input type="date" class="form-input" id="payNaissance" autocomplete="bday">
+              </div>
+              <p class="licence-help">Le mail de licence (certificat médical, marche à suivre FFBoxe) est envoyé à cette adresse. Réservé aux majeurs.</p>
+              <div class="form-error" id="licencePay-error" role="alert"></div>
+            </div>
             <div class="g-actions">
               <span class="g-price">50 €</span>
-              <button type="button" class="btn btn-primary" id="licencePayBtn" disabled>Payer ma licence</button>
+              <button type="button" class="btn btn-primary" id="licencePayBtn">Payer avec PayPal ou carte</button>
             </div>
+            <p class="licence-help">Paiement sécurisé PayPal, encaissé par le club Noble Art Portésien.</p>
             </div>
           </div>
         </div>
@@ -1252,7 +1273,7 @@ html,body{overflow-x:hidden}
 <script src="published-matches.js?v=2"></script>
 <script src="registration-gate.js"></script>
 <script src="home-combats.js"></script>
-<script src="licence-gate.js?v=2"></script>
+<script src="licence-gate.js?v=3"></script>
 <script src="pass.js?v=2" defer></script>
 <script src="app.js?v=12"></script>
 <script src="gallery.js?v=2"></script>

@@ -449,12 +449,9 @@ body.intro-done.g-scrolled .hint { opacity: 0; translate: 0 8px; pointer-events:
 .licence-gate { max-width: 720px; margin-top: 18px; }
 .licence-gate-panel { display: none; margin-top: 18px; }
 .licence-gate-panel.visible { display: block; }
-/* Paiement des licences en maintenance */
-.licence-maintenance { display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px; border-radius: 16px; background: rgba(232,171,54,.08); border: 1px solid rgba(255,197,112,.45); }
-.licence-maintenance-icon { flex-shrink: 0; width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; font-size: 18px; color: #1a0f08; background: linear-gradient(90deg, #e8ab36, #ffc570); }
-.licence-maintenance-title { margin: 0 0 6px; font: 600 17px/1.3 Geist, sans-serif; color: #f6faf9; }
-.licence-maintenance-text { margin: 0; font-size: 14.5px; line-height: 1.6; color: rgba(246,250,249,.74); }
-.licence-maintenance-text a { color: #ffc570; font-weight: 600; text-decoration: none; }
+/* Paiement licence (Noble Art Portésien) */
+.licence-pay-form { margin: 18px 0 6px; }
+.licence-pay-form .form-error { margin-top: 8px; }
 .licence-help { margin-top: 10px; font-size: 14px; color: var(--mist, rgba(246,250,249,.72)); line-height: 1.5; }
 .licence-help a { color: var(--gold-1, #e8ab36); }
 .licence-warn {
