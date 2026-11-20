@@ -461,3 +461,62 @@ body.intro-done.g-scrolled .hint { opacity: 0; translate: 0 8px; pointer-events:
   line-height: 1.5;
 }
 .form-section.is-locked #combatFormWrap { display: none; }
+
+/* ─────────── 09 · Licence : medaillon 3D Trophy 20 ─────────── */
+.g-licence { align-items: center; }
+.t3d { position: relative; height: clamp(320px, 38vw, 470px); perspective: 1100px; display: grid; place-items: center; user-select: none; pointer-events: none; }
+.t3d-glow { position: absolute; inset: 12% 14%; border-radius: 50%; background: radial-gradient(circle, rgba(255,197,112,.38), rgba(232,171,54,.12) 45%, transparent 70%); filter: blur(30px); animation: t3dPulse 4.5s ease-in-out infinite; }
+.t3d-tilt { position: relative; width: clamp(200px, 22vw, 280px); aspect-ratio: 1; transform-style: preserve-3d; transform: rotateX(var(--t3d-rx, 8deg)) rotateY(var(--t3d-ry, 0deg)); transition: transform .6s var(--g-ease); }
+.t3d-float { position: absolute; inset: 0; transform-style: preserve-3d; animation: t3dFloat 5s ease-in-out infinite; }
+.t3d-coin { position: absolute; inset: 0; transform-style: preserve-3d; animation: t3dSpin 11s cubic-bezier(.45,.05,.55,.95) infinite; }
+.t3d-edge, .t3d-edge span { position: absolute; inset: 0; border-radius: 50%; transform-style: preserve-3d; }
+.t3d-edge span { background: linear-gradient(90deg, #6e4810, #c98d2a 30%, #ffd98a 50%, #b07a22 70%, #5a3a0c); }
+.t3d-face { position: absolute; inset: 0; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  background: radial-gradient(circle at 32% 26%, #fff3d0 0%, #ffd98a 18%, #e8ab36 46%, #a96f1c 78%, #6e4810 100%);
+  box-shadow: inset 0 0 0 6px rgba(110,72,16,.55), inset 0 0 0 9px rgba(255,236,190,.55), inset 0 -18px 40px rgba(80,45,5,.45), inset 0 14px 30px rgba(255,255,255,.35); }
+.t3d-front { transform: translateZ(14px); }
+.t3d-back { transform: rotateY(180deg) translateZ(14px); }
+.t3d-ring { position: absolute; inset: 9%; border-radius: 50%; border: 2px dashed rgba(90,55,10,.45); }
+.t3d-kicker, .t3d-name, .t3d-date { position: relative; font: 600 clamp(9px, .9vw, 11px)/1 "Geist Mono", monospace; letter-spacing: .32em; text-transform: uppercase; color: #4a2e06; text-shadow: 0 1px 0 rgba(255,240,200,.7); }
+.t3d-name { margin-top: 4px; font: 400 clamp(14px, 1.5vw, 19px)/1 Boldonse, sans-serif; letter-spacing: .06em; }
+.t3d-date { margin-top: 10px; font-size: clamp(8px, .75vw, 9px); letter-spacing: .24em; opacity: .8; }
+.t3d-num { position: relative; margin: 6px 0 2px; font: 400 clamp(64px, 7.4vw, 96px)/1 Boldonse, sans-serif; color: #5a3a0c;
+  text-shadow: 0 1px 0 #fff0c4, 0 -1px 0 #3a2404, 1px 2px 0 #8a5a14, 2px 4px 0 #6e4810, 3px 6px 10px rgba(40,20,0,.45); }
+.t3d-num-sm { font-size: clamp(48px, 5.4vw, 70px); }
+.t3d-shine { position: absolute; inset: -40%; background: linear-gradient(115deg, transparent 40%, rgba(255,255,255,.75) 50%, transparent 60%); transform: translateX(-60%); animation: t3dShine 5.5s ease-in-out infinite; mix-blend-mode: overlay; }
+.t3d-orbit { position: absolute; inset: -22%; border-radius: 50%; border: 1px solid rgba(255,197,112,.35); transform-style: preserve-3d; box-shadow: 0 0 18px rgba(232,171,54,.15); }
+.t3d-orbit i { position: absolute; top: -4px; left: 50%; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; background: #fff1cc; box-shadow: 0 0 12px 3px rgba(255,197,112,.9); }
+.t3d-orbit-1 { animation: t3dOrbit1 9s linear infinite; }
+.t3d-orbit-2 { inset: -32%; border-color: rgba(255,255,255,.14); animation: t3dOrbit2 14s linear infinite; }
+.t3d-orbit-3 { inset: -12%; border-style: dashed; border-color: rgba(216,53,42,.35); animation: t3dOrbit3 7s linear infinite; }
+.t3d-orbit-3 i { background: #ff8a7a; box-shadow: 0 0 12px 3px rgba(216,53,42,.8); }
+.t3d-floor { position: absolute; bottom: 6%; left: 50%; width: 46%; height: 26px; margin-left: -23%; border-radius: 50%; background: radial-gradient(ellipse, rgba(0,0,0,.6), transparent 70%); filter: blur(6px); animation: t3dShadow 5s ease-in-out infinite; }
+.t3d-sparks { position: absolute; inset: 0; }
+.t3d-sparks b { position: absolute; bottom: 18%; width: 3px; height: 3px; border-radius: 50%; background: #ffd98a; box-shadow: 0 0 8px 2px rgba(255,197,112,.8); opacity: 0; animation: t3dSpark var(--d, 4s) ease-out var(--w, 0s) infinite; }
+
+@keyframes t3dSpin { 0% { transform: rotateY(-25deg); } 45% { transform: rotateY(25deg); } 55% { transform: rotateY(180deg); } 100% { transform: rotateY(335deg); } }
+@keyframes t3dFloat { 0%, 100% { transform: translateY(-8px) rotateZ(-2deg); } 50% { transform: translateY(10px) rotateZ(2deg); } }
+@keyframes t3dShadow { 0%, 100% { transform: scale(.85); opacity: .6; } 50% { transform: scale(1.05); opacity: .9; } }
+@keyframes t3dPulse { 0%, 100% { opacity: .7; transform: scale(.95); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes t3dShine { 0%, 55% { transform: translateX(-60%); } 85%, 100% { transform: translateX(60%); } }
+@keyframes t3dOrbit1 { from { transform: rotateX(72deg) rotateZ(0); } to { transform: rotateX(72deg) rotateZ(360deg); } }
+@keyframes t3dOrbit2 { from { transform: rotateX(64deg) rotateY(18deg) rotateZ(360deg); } to { transform: rotateX(64deg) rotateY(18deg) rotateZ(0); } }
+@keyframes t3dOrbit3 { from { transform: rotateX(80deg) rotateY(-24deg) rotateZ(0); } to { transform: rotateX(80deg) rotateY(-24deg) rotateZ(360deg); } }
+@keyframes t3dSpark { 0% { opacity: 0; transform: translate(0, 0) scale(.6); } 15% { opacity: 1; } 100% { opacity: 0; transform: translate(var(--x, 0px), -220px) scale(1.2); } }
+
+@media (max-width: 960px) {
+  .t3d { order: -1; height: 300px; margin-top: -6px; }
+  .t3d-tilt { width: 190px; }
+}
+@media (max-width: 700px) {
+  .t3d { height: 260px; }
+  .t3d-tilt { width: 160px; }
+  .t3d-num { font-size: 58px; }
+  .t3d-num-sm { font-size: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .t3d-coin, .t3d-float, .t3d-orbit, .t3d-shine, .t3d-glow, .t3d-floor, .t3d-sparks b { animation: none; }
+  .t3d-orbit-1 { transform: rotateX(72deg); }
+  .t3d-orbit-2 { transform: rotateX(64deg) rotateY(18deg); }
+  .t3d-orbit-3 { transform: rotateX(80deg) rotateY(-24deg); }
+}
