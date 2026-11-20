@@ -11,6 +11,15 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  /* Mot de passe change sur Vercel depuis la connexion : on deconnecte proprement. */
+  function sessionExpired() {
+    sessionStorage.removeItem('boxingtrophy20_admin_auth');
+    sessionStorage.removeItem('bt20_admin_pw');
+    alert('Le mot de passe admin a changé depuis votre connexion. Reconnectez-vous avec le nouveau.');
+    location.reload();
+  }
+  window.BT20AdminExpired = sessionExpired;
+
   function fullName(f) { return f ? ((f.prenom || '') + ' ' + (f.nom || '')).trim() || '—' : '—'; }
 
   async function load() {
@@ -22,6 +31,7 @@
         headers: { 'x-admin-password': sessionStorage.getItem('bt20_admin_pw') || '' }
       });
       var body = await res.json().catch(function () { return {}; });
+      if (res.status === 401) return sessionExpired();
       if (!res.ok) throw new Error(body.error || 'Archives indisponibles');
       if (body.edition !== 't19') {
         status.textContent = 'Le classement par édition n\'est pas encore actif : passez le SQL « Trophy 19 / Trophy 20 » de schema.sql dans Supabase.';
@@ -97,6 +107,7 @@
     async function post(path, body) {
       var r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': pw }, body: JSON.stringify(body) });
       var j = await r.json().catch(function () { return {}; });
+      if (r.status === 401) { sessionExpired(); throw new Error('Session expirée'); }
       if (!r.ok) throw new Error(j.error || 'Erreur ' + r.status);
       return j;
     }

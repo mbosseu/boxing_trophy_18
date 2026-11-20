@@ -23,6 +23,10 @@
       body: JSON.stringify(body || {})
     });
     var data = await res.json().catch(function () { return {}; });
+    if (res.status === 401 && typeof window.BT20AdminExpired === 'function') {
+      window.BT20AdminExpired();
+      throw new Error('Session expirée');
+    }
     if (!res.ok) throw new Error(data.error || 'Erreur API');
     return data;
   }

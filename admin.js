@@ -139,12 +139,30 @@
     // ═══════════════════════════════════════════════════════
     //  AUTH
     // ═══════════════════════════════════════════════════════
-    function checkAuth() {
-        if (sessionStorage.getItem(AUTH_KEY) === 'true') {
-            showAdmin();
-        } else {
+    async function checkAuth() {
+        if (sessionStorage.getItem(AUTH_KEY) !== 'true') {
             showLogin();
+            return;
         }
+        // Le mot de passe a pu changer sur Vercel depuis la connexion : on le revérifie.
+        try {
+            const res = await fetch('/api/trophyrec/accounts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': sessionStorage.getItem(ADMIN_PW_KEY) || '' },
+                body: JSON.stringify({ action: 'admin_login' })
+            });
+            if (res.status === 401) {
+                sessionStorage.removeItem(AUTH_KEY);
+                sessionStorage.removeItem(ADMIN_PW_KEY);
+                showLogin();
+                if (loginError) {
+                    loginError.textContent = 'Le mot de passe a changé : reconnectez-vous avec le nouveau.';
+                    loginError.hidden = false;
+                }
+                return;
+            }
+        } catch (e) { /* hors ligne : on garde la session */ }
+        showAdmin();
     }
 
     function showLogin() {
@@ -322,6 +340,7 @@
             loginError.hidden = true;
             showAdmin();
         } else {
+            loginError.textContent = 'Mot de passe incorrect.';
             loginError.hidden = false;
             loginPassword.value = '';
             loginPassword.focus();
