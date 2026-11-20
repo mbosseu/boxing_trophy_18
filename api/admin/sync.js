@@ -38,11 +38,12 @@ module.exports = async function handler(req, res) {
   }
 
   const supabase = createClient(url, key);
+  const edition = /^t\d{1,3}$/.test(String((req.query && req.query.edition) || '')) ? req.query.edition : 't20';
 
   try {
-    const [regsRes, matchesRes, metaRes] = await Promise.all([
-      supabase.from('registrations').select('*'),
-      supabase.from('matches').select('*').order('sort_order', { ascending: true }),
+    let [regsRes, matchesRes, metaRes] = await Promise.all([
+      supabase.from('registrations').select('*').eq('edition', edition),
+      supabase.from('matches').select('*').eq('edition', edition).order('sort_order', { ascending: true }),
       supabase
         .from('match_metadata')
         .select('value')
@@ -50,6 +51,13 @@ module.exports = async function handler(req, res) {
         .maybeSingle()
     ]);
 
+    // Colonne edition absente tant que le SQL n'est pas passe : tout est renvoye
+    if (regsRes.error && /edition/i.test(regsRes.error.message || '')) {
+      [regsRes, matchesRes] = await Promise.all([
+        supabase.from('registrations').select('*'),
+        supabase.from('matches').select('*').order('sort_order', { ascending: true })
+      ]);
+    }
     if (regsRes.error) throw regsRes.error;
     if (matchesRes.error) throw matchesRes.error;
 
@@ -57,6 +65,7 @@ module.exports = async function handler(req, res) {
       registrations: regsRes.data || [],
       matches: matchesRes.data || [],
       matchesTimestamp: metaRes.data ? metaRes.data.value : null,
+      edition: edition,
       syncedAt: new Date().toISOString()
     });
   } catch (e) {

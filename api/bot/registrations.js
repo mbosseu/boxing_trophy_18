@@ -95,6 +95,14 @@ function matchesFilter(reg, filters) {
   return true;
 }
 
+
+/* Trophy 20 uniquement (le Trophy 19 est archive). Sans la colonne edition, relit tout. */
+async function t20(build) {
+  const r = await build(true);
+  if (r.error && /edition/i.test(r.error.message || '')) return build(false);
+  return r;
+}
+
 module.exports = async function handler(req, res) {
   if (req.method !== 'GET') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -140,10 +148,11 @@ module.exports = async function handler(req, res) {
   const sb = createClient(supabaseUrl, supabaseKey);
 
   if (action === 'list') {
-    const { data, error } = await sb
-      .from('registrations')
-      .select('id, nom, prenom, telephone, email')
-      .order('nom');
+    const { data, error } = await t20((f) => {
+      let q = sb.from('registrations').select('id, nom, prenom, telephone, email');
+      if (f) q = q.eq('edition', 't20');
+      return q.order('nom');
+    });
     if (error) {
       res.status(500).json({ error: error.message });
       return;
@@ -153,11 +162,11 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === 'participants') {
-    const { data, error } = await sb
-      .from('registrations')
-      .select('nom, prenom, club, categoriePoids, sexe, niveau')
-      .order('nom', { ascending: true })
-      .order('prenom', { ascending: true });
+    const { data, error } = await t20((f) => {
+      let q = sb.from('registrations').select('nom, prenom, club, categoriePoids, sexe, niveau');
+      if (f) q = q.eq('edition', 't20');
+      return q.order('nom', { ascending: true }).order('prenom', { ascending: true });
+    });
     if (error) {
       res.status(500).json({ error: error.message });
       return;
@@ -184,7 +193,11 @@ module.exports = async function handler(req, res) {
   }
 
   if (action === 'missing') {
-    const { data, error } = await sb.from('registrations').select('*').order('nom');
+    const { data, error } = await t20((f) => {
+      let q = sb.from('registrations').select('*');
+      if (f) q = q.eq('edition', 't20');
+      return q.order('nom');
+    });
     if (error) {
       res.status(500).json({ error: error.message });
       return;

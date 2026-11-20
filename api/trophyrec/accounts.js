@@ -434,6 +434,7 @@ async function actDelete(supabase, body) {
 
 const PUBLIC = { provision: actProvision, forgot: actForgot };
 const ADMIN = {
+  admin_login: async function () { return [200, { ok: true }]; },
   list: actList,
   create: actCreate,
   verify_licence: actVerify,

@@ -533,9 +533,14 @@ function initForm() {
     
     if (typeof supabaseClient !== 'undefined' && supabaseClient) {
       try {
-        const { data, error } = await supabaseClient
+        let { data, error } = await supabaseClient
           .from('registrations')
-          .select('email, telephone');
+          .select('email, telephone')
+          .eq('edition', 't20');
+        // Colonne edition absente tant que le SQL n'est pas passe
+        if (error && /edition/i.test(error.message || '')) {
+          ({ data, error } = await supabaseClient.from('registrations').select('email, telephone'));
+        }
         if (error) throw error;
         if (data) registrations = data;
       } catch (err) {

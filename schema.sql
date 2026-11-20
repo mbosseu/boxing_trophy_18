@@ -77,3 +77,12 @@ DROP POLICY IF EXISTS "Public match_metadata policy" ON match_metadata;
 CREATE POLICY "Public match_metadata policy" ON match_metadata
   FOR ALL USING (true) WITH CHECK (true);
 -- TrophyRec : executer aussi schema-trophyrec.sql (fighters, coaches, bouts, RLS).
+
+-- ─── Trophy 19 / Trophy 20 : une edition par inscription et par combat ───
+-- Tout ce qui existe avant l'ouverture du Trophy 20 (pas d'etape licence) part en archive Trophy 19.
+ALTER TABLE registrations ADD COLUMN IF NOT EXISTS edition TEXT NOT NULL DEFAULT 't20';
+ALTER TABLE matches ADD COLUMN IF NOT EXISTS edition TEXT NOT NULL DEFAULT 't20';
+UPDATE registrations SET edition = 't19' WHERE "licenceGate" IS NULL AND "dateInscription" < '2026-11-21';
+UPDATE matches SET edition = 't19' WHERE created_at < '2026-11-21';
+CREATE INDEX IF NOT EXISTS registrations_edition_idx ON registrations (edition);
+CREATE INDEX IF NOT EXISTS matches_edition_idx ON matches (edition);

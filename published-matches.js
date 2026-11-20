@@ -37,7 +37,10 @@
 
   async function loadMatchesRaw() {
     if (typeof supabaseClient !== 'undefined' && supabaseClient) {
-      var res = await supabaseClient.from('matches').select('*').order('sort_order', { ascending: true });
+      var res = await supabaseClient.from('matches').select('*').eq('edition', 't20').order('sort_order', { ascending: true });
+      if (res.error && /edition/i.test(res.error.message || '')) {
+        res = await supabaseClient.from('matches').select('*').order('sort_order', { ascending: true });
+      }
       if (res.error) throw res.error;
       if (typeof global.GalaPoster !== 'undefined') return global.GalaPoster.latestGeneration(res.data || []);
       return res.data || [];

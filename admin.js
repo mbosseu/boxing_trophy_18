@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════
-   Boxing Trophy 19 — Admin Panel Logic
+   Boxing Trophy 20 — Admin Panel Logic
    Handles auth, registrations, filtering, matching, export
    ═══════════════════════════════════════════════════════════ */
 
@@ -30,9 +30,27 @@
     migrateLocalStorage();
 
     // ── Constants ──────────────────────────────────────────
-    const ADMIN_PASSWORD = (typeof getAdminPasswordFromEnv === 'function' && getAdminPasswordFromEnv())
-        || '';
-    const AUTH_KEY = 'boxingtrophy19_admin_auth';
+    // Le mot de passe admin n'est plus livre au navigateur : il est verifie par le serveur.
+    const AUTH_KEY = 'boxingtrophy20_admin_auth';
+    const ADMIN_PW_KEY = 'bt20_admin_pw';
+
+    // Edition en cours : le back office ne touche qu'au Trophy 20. Le Trophy 19 est archive (onglet dedie).
+    const EDITION = 't20';
+    let editionReady = null;
+    async function ensureEdition() {
+        if (editionReady !== null) return editionReady;
+        if (typeof supabaseClient === 'undefined' || !supabaseClient) return (editionReady = false);
+        try {
+            const { error } = await supabaseClient.from('registrations').select('edition').limit(1);
+            editionReady = !error;
+        } catch (e) {
+            editionReady = false;
+        }
+        return editionReady;
+    }
+    function scoped(query) {
+        return editionReady ? query.eq('edition', EDITION) : query;
+    }
     const REG_KEY = 'boxingtrophy19_registrations';
     const MATCH_KEY = 'boxingtrophy19_matches';
     const MATCH_TS_KEY = 'boxingtrophy19_matches_timestamp';
@@ -225,7 +243,7 @@
                 enrichMatchesFromRegistrations();
                 await loadMatches();
             } else {
-                var adminPw = sessionStorage.getItem('bt19_admin_pw') || '';
+                var adminPw = sessionStorage.getItem(ADMIN_PW_KEY) || '';
                 var res = await fetch('/api/admin/sync', {
                     cache: 'no-store',
                     headers: { 'x-admin-password': adminPw }
@@ -281,11 +299,26 @@
         document.removeEventListener('visibilitychange', onVisibilityDataSync);
     }
 
-    loginForm.addEventListener('submit', function (e) {
+    loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
-        if (ADMIN_PASSWORD && loginPassword.value === ADMIN_PASSWORD) {
+        const pw = loginPassword.value;
+        const submit = loginForm.querySelector('[type="submit"]');
+        if (submit) submit.disabled = true;
+        let ok = false;
+        try {
+            const res = await fetch('/api/trophyrec/accounts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'x-admin-password': pw },
+                body: JSON.stringify({ action: 'admin_login' })
+            });
+            ok = res.ok;
+        } catch (err) {
+            ok = false;
+        }
+        if (submit) submit.disabled = false;
+        if (ok) {
             sessionStorage.setItem(AUTH_KEY, 'true');
-            sessionStorage.setItem('bt19_admin_pw', loginPassword.value);
+            sessionStorage.setItem(ADMIN_PW_KEY, pw);
             loginError.hidden = true;
             showAdmin();
         } else {
@@ -298,7 +331,7 @@
     logoutBtn.addEventListener('click', function () {
         stopDataAutoSync();
         sessionStorage.removeItem(AUTH_KEY);
-        sessionStorage.removeItem('bt19_admin_pw');
+        sessionStorage.removeItem(ADMIN_PW_KEY);
         showLogin();
         loginPassword.value = '';
     });
@@ -355,9 +388,10 @@
     async function loadData() {
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
             try {
-                const { data, error } = await supabaseClient
+                await ensureEdition();
+                const { data, error } = await scoped(supabaseClient
                     .from('registrations')
-                    .select('*');
+                    .select('*'));
                 if (error) throw error;
                 registrations = data || [];
                 enrichMatchesFromRegistrations();
@@ -428,6 +462,7 @@
                 // Les nouvelles lignes d'abord : une coupure ou une sortie de page
                 // en cours d'enregistrement ne peut plus vider la table.
                 let oldestNewId = null;
+                if (await ensureEdition()) matchesToInsert.forEach(function (row) { row.edition = EDITION; });
                 if (matchesToInsert.length > 0) {
                     const { data: inserted, error: insertError } = await supabaseClient
                         .from('matches')
@@ -447,7 +482,7 @@
                 // Puis retrait des anciennes lignes. S'il échoue, les combats sont quand même
                 // enregistrés : la lecture ignore les anciennes lignes (latestGeneration)
                 // et le prochain enregistrement les retirera.
-                let oldRows = supabaseClient.from('matches').delete();
+                let oldRows = scoped(supabaseClient.from('matches').delete());
                 oldRows = oldestNewId != null ? oldRows.lt('id', oldestNewId) : oldRows.neq('id', -1);
                 const { error: deleteError } = await oldRows;
                 if (deleteError) console.warn('Retrait des anciens combats :', deleteError);
@@ -672,9 +707,10 @@
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
             try {
                 const generationAtStart = matchesWriteGeneration;
-                const { data, error } = await supabaseClient
+                await ensureEdition();
+                const { data, error } = await scoped(supabaseClient
                     .from('matches')
-                    .select('*')
+                    .select('*'))
                     .order('sort_order', { ascending: true });
                 if (error) throw error;
 
@@ -1311,7 +1347,7 @@
                 if (typeof BT19Cloudinary === 'undefined' || !BT19Cloudinary.getCloudinaryConfig().isConfigured()) {
                     throw new Error('Cloudinary non configuré (Paramètres)');
                 }
-                var adminPw = sessionStorage.getItem('bt19_admin_pw') || '';
+                var adminPw = sessionStorage.getItem(ADMIN_PW_KEY) || '';
                 var url = await BT19Cloudinary.uploadFile(file, { adminPassword: adminPw });
                 updateEditPhotoPreview(url);
                 showNotification('✅ Photo prête — enregistrez le candidat');
@@ -1715,7 +1751,7 @@
         }
 
         $('#exportPdfBtn').addEventListener('click', () => {
-            printPage("Boxing Trophy 19 — Liste des inscriptions", `${registrations.length} inscriptions enregistrées`);
+            printPage("Boxing Trophy 20 — Liste des inscriptions", `${registrations.length} inscriptions enregistrées`);
         });
 
         $('#exportMatchesCsvBtn').addEventListener('click', () => {
@@ -1747,7 +1783,7 @@
             var url = URL.createObjectURL(blob);
             var a = document.createElement('a');
             a.href = url;
-            a.download = 'boxingtrophy19_combats_' + dateStamp() + '.csv';
+            a.download = 'boxingtrophy20_combats_' + dateStamp() + '.csv';
             a.click();
             URL.revokeObjectURL(url);
         });
@@ -1788,7 +1824,7 @@
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'boxingtrophy19_inscriptions_' + dateStamp() + '.csv';
+        a.download = 'boxingtrophy20_inscriptions_' + dateStamp() + '.csv';
         a.click();
         URL.revokeObjectURL(url);
     });
@@ -2740,7 +2776,7 @@
                 try {
                     var url;
                     if (typeof BT19Cloudinary !== 'undefined' && BT19Cloudinary.getCloudinaryConfig().isConfigured()) {
-                        var adminPw = sessionStorage.getItem('bt19_admin_pw') || '';
+                        var adminPw = sessionStorage.getItem(ADMIN_PW_KEY) || '';
                         url = await BT19Cloudinary.uploadFile(file, { adminPassword: adminPw });
                     } else {
                         throw new Error(
@@ -3011,7 +3047,7 @@
                     const regsUrl = URL.createObjectURL(regsBlob);
                     const regsLink = document.createElement('a');
                     regsLink.href = regsUrl;
-                    regsLink.download = 'backup_bt19_inscriptions_' + new Date().toISOString().slice(0, 10) + '.json';
+                    regsLink.download = 'backup_bt20_inscriptions_' + new Date().toISOString().slice(0, 10) + '.json';
                     regsLink.click();
 
                     // 2. Export matches backup
@@ -3020,17 +3056,18 @@
                     const matchesUrl = URL.createObjectURL(matchesBlob);
                     const matchesLink = document.createElement('a');
                     matchesLink.href = matchesUrl;
-                    matchesLink.download = 'backup_bt19_combats_' + new Date().toISOString().slice(0, 10) + '.json';
+                    matchesLink.download = 'backup_bt20_combats_' + new Date().toISOString().slice(0, 10) + '.json';
                     matchesLink.click();
 
                     await new Promise(r => setTimeout(r, 800));
 
                     // 3. Clear Supabase tables
                     if (supabaseClient) {
-                        const { error: e1 } = await supabaseClient.from('registrations').delete().neq('id', '');
+                        await ensureEdition();
+                        const { error: e1 } = await scoped(supabaseClient.from('registrations').delete().neq('id', ''));
                         if (e1) throw new Error('Erreur suppression inscriptions : ' + e1.message);
 
-                        const { error: e2 } = await supabaseClient.from('matches').delete().gte('id', 0);
+                        const { error: e2 } = await scoped(supabaseClient.from('matches').delete().gte('id', 0));
                         if (e2) throw new Error('Erreur suppression combats : ' + e2.message);
 
                         // 4. Reset metadata flags

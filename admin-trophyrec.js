@@ -6,12 +6,8 @@
   }
 
   function password() {
-    if (typeof getAdminPasswordFromEnv === 'function') {
-      var envPw = getAdminPasswordFromEnv();
-      if (envPw) return envPw;
-    }
     try {
-      return sessionStorage.getItem('bt19_admin_pw') || '';
+      return sessionStorage.getItem('bt20_admin_pw') || '';
     } catch (e) {
       return '';
     }
@@ -36,7 +32,7 @@
     var input = document.getElementById('loginPassword');
     if (!form || !input) return;
     form.addEventListener('submit', function () {
-      try { sessionStorage.setItem('bt19_admin_pw', input.value); } catch (e) {}
+      /* le mot de passe est enregistre par admin.js apres verification par le serveur */
     });
   }
 

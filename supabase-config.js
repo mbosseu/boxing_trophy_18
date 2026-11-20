@@ -56,5 +56,6 @@ function reinitSupabaseClient(url, key) {
 }
 
 function getAdminPasswordFromEnv() {
-  return envGet('ADMIN_PASSWORD');
+  // Le mot de passe admin n'est plus expose dans env.js : verification cote serveur.
+  return '';
 }
