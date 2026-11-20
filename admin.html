@@ -286,6 +286,7 @@
                             <th>Discipline</th>
                             <th class="sortable" data-sort="licencie" style="cursor:pointer;">Licencié <span class="sort-direction"></span></th>
                             <th>N° Licence</th>
+                            <th>Sas licence</th>
                             <th class="sortable" data-sort="club" style="cursor:pointer;">Club <span class="sort-direction"></span></th>
                             <th class="sortable" data-sort="categoriePoids" style="cursor:pointer;">Poids <span class="sort-direction"></span></th>
                             <th class="sortable" data-sort="dateInscription" style="cursor:pointer;">Inscription <span class="sort-direction"></span></th>
@@ -581,6 +582,7 @@ create table registrations (
   discipline text,
   licencie text,
   "numeroLicence" text,
+  "licenceGate" text,
   "engagementLicence" boolean default false,
   club text,
   "categoriePoids" text,
@@ -758,6 +760,14 @@ create policy "Accès public total" on match_metadata
                         <div class="form-group" id="editLicenceNumberGroup">
                             <label class="form-label" for="editNumeroLicence">N° Licence</label>
                             <input type="text" class="form-input" id="editNumeroLicence" />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="editLicenceGate">Sas licence</label>
+                            <select class="form-select" id="editLicenceGate">
+                                <option value="">—</option>
+                                <option value="existing">Numero existant</option>
+                                <option value="paid_50">Paye 50 EUR</option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-row">

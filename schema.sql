@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS registrations (
 );
 
 ALTER TABLE registrations ADD COLUMN IF NOT EXISTS "photoUrl" TEXT;
+ALTER TABLE registrations ADD COLUMN IF NOT EXISTS "licenceGate" TEXT;
 
 -- Enable RLS for registrations
 ALTER TABLE registrations ENABLE ROW LEVEL SECURITY;

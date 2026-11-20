@@ -445,3 +445,19 @@ body.intro-done.g-scrolled .hint { opacity: 0; translate: 0 8px; pointer-events:
   .film-tilt { transform: none; }
   .reg-urgency-pulse, .btn-urgent.is-pulsing { animation: none; }
 }
+
+.licence-gate { max-width: 720px; margin-top: 18px; }
+.licence-gate-panel { display: none; margin-top: 18px; }
+.licence-gate-panel.visible { display: block; }
+.licence-help { margin-top: 10px; font-size: 14px; color: var(--mist, rgba(246,250,249,.72)); line-height: 1.5; }
+.licence-help a { color: var(--gold-1, #e8ab36); }
+.licence-warn {
+  border: 1px solid var(--gold-1, #e8ab36);
+  background: rgba(232,171,54,.12);
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.form-section.is-locked #combatFormWrap { display: none; }

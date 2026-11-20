@@ -23,6 +23,9 @@ document.addEventListener('DOMContentLoaded', async () => {
   initAnchorScroll();
   initCountdown();
   initScrollReveal();
+  if (typeof BT20LicenceGate !== 'undefined') {
+    BT20LicenceGate.init();
+  }
   if (typeof BT18RegistrationGate !== 'undefined') {
     try {
       await BT18RegistrationGate.applyRegistrationGateUI();
@@ -397,25 +400,6 @@ function initForm() {
     });
   });
 
-  // Licence conditional logic
-  const licenceRadios = document.querySelectorAll('input[name="licencie"]');
-  const licenceField = document.getElementById('licenceField');
-  const engagementField = document.getElementById('engagementField');
-
-  licenceRadios.forEach(radio => {
-    radio.addEventListener('change', () => {
-      if (radio.value === 'Oui') {
-        licenceField.classList.add('visible');
-        engagementField.classList.remove('visible');
-        document.getElementById('engagementLicence').checked = false;
-      } else {
-        licenceField.classList.remove('visible');
-        engagementField.classList.add('visible');
-        document.getElementById('numeroLicence').value = '';
-      }
-    });
-  });
-
   initRegPhoto();
 
   // Form submission
@@ -475,22 +459,6 @@ function initForm() {
     if (step === 2) {
       valid = validateField('niveau') && valid;
       valid = validateField('discipline') && valid;
-      valid = validateRadio('licencie', 'licencie-error') && valid;
-
-      const licencie = document.querySelector('input[name="licencie"]:checked');
-      if (licencie) {
-        if (licencie.value === 'Oui') {
-          valid = validateField('numeroLicence') && valid;
-        } else {
-          const engagement = document.getElementById('engagementLicence');
-          if (!engagement.checked) {
-            showError('engagementLicence-error');
-            valid = false;
-          } else {
-            hideError('engagementLicence-error');
-          }
-        }
-      }
     }
 
     if (step === 3) {
@@ -677,6 +645,32 @@ function initForm() {
       }
     }
 
+    const gate =
+      typeof BT20LicenceGate !== 'undefined' ? BT20LicenceGate.readGate() : null;
+    const licenceGateValue =
+      (document.getElementById('licenceGate') || {}).value ||
+      (gate && gate.kind) ||
+      '';
+    const numeroLicenceValue = (
+      getValue('numeroLicence') ||
+      (gate && gate.numeroLicence) ||
+      ''
+    ).replace(/\D/g, '');
+    if (licenceGateValue === 'existing' && !/^\d{6,7}$/.test(numeroLicenceValue)) {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+      return;
+    }
+    if (licenceGateValue !== 'existing' && licenceGateValue !== 'paid_50') {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+      return;
+    }
+
     const formData = {
       id: generateId(),
       nom: getValue('nom'),
@@ -685,9 +679,10 @@ function initForm() {
       sexe: getRadioValue('sexe'),
       niveau: getValue('niveau'),
       discipline: getValue('discipline'),
-      licencie: getRadioValue('licencie'),
-      numeroLicence: getValue('numeroLicence') || '',
-      engagementLicence: document.getElementById('engagementLicence').checked,
+      licencie: licenceGateValue === 'existing' ? 'Oui' : 'Non',
+      numeroLicence: licenceGateValue === 'existing' ? numeroLicenceValue : '',
+      licenceGate: licenceGateValue,
+      engagementLicence: licenceGateValue === 'paid_50',
       club: getValue('club'),
       categoriePoids: getValue('categoriePoids'),
       email: getValue('email'),
@@ -701,9 +696,14 @@ function initForm() {
 
     if (typeof supabaseClient !== 'undefined' && supabaseClient) {
       try {
-        const { error } = await supabaseClient
-          .from('registrations')
-          .insert([formData]);
+        let payload = formData;
+        let { error } = await supabaseClient.from('registrations').insert([payload]);
+        if (error && /licenceGate/i.test(error.message || '')) {
+          payload = Object.assign({}, formData);
+          delete payload.licenceGate;
+          const retry = await supabaseClient.from('registrations').insert([payload]);
+          error = retry.error;
+        }
         if (error) throw error;
         savedToCloud = true;
       } catch (err) {

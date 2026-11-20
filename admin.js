@@ -1095,6 +1095,7 @@
                 '<td data-label="Discipline">' + escapeHtml(r.discipline || '') + '</td>' +
                 '<td data-label="Licencié">' + (r.licencie === 'Oui' || r.licencie === true ? '<span class="badge badge-success">Oui</span>' : '<span class="badge badge-warning">Non</span>') + '</td>' +
                 '<td data-label="N° Licence">' + escapeHtml(r.numeroLicence || '—') + '</td>' +
+                '<td data-label="Sas licence">' + escapeHtml(r.licenceGate === 'paid_50' ? 'Paye 50 EUR' : r.licenceGate === 'existing' ? 'Numero existant' : (r.licenceGate || '—')) + '</td>' +
                 '<td data-label="Club">' + escapeHtml(r.club || '—') + '</td>' +
                 '<td data-label="Poids">' + escapeHtml(r.categoriePoids || '—') + '</td>' +
                 '<td data-label="Inscription">' + escapeHtml(formatDate(r.dateInscription)) + '</td>' +
@@ -1357,6 +1358,7 @@
         $('#editCategoriePoids').value = reg.categoriePoids || '-60kg';
         $('#editLicencie').value = reg.licencie === true ? 'Oui' : reg.licencie === false ? 'Non' : (reg.licencie || 'Non');
         $('#editNumeroLicence').value = reg.numeroLicence || '';
+        if ($('#editLicenceGate')) $('#editLicenceGate').value = reg.licenceGate || '';
         $('#editEmail').value = reg.email || '';
         $('#editTelephone').value = reg.telephone || '';
         $('#editClub').value = reg.club || '';
@@ -1411,6 +1413,7 @@
             categoriePoids: $('#editCategoriePoids').value,
             licencie: $('#editLicencie').value,
             numeroLicence: $('#editLicencie').value === 'Oui' ? $('#editNumeroLicence').value.trim() : '',
+            licenceGate: ($('#editLicenceGate') && $('#editLicenceGate').value) || '',
             email: $('#editEmail').value.trim(),
             telephone: $('#editTelephone').value.trim(),
             club: $('#editClub').value.trim(),
@@ -1758,7 +1761,7 @@
             alert('Aucune inscription à exporter.');
             return;
         }
-        var headers = ['Nom', 'Prénom', 'Date de naissance', 'Sexe', 'E-mail', 'Téléphone', 'Niveau', 'Discipline', 'Licencié', 'N° Licence', 'Engagement Licence', 'Club', 'Catégorie de poids', 'Date inscription', 'Consentement RGPD'];
+        var headers = ['Nom', 'Prénom', 'Date de naissance', 'Sexe', 'E-mail', 'Téléphone', 'Niveau', 'Discipline', 'Licencié', 'N° Licence', 'Sas licence', 'Engagement Licence', 'Club', 'Catégorie de poids', 'Date inscription', 'Consentement RGPD'];
         var rows = registrations.map(function (r) {
             return [
                 csvCell(r.nom),
@@ -1771,6 +1774,7 @@
                 csvCell(r.discipline),
                 csvCell(r.licencie ? 'Oui' : 'Non'),
                 csvCell(r.numeroLicence),
+                csvCell(r.licenceGate),
                 csvCell(r.engagementLicence),
                 csvCell(r.club),
                 csvCell(r.categoriePoids),

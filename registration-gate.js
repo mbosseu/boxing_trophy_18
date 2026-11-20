@@ -65,18 +65,22 @@
 
     var steps = section.querySelector('.form-steps');
     var form = document.getElementById('registrationForm');
+    var combatWrap = document.getElementById('combatFormWrap');
     var closed = document.getElementById('registrationsClosed');
     var success = document.getElementById('formSuccess');
 
     if (steps) steps.hidden = true;
     if (form) form.hidden = true;
+    if (combatWrap) combatWrap.hidden = false;
+    var warn = document.querySelector('#inscription .licence-warn');
+    if (warn) warn.hidden = true;
     if (success) success.classList.remove('visible');
     if (closed) closed.hidden = false;
 
-    document.querySelectorAll('a[href="#inscription"].nav-cta').forEach(function (a) {
+    document.querySelectorAll('a.nav-cta[href="#inscription"], a.nav-cta[href="#licence"]').forEach(function (a) {
       a.hidden = true;
     });
-    var heroCta = document.querySelector('.hero-cta-group .btn-primary[href="#inscription"]');
+    var heroCta = document.querySelector('.hero-cta-group .btn-primary[href="#licence"], .hero-cta-group .btn-primary[href="#inscription"]');
     if (heroCta) heroCta.hidden = true;
   }
 
@@ -97,14 +101,18 @@
     var form = document.getElementById('registrationForm');
     var closed = document.getElementById('registrationsClosed');
 
-    if (steps) steps.hidden = false;
     if (form) form.hidden = false;
     if (closed) closed.hidden = true;
+    if (typeof BT20LicenceGate !== 'undefined') {
+      BT20LicenceGate.applyUI();
+    } else if (steps) {
+      steps.hidden = false;
+    }
 
-    document.querySelectorAll('a[href="#inscription"].nav-cta').forEach(function (a) {
+    document.querySelectorAll('a.nav-cta[href="#inscription"], a.nav-cta[href="#licence"]').forEach(function (a) {
       a.hidden = false;
     });
-    var heroCta = document.querySelector('.hero-cta-group .btn-primary[href="#inscription"]');
+    var heroCta = document.querySelector('.hero-cta-group .btn-primary[href="#licence"], .hero-cta-group .btn-primary[href="#inscription"]');
     if (heroCta) heroCta.hidden = false;
   }
 
