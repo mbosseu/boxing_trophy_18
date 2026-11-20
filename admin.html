@@ -25,7 +25,7 @@
         <div class="login-card">
             <div class="login-logo">
                 <img src="image/logo_boxing_center.png" alt="Boxing Center" class="nl-logo-img" style="width:120px;height:auto;margin-bottom:12px;" />
-                <h1>BOXING TROPHY <span class="gold">19</span></h1>
+                <h1>BOXING TROPHY <span class="gold">20</span></h1>
                 <p class="login-subtitle">Panneau d'administration</p>
             </div>
             <form id="loginForm" autocomplete="off">
@@ -56,7 +56,7 @@
         <!-- HEADER -->
         <header class="admin-header">
             <div class="header-left">
-                <h1 class="header-title">🥊 BOXING TROPHY <span class="gold">19</span> <span class="header-badge">ADMIN</span></h1>
+                <h1 class="header-title">🥊 BOXING TROPHY <span class="gold">20</span> <span class="header-badge">ADMIN</span></h1>
             </div>
             <div class="header-right">
                 <span id="autoSyncStatus" class="auto-sync-status" title="Actualisation automatique toutes les 3 minutes">Sync · 3 min</span>
@@ -534,6 +534,7 @@
                 <div class="section-actions">
                     <button type="button" class="btn btn-outline btn-sm" id="t19Refresh">Actualiser</button>
                     <button type="button" class="btn btn-outline btn-sm" id="t19Export">Exporter les inscrits (CSV)</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="t19Import">Importer les vainqueurs dans TrophyRec</button>
                 </div>
             </div>
             <p id="t19Status" style="font-size:13px;color:var(--text-dim);margin-bottom:12px;"></p>
@@ -1124,6 +1125,6 @@ create policy "Accès public total" on match_metadata
     <script src="trophyrec.js"></script>
     <script src="admin.js?v=25"></script>
     <script src="admin-trophyrec.js?v=3"></script>
-    <script src="admin-t19.js?v=1"></script>
+    <script src="admin-t19.js?v=2"></script>
 </body>
 </html>

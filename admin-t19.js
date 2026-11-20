@@ -85,8 +85,58 @@
     a.click();
   }
 
+  /* Vainqueurs du Trophy 19 -> resultats officiels TrophyRec (methode notee Decision, a corriger si KO). */
+  var T19_DATE = '2026-11-13';
+  async function importTrophyRec() {
+    var status = $('t19Status');
+    if (!loaded) { status.textContent = 'Chargez d\'abord les archives.'; return; }
+    var withWinner = data.matches.filter(function (m) { return m.winner === 'fighter1' || m.winner === 'fighter2'; });
+    if (!withWinner.length) { status.textContent = 'Aucun vainqueur saisi sur la carte du Trophy 19.'; return; }
+    if (!confirm('Importer ' + withWinner.length + ' résultat(s) du Trophy 19 dans TrophyRec ?\n\nLa méthode sera notée « Décision » : corrigez ensuite les KO dans TrophyRec > Résultat officiel.\nVous pouvez relancer l\'import sans créer de doublons.')) return;
+    var pw = sessionStorage.getItem('bt20_admin_pw') || '';
+    async function post(path, body) {
+      var r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': pw }, body: JSON.stringify(body) });
+      var j = await r.json().catch(function () { return {}; });
+      if (!r.ok) throw new Error(j.error || 'Erreur ' + r.status);
+      return j;
+    }
+    var btn = $('t19Import');
+    btn.disabled = true;
+    try {
+      status.textContent = 'Création des fiches combattants…';
+      await post('/api/trophyrec/sync-fighters', {});
+      var ok = 0, fails = [];
+      for (var i = 0; i < withWinner.length; i++) {
+        var m = withWinner[i], f1 = m.fighter1 || {}, f2 = m.fighter2 || {};
+        status.textContent = 'Import des résultats… ' + (i + 1) + ' / ' + withWinner.length;
+        try {
+          await post('/api/trophyrec/result', {
+            fighter_a: f1.id, fighter_b: f2.id,
+            result: m.winner === 'fighter1' ? 'a_win' : 'b_win',
+            method: 'decision',
+            discipline: m.discipline || f1.discipline || null,
+            sexe: m.sexe || f1.sexe || null,
+            categorie_poids: m.categoriePoids || f1.categoriePoids || null,
+            bout_date: T19_DATE,
+            edition_id: 't19',
+            source_match_id: 't19-' + (m.id != null ? m.id : (m.match_number || i))
+          });
+          ok++;
+        } catch (e) {
+          fails.push(fullName(f1) + ' vs ' + fullName(f2) + ' : ' + e.message);
+        }
+      }
+      status.textContent = ok + ' résultat(s) importé(s) dans TrophyRec.' + (fails.length ? ' ' + fails.length + ' en échec : ' + fails.join(' | ') : ' Pensez à corriger les victoires par KO.');
+    } catch (e) {
+      status.textContent = e.message;
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     if (!$('tab-t19')) return;
+    $('t19Import').addEventListener('click', importTrophyRec);
     document.querySelectorAll('.tab-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         if (btn.getAttribute('data-tab') === 't19' && !loaded) load();
