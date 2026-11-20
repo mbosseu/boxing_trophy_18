@@ -31,7 +31,12 @@ function signParams(params, apiSecret) {
   return crypto.createHash('sha1').update(sorted + apiSecret).digest('hex');
 }
 
+const licenceCheckout = require("../_lib/licence-checkout");
+
 module.exports = async function handler(req, res) {
+  // Paiement licence Trophy, servi ici pour rester sous la limite de 12 fonctions Vercel
+  // (vercel.json : /api/licence/checkout -> /api/cloudinary/sign?op=licence-checkout).
+  if (req.query && req.query.op === "licence-checkout") return licenceCheckout(req, res);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-password');

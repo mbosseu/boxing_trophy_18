@@ -6,6 +6,10 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/api/licence/checkout",
+      "destination": "/api/cloudinary/sign?op=licence-checkout"
+    },
+    {
       "source": "/admin",
       "destination": "/admin.html"
     },
