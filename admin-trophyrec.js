@@ -129,6 +129,7 @@
     if (a.account_status === 'ferme') btn('activate', 'Réactiver', 'btn-outline');
     else btn('close', 'Fermer', 'btn-outline');
     if (a.email && a.account_status !== 'ferme') btn('resend', a.has_access ? 'Renvoyer les accès' : 'Créer l\'accès', 'btn-ghost');
+    btn('profile', 'Modifier la fiche', 'btn-outline');
     btn('delete', 'Supprimer', 'btn-danger');
     return '<div style="display:flex;flex-wrap:wrap;gap:6px;">' + b.join('') + '</div>';
   }
@@ -238,6 +239,7 @@
         return;
       }
       var act = e.target.closest('[data-acc]');
+      if (act && act.getAttribute('data-acc') === 'profile') { openProfile(act.getAttribute('data-id')); return; }
       if (act) onAccountAction(act);
     });
     var search = document.getElementById('trAccSearch');
@@ -274,16 +276,28 @@
 
   function nameOf(id) {
     var f = (window.__trFighters || []).find(function (x) { return x.id === id; });
-    return f ? ((f.prenom || '') + ' ' + (f.nom || '')).trim() : id;
+    if (!f) return id;
+    var n = ((f.prenom || '') + ' ' + (f.nom || '')).trim();
+    return f.alias ? n + ' « ' + f.alias + ' »' : n;
   }
 
+  var GYM_SHORT = { minimes: 'BC Minimes', 'etats-unis': 'BC Etats-Unis', 'st-cyprien': 'BC Saint-Cyprien', ramonville: 'BC Ramonville', portet: 'BC Portet', moteka: 'Moteka', autre: 'Autre club' };
+
   function fillFighterSelects() {
-    var opts = '<option value="">—</option>' + (window.__trFighters || []).map(function (f) {
-      return '<option value="' + f.id + '">' + ((f.prenom || '') + ' ' + (f.nom || '')).replace(/</g, '') + '</option>';
+    var list = (window.__trFighters || []).slice().sort(function (a, b) {
+      return ((a.prenom || '') + (a.nom || '')).localeCompare((b.prenom || '') + (b.nom || ''));
+    });
+    var opts = '<option value="">Choisir…</option>' + list.map(function (f) {
+      var club = f.gym_id === 'autre' && f.gym_other ? f.gym_other : (GYM_SHORT[f.gym_id] || '');
+      var extra = [f.sexe, club, f.account_status === 'ferme' ? 'compte fermé' : ''].filter(Boolean).join(' · ');
+      return '<option value="' + esc(f.id) + '">' + esc(nameOf(f.id)) + (extra ? ' (' + esc(extra) + ')' : '') + '</option>';
     }).join('');
     ['trFighterA', 'trFighterB'].forEach(function (id) {
       var el = document.getElementById(id);
-      if (el) el.innerHTML = opts;
+      if (!el) return;
+      var keep = el.value;
+      el.innerHTML = opts;
+      el.value = keep;
     });
   }
 
@@ -291,17 +305,136 @@
     var ul = document.getElementById('trCoachList');
     if (!ul) return;
     ul.innerHTML = (window.__trCoaches || []).map(function (c) {
-      return '<li>' + String(c.name).replace(/</g, '') + ' · ' + (c.gym_id || '') + '</li>';
+      var off = c.active === false;
+      return '<li style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.06);' + (off ? 'opacity:.55;' : '') + '">' +
+        '<strong>' + esc(c.name) + '</strong><span style="color:var(--text-dim);font-size:13px;">' + esc(GYM_SHORT[c.gym_id] || c.gym_id || '') + (off ? ' · désactivé' : '') + '</span>' +
+        '<button type="button" class="btn btn-ghost btn-sm" style="margin-left:auto;" data-coach="' + esc(c.id) + '" data-active="' + (off ? '1' : '0') + '">' + (off ? 'Réactiver' : 'Désactiver') + '</button></li>';
     }).join('') || '<li>Aucun coach. Ajoutez-en un.</li>';
   }
+
+  var RES_LABEL = { a_win: 'Victoire', b_win: 'Victoire', draw: 'Nul', nc: 'Sans décision' };
+  var METHOD_LABEL = { decision: 'Décision', ko: 'KO', tko: 'TKO', abandon: 'Abandon', dq: 'Disqualification', forfeit: 'Forfait' };
 
   function renderBouts() {
     var tb = document.getElementById('trBoutsBody');
     if (!tb) return;
-    tb.innerHTML = (window.__trBouts || []).map(function (b) {
-      return '<tr><td>' + nameOf(b.fighter_a) + '</td><td>' + nameOf(b.fighter_b) + '</td><td>' +
-        (b.result || '') + '</td><td>' + (b.method || '') + '</td><td>' + (b.categorie_poids || '') + '</td></tr>';
+    var list = (window.__trBouts || []).slice().sort(function (a, b) {
+      return String(b.bout_date || b.created_at || '').localeCompare(String(a.bout_date || a.created_at || ''));
+    });
+    if (!list.length) { tb.innerHTML = '<tr><td colspan="7" style="color:var(--text-dim)">Aucun résultat saisi.</td></tr>'; return; }
+    tb.innerHTML = list.map(function (b) {
+      var aWin = b.result !== 'b_win';
+      var left = aWin ? b.fighter_a : b.fighter_b;
+      var right = aWin ? b.fighter_b : b.fighter_a;
+      var res = b.result === 'draw' || b.result === 'nc'
+        ? '<span class="badge">' + RES_LABEL[b.result] + '</span>'
+        : '<span class="badge ' + (b.method === 'ko' || b.method === 'tko' ? 'badge-danger' : 'badge-success') + '">V · ' + esc(METHOD_LABEL[b.method] || b.method || '') + (b.round ? ' R' + b.round : '') + '</span>';
+      var ed = /^t(\d+)$/.exec(b.edition_id || '');
+      return '<tr><td>' + esc(b.bout_date || '') + '</td><td>' + esc(ed ? 'Trophy ' + ed[1] : (b.edition_id || '')) + '</td>' +
+        '<td><strong>' + esc(nameOf(left)) + '</strong></td><td>' + res + '</td><td>' + esc(nameOf(right)) + '</td>' +
+        '<td style="font-size:13px;">' + esc([b.discipline, b.sexe, b.categorie_poids].filter(Boolean).join(' · ')) + '</td>' +
+        '<td><div style="display:flex;gap:6px;flex-wrap:wrap;"><button type="button" class="btn btn-outline btn-sm" data-bout-edit="' + esc(b.id) + '">Corriger</button>' +
+        '<button type="button" class="btn btn-danger btn-sm" data-bout-del="' + esc(b.id) + '">Supprimer</button></div></td></tr>';
     }).join('');
+  }
+
+  function today() { return new Date().toISOString().slice(0, 10); }
+
+  function resetBoutForm() {
+    var form = document.getElementById('trBoutForm');
+    form.reset();
+    document.getElementById('trBoutId').value = '';
+    document.getElementById('trBoutDate').value = today();
+    document.getElementById('trBoutTitle').textContent = '2. Résultat officiel';
+    document.getElementById('trBoutSubmit').textContent = 'Enregistrer le résultat';
+    document.getElementById('trBoutCancel').hidden = true;
+  }
+
+  function editBout(id) {
+    var b = (window.__trBouts || []).find(function (x) { return String(x.id) === String(id); });
+    if (!b) return;
+    var set = function (elId, v) { var el = document.getElementById(elId); if (el && v != null) el.value = v; };
+    set('trBoutId', b.id); set('trFighterA', b.fighter_a); set('trFighterB', b.fighter_b);
+    set('trResult', b.result); set('trMethod', b.method || 'decision'); set('trDiscipline', b.discipline);
+    set('trSexe', b.sexe); set('trPoids', b.categorie_poids); set('trRound', b.round || '');
+    set('trBoutDate', b.bout_date || today()); set('trEdition', b.edition_id || 't20'); set('trMatchId', b.source_match_id || '');
+    document.getElementById('trBoutTitle').textContent = 'Corriger le résultat';
+    document.getElementById('trBoutSubmit').textContent = 'Enregistrer la correction';
+    document.getElementById('trBoutCancel').hidden = false;
+    document.getElementById('trBoutForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  /* Discipline, tableau et poids repris de la fiche et du dernier combat du combattant A */
+  function prefillFromFighter() {
+    if (document.getElementById('trBoutId').value) return;
+    var id = document.getElementById('trFighterA').value;
+    var f = (window.__trFighters || []).find(function (x) { return x.id === id; });
+    if (!f) return;
+    if (f.sexe) document.getElementById('trSexe').value = f.sexe;
+    var last = (window.__trBouts || []).filter(function (b) { return b.fighter_a === id || b.fighter_b === id; })
+      .sort(function (a, b) { return String(b.bout_date || '').localeCompare(String(a.bout_date || '')); })[0];
+    if (last) {
+      if (last.discipline) document.getElementById('trDiscipline').value = last.discipline;
+      if (last.categorie_poids) document.getElementById('trPoids').value = last.categorie_poids;
+    }
+  }
+
+  /* ───────── Fiche publique (club, photo, surnom...) ───────── */
+  function openProfile(id) {
+    var f = (window.__trFighters || []).find(function (x) { return x.id === id; });
+    var dlg = document.getElementById('trEditDlg');
+    if (!f || !dlg) return;
+    var set = function (elId, v) { document.getElementById(elId).value = v == null ? '' : v; };
+    set('trEdId', f.id); set('trEdPrenom', f.prenom); set('trEdNom', f.nom); set('trEdAlias', f.alias);
+    set('trEdSexe', f.sexe || ''); set('trEdGym', f.gym_id || 'autre'); set('trEdGymOther', f.gym_other);
+    set('trEdStance', f.stance || ''); set('trEdHeight', f.height_cm); set('trEdLicence', f.numero_licence); set('trEdPhoto', f.photo_url);
+    var coach = document.getElementById('trEdCoach');
+    coach.innerHTML = '<option value="">Aucun</option>' + (window.__trCoaches || []).filter(function (c) { return c.active !== false || c.id === f.coach_id; }).map(function (c) {
+      return '<option value="' + esc(c.id) + '">' + esc(c.name) + ' · ' + esc(GYM_SHORT[c.gym_id] || '') + '</option>';
+    }).join('');
+    coach.value = f.coach_id || '';
+    document.getElementById('trEdMsg').textContent = '';
+    document.getElementById('trEdPhotoFile').value = '';
+    if (dlg.showModal) dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+
+  function initProfileDialog() {
+    var dlg = document.getElementById('trEditDlg');
+    if (!dlg) return;
+    var msgEl = document.getElementById('trEdMsg');
+    document.getElementById('trEdCancel').addEventListener('click', function () { dlg.close(); });
+    document.getElementById('trEdPhotoFile').addEventListener('change', async function (e) {
+      var file = e.target.files && e.target.files[0];
+      if (!file) return;
+      if (typeof BT18Cloudinary === 'undefined') { msgEl.textContent = 'Envoi de photo indisponible : collez un lien.'; return; }
+      msgEl.textContent = 'Envoi de la photo…';
+      try {
+        document.getElementById('trEdPhoto').value = await BT18Cloudinary.uploadFile(file);
+        msgEl.textContent = 'Photo envoyée. Pensez à enregistrer.';
+      } catch (err) {
+        msgEl.textContent = err.message || 'Envoi impossible.';
+      }
+    });
+    document.getElementById('trEditForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      var v = function (id) { return document.getElementById(id).value.trim(); };
+      var save = document.getElementById('trEdSave');
+      save.disabled = true;
+      try {
+        await api('/api/trophyrec/accounts', {
+          action: 'update_profile', id: v('trEdId'), prenom: v('trEdPrenom'), nom: v('trEdNom'), alias: v('trEdAlias'),
+          sexe: v('trEdSexe'), gym_id: v('trEdGym'), gym_other: v('trEdGymOther'), coach_id: v('trEdCoach'),
+          stance: v('trEdStance'), height_cm: v('trEdHeight'), numero_licence: v('trEdLicence'), photo_url: v('trEdPhoto')
+        });
+        dlg.close();
+        setAccStatus('Fiche de ' + v('trEdPrenom') + ' ' + v('trEdNom') + ' mise à jour. TrophyRec est à jour.');
+        await loadLists();
+      } catch (err) {
+        msgEl.textContent = err.message;
+      } finally {
+        save.disabled = false;
+      }
+    });
   }
 
   function init() {
@@ -309,6 +442,7 @@
     var tab = document.getElementById('tab-trophyrec');
     if (!tab) return;
     initAccounts();
+    initProfileDialog();
 
     document.querySelectorAll('.tab-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
@@ -322,7 +456,7 @@
         var st = document.getElementById('trAdminStatus');
         try {
           var r = await api('/api/trophyrec/sync-fighters', {});
-          st.textContent = 'Fiches creees : ' + r.created + ' (deja la : ' + r.skipped + ').';
+          st.textContent = 'Fiches créées : ' + r.created + ' (déjà là : ' + r.skipped + ').';
           await loadLists();
         } catch (e) {
           st.textContent = e.message;
@@ -332,26 +466,53 @@
 
     var boutForm = document.getElementById('trBoutForm');
     if (boutForm) {
+      resetBoutForm();
+      document.getElementById('trFighterA').addEventListener('change', prefillFromFighter);
+      document.getElementById('trBoutCancel').addEventListener('click', resetBoutForm);
       boutForm.addEventListener('submit', async function (e) {
         e.preventDefault();
         var st = document.getElementById('trAdminStatus');
+        var id = document.getElementById('trBoutId').value;
+        var a = document.getElementById('trFighterA').value;
+        var b = document.getElementById('trFighterB').value;
+        if (a && a === b) { st.textContent = 'Choisissez deux combattants différents.'; return; }
         try {
           await api('/api/trophyrec/result', {
-            fighter_a: document.getElementById('trFighterA').value,
-            fighter_b: document.getElementById('trFighterB').value,
+            id: id || undefined,
+            fighter_a: a,
+            fighter_b: b,
             result: document.getElementById('trResult').value,
             method: document.getElementById('trMethod').value,
             discipline: document.getElementById('trDiscipline').value,
             sexe: document.getElementById('trSexe').value,
             categorie_poids: document.getElementById('trPoids').value,
+            round: document.getElementById('trRound').value || null,
+            bout_date: document.getElementById('trBoutDate').value,
+            edition_id: document.getElementById('trEdition').value,
             source_match_id: document.getElementById('trMatchId').value.trim() || null,
             sync_affiche: true
           });
-          st.textContent = 'Resultat enregistre. Classement public mis a jour.';
-          boutForm.reset();
+          st.textContent = id ? 'Résultat corrigé. TrophyRec est à jour.' : 'Résultat enregistré. TrophyRec est à jour.';
+          resetBoutForm();
           await loadLists();
         } catch (err) {
           st.textContent = err.message;
+        }
+      });
+
+      document.getElementById('trBoutsBody').addEventListener('click', async function (e) {
+        var ed = e.target.closest('[data-bout-edit]');
+        if (ed) { editBout(ed.getAttribute('data-bout-edit')); return; }
+        var del = e.target.closest('[data-bout-del]');
+        if (!del) return;
+        var bout = (window.__trBouts || []).find(function (x) { return String(x.id) === del.getAttribute('data-bout-del'); });
+        if (!bout || !confirm('Supprimer le combat ' + nameOf(bout.fighter_a) + ' contre ' + nameOf(bout.fighter_b) + ' ? Le classement sera recalculé.')) return;
+        try {
+          await api('/api/trophyrec/result', { action: 'delete', id: bout.id });
+          setAccStatus('Combat supprimé. Classement recalculé.');
+          await loadLists();
+        } catch (err) {
+          setAccStatus(err.message);
         }
       });
     }
@@ -366,11 +527,23 @@
             name: document.getElementById('trCoachName').value.trim(),
             gym_id: document.getElementById('trCoachGym').value
           });
-          st.textContent = 'Coach ajoute.';
+          st.textContent = 'Coach ajouté.';
           coachForm.reset();
           await loadLists();
         } catch (err) {
           st.textContent = err.message;
+        }
+      });
+      document.getElementById('trCoachList').addEventListener('click', async function (e) {
+        var btn = e.target.closest('[data-coach]');
+        if (!btn) return;
+        var on = btn.getAttribute('data-active') === '1';
+        try {
+          await api('/api/trophyrec/coach', { action: 'toggle', id: btn.getAttribute('data-coach'), active: on });
+          setAccStatus(on ? 'Coach réactivé.' : 'Coach désactivé : il n\'est plus proposé aux combattants.');
+          await loadLists();
+        } catch (err) {
+          setAccStatus(err.message);
         }
       });
     }

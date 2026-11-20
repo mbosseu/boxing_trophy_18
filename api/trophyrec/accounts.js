@@ -8,7 +8,7 @@
  *  - forgot    : envoie par Brevo un lien pour choisir un nouveau mot de passe.
  *
  * Actions admin (en-tete x-admin-password) :
- *  - list, create, verify_licence, refuse_licence, close, activate, resend, delete
+ *  - list, create, verify_licence, refuse_licence, close, activate, resend, delete, update_profile
  *
  * Le numero de licence n'est verifie que sur le format ici : le controle reel se fait
  * dans le back office (licence validee ou refusee, compte ferme si fausse licence).
@@ -372,6 +372,43 @@ async function actResend(supabase, body) {
   return [200, { ok: true, mail: mail.sent, password: mail.sent ? undefined : password }];
 }
 
+const GYM_IDS = ['minimes', 'etats-unis', 'st-cyprien', 'ramonville', 'portet', 'moteka', 'autre'];
+
+/* Fiche publique modifiee par l'organisation (club, photo, surnom, tableau...). */
+async function actUpdateProfile(supabase, body) {
+  const f = await fighterById(supabase, body.id);
+  if (!f) return [404, { error: 'Fiche introuvable' }];
+  const str = function (v) { const t = String(v == null ? '' : v).trim(); return t || null; };
+  const patch = { updated_at: new Date().toISOString() };
+  if ('prenom' in body) patch.prenom = str(body.prenom) || f.prenom;
+  if ('nom' in body) patch.nom = str(body.nom) || f.nom;
+  if ('alias' in body) patch.alias = str(body.alias);
+  if ('sexe' in body) patch.sexe = ['Homme', 'Femme'].indexOf(body.sexe) >= 0 ? body.sexe : null;
+  if ('gym_id' in body) patch.gym_id = GYM_IDS.indexOf(body.gym_id) >= 0 ? body.gym_id : 'autre';
+  if ('gym_other' in body) patch.gym_other = str(body.gym_other);
+  if ('coach_id' in body) patch.coach_id = str(body.coach_id);
+  if ('photo_url' in body) {
+    const url = str(body.photo_url);
+    if (url && !/^https:\/\//.test(url)) return [400, { error: 'La photo doit être un lien https://' }];
+    patch.photo_url = url;
+  }
+  if ('stance' in body) patch.stance = ['orthodoxe', 'southpaw'].indexOf(body.stance) >= 0 ? body.stance : null;
+  if ('height_cm' in body) {
+    const h = body.height_cm ? Number(body.height_cm) : null;
+    if (h !== null && (!(h >= 120) || !(h <= 230))) return [400, { error: 'Taille entre 120 et 230 cm' }];
+    patch.height_cm = h;
+  }
+  if ('numero_licence' in body) {
+    const n = String(body.numero_licence || '').replace(/\D/g, '');
+    if (n && !LICENCE_RE.test(n)) return [400, { error: 'Numéro de licence : 6 ou 7 chiffres' }];
+    patch.numero_licence = n || null;
+    if (n) patch.licence_gate = 'existing';
+  }
+  const up = await supabase.from('trophyrec_fighters').update(patch).eq('id', f.id);
+  if (up.error) throw up.error;
+  return [200, { ok: true }];
+}
+
 async function actDelete(supabase, body) {
   const f = await fighterById(supabase, body.id);
   if (!f) return [404, { error: 'Fiche introuvable' }];
@@ -404,7 +441,8 @@ const ADMIN = {
   close: function (sb, body) { return actClose(sb, body); },
   activate: actActivate,
   resend: actResend,
-  delete: actDelete
+  delete: actDelete,
+  update_profile: actUpdateProfile
 };
 
 module.exports = async function handler(req, res) {

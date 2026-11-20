@@ -23,6 +23,15 @@ module.exports = async function handler(req, res) {
 
   try {
     const body = await readBody(req);
+    const action = String(body.action || 'save');
+
+    if (action === 'delete') {
+      if (!body.id) return json(res, 400, { error: 'Combat introuvable' });
+      const del = await supabase.from('trophyrec_bouts').delete().eq('id', String(body.id));
+      if (del.error) throw del.error;
+      return json(res, 200, { ok: true });
+    }
+
     const fighterA = String(body.fighter_a || '').trim();
     const fighterB = String(body.fighter_b || '').trim();
     const result = String(body.result || '').trim();
@@ -47,8 +56,19 @@ module.exports = async function handler(req, res) {
       bout_date: body.bout_date || new Date().toISOString().slice(0, 10)
     };
 
+    const round = row.round;
+    if (round !== null && (!Number.isInteger(round) || round < 1 || round > 12)) {
+      return json(res, 400, { error: 'Round entre 1 et 12' });
+    }
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(row.bout_date))) {
+      return json(res, 400, { error: 'Date invalide' });
+    }
+
     let q;
-    if (row.source_match_id) {
+    if (body.id) {
+      // Correction d'un resultat deja saisi
+      q = await supabase.from('trophyrec_bouts').update(row).eq('id', String(body.id));
+    } else if (row.source_match_id) {
       q = await supabase
         .from('trophyrec_bouts')
         .upsert(row, { onConflict: 'edition_id,source_match_id' });

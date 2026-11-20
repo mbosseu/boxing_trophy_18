@@ -392,10 +392,12 @@
                 <button type="button" class="btn btn-primary btn-sm" id="trSyncBtn">Importer les inscriptions</button>
             </div>
             <div class="card" style="margin-bottom:16px;padding:16px;">
-                <h3>2. Resultat officiel</h3>
-                <form id="trBoutForm" style="display:grid;gap:10px;max-width:640px;">
-                    <label>Combattant A <select id="trFighterA" required></select></label>
-                    <label>Combattant B <select id="trFighterB" required></select></label>
+                <h3 id="trBoutTitle">2. Résultat officiel</h3>
+                <p style="font-size:13px;color:var(--text-dim);">Chaque résultat met à jour tout TrophyRec : classements, P4P, champions, résultats, clubs. Discipline, tableau et poids se remplissent depuis la fiche du combattant A, à vérifier.</p>
+                <form id="trBoutForm" style="display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));max-width:900px;align-items:end;">
+                    <input type="hidden" id="trBoutId">
+                    <label>Combattant A <select id="trFighterA" class="form-select" required></select></label>
+                    <label>Combattant B <select id="trFighterB" class="form-select" required></select></label>
                     <label>Resultat
                         <select id="trResult" required>
                             <option value="a_win">Victoire A</option>
@@ -437,11 +439,29 @@
                             <option value="+91kg">+91kg</option>
                         </select>
                     </label>
+                    <label>Round de fin
+                        <select id="trRound" class="form-select">
+                            <option value="">Non précisé</option>
+                            <option value="1">R1</option><option value="2">R2</option><option value="3">R3</option>
+                            <option value="4">R4</option><option value="5">R5</option><option value="6">R6</option>
+                        </select>
+                    </label>
+                    <label>Date du combat <input id="trBoutDate" type="date" class="form-input" required /></label>
+                    <label>Gala
+                        <select id="trEdition" class="form-select">
+                            <option value="t20">Trophy 20</option>
+                            <option value="t19">Trophy 19</option>
+                            <option value="t18">Trophy 18</option>
+                        </select>
+                    </label>
                     <label>Id combat affiche (optionnel) <input id="trMatchId" class="form-input" /></label>
-                    <button type="submit" class="btn btn-primary">Enregistrer le resultat</button>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button type="submit" class="btn btn-primary" id="trBoutSubmit">Enregistrer le résultat</button>
+                        <button type="button" class="btn btn-ghost" id="trBoutCancel" hidden>Annuler la modification</button>
+                    </div>
                 </form>
                 <div class="table-wrapper" style="margin-top:16px;">
-                    <table class="data-table"><thead><tr><th>A</th><th>B</th><th>Resultat</th><th>Methode</th><th>Poids</th></tr></thead>
+                    <table class="data-table"><thead><tr><th>Date</th><th>Gala</th><th>Vainqueur / A</th><th>Résultat</th><th>Perdant / B</th><th>Catégorie</th><th>Actions</th></tr></thead>
                     <tbody id="trBoutsBody"></tbody></table>
                 </div>
             </div>
@@ -462,8 +482,44 @@
                     </label>
                     <button type="submit" class="btn btn-outline btn-sm">Ajouter le coach</button>
                 </form>
-                <ul id="trCoachList" style="margin-top:12px;"></ul>
+                <ul id="trCoachList" style="margin-top:12px;list-style:none;padding:0;"></ul>
             </div>
+
+            <dialog id="trEditDlg" style="max-width:640px;width:calc(100% - 32px);border:1px solid rgba(255,255,255,.15);border-radius:16px;background:#141010;color:inherit;padding:0;">
+                <form id="trEditForm" method="dialog" style="padding:20px;display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));">
+                    <h3 style="grid-column:1/-1;margin:0 0 4px;">Modifier la fiche publique</h3>
+                    <p style="grid-column:1/-1;margin:0 0 6px;font-size:13px;color:var(--text-dim);">Ce qui s'affiche sur TrophyRec. Le palmarès se corrige dans « Résultat officiel ».</p>
+                    <input type="hidden" id="trEdId">
+                    <label>Prénom <input id="trEdPrenom" class="form-input" required></label>
+                    <label>Nom <input id="trEdNom" class="form-input" required></label>
+                    <label>Nom de ring <input id="trEdAlias" class="form-input"></label>
+                    <label>Tableau
+                        <select id="trEdSexe" class="form-select"><option value="">Non précisé</option><option value="Homme">Homme</option><option value="Femme">Femme</option></select>
+                    </label>
+                    <label>Club
+                        <select id="trEdGym" class="form-select">
+                            <option value="minimes">BC Minimes</option><option value="etats-unis">BC Etats-Unis</option><option value="st-cyprien">BC Saint-Cyprien</option>
+                            <option value="ramonville">BC Ramonville</option><option value="portet">BC Portet</option><option value="moteka">Moteka Fenouillet</option><option value="autre">Autre club</option>
+                        </select>
+                    </label>
+                    <label>Autre club (nom) <input id="trEdGymOther" class="form-input"></label>
+                    <label>Coach <select id="trEdCoach" class="form-select"></select></label>
+                    <label>Garde
+                        <select id="trEdStance" class="form-select"><option value="">Non précisée</option><option value="orthodoxe">Droitier</option><option value="southpaw">Gaucher</option></select>
+                    </label>
+                    <label>Taille (cm) <input id="trEdHeight" type="number" min="120" max="230" class="form-input"></label>
+                    <label>N° de licence <input id="trEdLicence" class="form-input" inputmode="numeric" maxlength="7"></label>
+                    <label style="grid-column:1/-1;">Photo (lien https)
+                        <input id="trEdPhoto" class="form-input" placeholder="https://">
+                    </label>
+                    <label style="grid-column:1/-1;">Ou envoyer une photo <input id="trEdPhotoFile" type="file" accept="image/jpeg,image/png,image/webp" class="form-input"></label>
+                    <p id="trEdMsg" style="grid-column:1/-1;margin:0;font-size:13px;color:var(--text-dim);"></p>
+                    <div style="grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end;">
+                        <button type="button" class="btn btn-ghost" id="trEdCancel">Annuler</button>
+                        <button type="submit" class="btn btn-primary" id="trEdSave">Enregistrer</button>
+                    </div>
+                </form>
+            </dialog>
         </section>
 
         <!-- ═══════ TAB: AFFICHE & RÉSULTATS ═══════ -->
@@ -1032,6 +1088,6 @@ create policy "Accès public total" on match_metadata
     <script src="poster.js?v=9"></script>
     <script src="trophyrec.js"></script>
     <script src="admin.js?v=24"></script>
-    <script src="admin-trophyrec.js?v=2"></script>
+    <script src="admin-trophyrec.js?v=3"></script>
 </body>
 </html>

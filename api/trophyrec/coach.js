@@ -23,6 +23,12 @@ module.exports = async function handler(req, res) {
 
   try {
     const body = await readBody(req);
+    if (body.action === 'toggle') {
+      if (!body.id) return json(res, 400, { error: 'Coach introuvable' });
+      const up = await supabase.from('trophyrec_coaches').update({ active: Boolean(body.active) }).eq('id', String(body.id));
+      if (up.error) throw up.error;
+      return json(res, 200, { ok: true });
+    }
     const name = String(body.name || '').trim();
     const gym_id = String(body.gym_id || 'autre').trim();
     if (!name) return json(res, 400, { error: 'Nom du coach requis' });
