@@ -136,7 +136,7 @@ html,body{overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){.ch-face,.hint-cue::after{animation:none}}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
-<link rel="stylesheet" href="gala.css?v=4">
+<link rel="stylesheet" href="gala.css?v=5">
 <link rel="stylesheet" href="night.css?v=14">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
@@ -536,7 +536,7 @@ html,body{overflow-x:hidden}
             <span class="form-label">Etes-vous titulaire d'une licence en cours de validité&nbsp;? <span class="required">*</span></span>
             <div class="form-radio-group">
               <label class="form-radio-label yes-license"><input type="radio" name="gateLicencie" value="Oui"><span class="radio-card-content"><span class="radio-card-title">Oui</span><span class="radio-card-desc">Licence FFB ou FFKMDA</span></span></label>
-              <label class="form-radio-label no-license"><input type="radio" name="gateLicencie" value="Non"><span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Payer 50&nbsp;€ puis s'inscrire</span></span></label>
+              <label class="form-radio-label no-license"><input type="radio" name="gateLicencie" value="Non"><span class="radio-card-content"><span class="radio-card-title">Non</span><span class="radio-card-desc">Paiement en maintenance</span></span></label>
             </div>
             <div class="form-error" id="gateLicencie-error">Indiquez si vous etes licencie</div>
           </div>
@@ -552,6 +552,16 @@ html,body{overflow-x:hidden}
             </div>
           </div>
           <div class="licence-gate-panel" id="licenceGateNo">
+            <!-- Paiement des licences fermé (maintenance). Pour rouvrir : supprimer ce bloc
+                 et retirer l'attribut hidden du bloc licence-pay-content juste en dessous. -->
+            <div class="licence-maintenance" role="status">
+              <span class="licence-maintenance-icon" aria-hidden="true">⚙</span>
+              <div>
+                <p class="licence-maintenance-title">Paiement des licences en maintenance</p>
+                <p class="licence-maintenance-text">Le paiement de la licence loisirs (50&nbsp;€) est momentanément indisponible. Il rouvrira très bientôt.</p>
+              </div>
+            </div>
+            <div class="licence-pay-content" hidden>
             <p class="g-note">Licence FFB Boxe Loisir : <b>50&nbsp;€</b> payés au club. Juste après le paiement, tu reçois un e-mail avec le certificat médical et la marche à suivre sur le site de la FFBoxe. Le paiement débloque l'inscription combat dans ce navigateur.</p>
             <ol class="g-steps">
               <li><b>Payer</b><span>50&nbsp;€ au club sur la boutique Boxing Center (coût de ta licence Boxe Loisir).</span></li>
@@ -562,7 +572,8 @@ html,body{overflow-x:hidden}
             <p class="g-note">Un <a href="/licence" style="color:var(--g-gold-2);font-weight:600">tutoriel pas à pas</a> t'explique chaque écran du site de la Fédération. Quand on te demande ton club, cherche <strong>Noble Art Portésien</strong>.</p>
             <div class="g-actions">
               <span class="g-price">50 €</span>
-              <button type="button" class="btn btn-primary" id="licencePayBtn">Payer ma licence</button>
+              <button type="button" class="btn btn-primary" id="licencePayBtn" disabled>Payer ma licence</button>
+            </div>
             </div>
           </div>
         </div>
