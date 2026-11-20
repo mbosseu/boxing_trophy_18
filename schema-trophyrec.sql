@@ -96,3 +96,5 @@ drop policy if exists "trophyrec bouts read" on trophyrec_bouts;
 create policy "trophyrec bouts read" on trophyrec_bouts for select using (true);
 
 -- Inserts / updates bouts et coaches : cle service_role (API admin), pas d'anon write.
+
+alter table registrations add column if not exists "licenceGate" text;

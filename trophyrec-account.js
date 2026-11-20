@@ -83,7 +83,7 @@
     function frError(e) {
       var m = String((e && e.message) || '');
       if (/invalid login credentials/i.test(m)) return 'E-mail ou mot de passe incorrect.';
-      if (/email not confirmed/i.test(m)) return 'Confirme d\'abord ton e-mail avec le lien reçu, puis reconnecte-toi.';
+      if (/email not confirmed/i.test(m)) return 'Reconnecte-toi : le mail de confirmation passe par Brevo, pas par un lien Supabase.';
       if (/already registered|already exists/i.test(m)) return 'Un accès existe déjà avec cet e-mail. Connecte-toi plutôt.';
       if (/rate limit|too many/i.test(m)) return 'Trop d\'essais d\'un coup. Attends une minute et réessaie.';
       if (/password/i.test(m)) return 'Mot de passe trop court : 6 caractères minimum.';
@@ -101,10 +101,16 @@
     async function doSignup(email, password) {
       var sb = client();
       if (!sb) return msg(err, 'Inscription indisponible pour le moment.');
-      var r = await sb.auth.signUp({ email: email, password: password });
-      if (r.error) return msg(err, frError(r.error));
-      if (r.data.session) location.replace('/compte');
-      else msg(err, 'Accès créé. Ouvre le lien reçu par e-mail pour le confirmer, puis connecte-toi.', true);
+      var created = await fetch('/api/trophyrec/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email, password: password })
+      });
+      var body = await created.json().catch(function () { return {}; });
+      if (!created.ok) return msg(err, body.error || 'Inscription impossible.');
+      var r = await sb.auth.signInWithPassword({ email: email, password: password });
+      if (r.error) return msg(err, 'Accès créé, e-mail envoyé. Connecte-toi.', true);
+      location.replace('/compte');
     }
 
     form.addEventListener('submit', async function (e) {
