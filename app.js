@@ -675,6 +675,18 @@ function initForm() {
       }
       return;
     }
+    // Licence payee au club : engagement obligatoire a faire la licence FFBoxe avant le 10 decembre
+    const engageBox = document.getElementById('engagementFFB');
+    if (licenceGateValue === 'paid_50' && engageBox && !engageBox.checked) {
+      const err = document.getElementById('engagementFFB-error');
+      if (err) err.classList.add('visible');
+      engageBox.focus();
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+      return;
+    }
 
     const formData = {
       id: generateId(),
@@ -687,7 +699,7 @@ function initForm() {
       licencie: licenceGateValue === 'existing' ? 'Oui' : 'Non',
       numeroLicence: licenceGateValue === 'existing' ? numeroLicenceValue : '',
       licenceGate: licenceGateValue,
-      engagementLicence: licenceGateValue === 'paid_50',
+      engagementLicence: licenceGateValue === 'paid_50' && !!(engageBox && engageBox.checked),
       club: getValue('club'),
       categoriePoids: getValue('categoriePoids'),
       email: getValue('email'),

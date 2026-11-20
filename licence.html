@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ta licence FFBoxe pas à pas — Boxing Trophy 20</title>
+  <meta name="description" content="Tutoriel licence Boxe Loisir pour le Boxing Trophy 20 : certificat médical, compte Mon Espace FFBoxe, club Noble Art Portésien, date limite le 10 décembre 2026." />
+  <link rel="canonical" href="https://boxing-trophy-20.vercel.app/licence" />
+  <meta name="theme-color" content="#0a0807" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/trophyrec.css?v=4" />
+  <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
+  <style>
+    .lc-alert { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-radius: 18px; border: 1px solid rgba(232,171,54,.5); background: rgba(232,171,54,.1); }
+    .lc-alert b { color: var(--g-gold-2); }
+    .lc-club { display: inline-block; padding: 2px 10px; border-radius: 8px; background: linear-gradient(90deg, var(--g-gold), var(--g-gold-2)); color: #1a0f08; font-weight: 800; letter-spacing: .01em; }
+    .lc-steps { list-style: none; margin: 0; padding: 0; counter-reset: s; display: grid; gap: 14px; }
+    .lc-steps > li { counter-increment: s; position: relative; padding: 22px 22px 22px 84px; border-radius: 20px; border: 1px solid var(--g-line-2);
+      background: linear-gradient(165deg, rgba(255,255,255,.07), rgba(255,255,255,.02) 50%, rgba(16,10,9,.55)); }
+    .lc-steps > li::before { content: counter(s, decimal-leading-zero); position: absolute; left: 22px; top: 20px; font: 400 28px/1 var(--tr-display); color: var(--g-gold-2); }
+    .lc-steps h2 { margin: 0 0 8px; font: 400 clamp(17px, 2vw, 21px)/1.25 var(--tr-display); }
+    .lc-steps p, .lc-steps li li { color: var(--g-text-2); line-height: 1.6; }
+    .lc-steps p { margin: 0 0 10px; }
+    .lc-steps ul { margin: 6px 0 10px; padding-left: 20px; }
+    .lc-steps li li { margin: 4px 0; }
+    .lc-steps .tr-actions { margin-top: 12px; }
+    .lc-done { border-color: rgba(95,211,138,.4) !important; }
+    .lc-done::before { content: "✓" !important; color: var(--g-win) !important; }
+    .lc-grid { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 18px; align-items: start; }
+    .lc-side { position: sticky; top: 96px; display: grid; gap: 14px; }
+    .lc-date { font: 400 clamp(26px, 3vw, 34px)/1.1 var(--tr-display); color: var(--g-gold-2); margin: 6px 0; }
+    @media (max-width: 960px) { .lc-grid { grid-template-columns: 1fr; } .lc-side { position: static; } }
+    @media (max-width: 560px) { .lc-steps > li { padding: 62px 18px 18px; } .lc-steps > li::before { top: 18px; left: 18px; } }
+  </style>
+</head>
+<body>
+  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+
+  <header class="tr-top">
+    <a class="tr-brand" href="/"><img src="/image/logo_boxing_center.png" alt="" width="30" height="30" /><span><b>Boxing Trophy <span>20</span></b><small>Licence FFBoxe</small></span></a>
+    <nav class="tr-links" aria-label="Navigation">
+      <a href="/">Le Trophy</a>
+      <a href="/licence" class="is-on" aria-current="page">Ma licence</a>
+      <a href="/classement">TrophyRec</a>
+      <a href="/connexion">Mon espace</a>
+      <a href="/#licence" class="tr-cta">S'inscrire</a>
+    </nav>
+  </header>
+
+  <main class="tr-wrap">
+    <p class="tr-cap">Tutoriel licence Boxe Loisir</p>
+    <h1 class="tr-h1">Ta licence FFBoxe, <span class="tr-gold">pas à pas</span></h1>
+    <p class="tr-lead">Tu as payé tes 50&nbsp;€ ? Il te reste à faire ta licence en ligne sur le site de la Fédération. Compte 15 minutes, ton certificat médical rempli à portée de main.</p>
+
+    <div class="lc-alert" style="margin:24px 0">
+      <span style="font-size:22px" aria-hidden="true">⚠</span>
+      <p style="margin:0;line-height:1.6">Quand le site de la FFBoxe te demande ton club, cherche <span class="lc-club">NOBLE ART PORTÉSIEN</span>. C'est le club affilié du Boxing Center pour le Trophy. Si tu choisis un autre club, ta licence ne sera pas validée à temps.</p>
+    </div>
+
+    <div class="lc-grid">
+      <ol class="lc-steps">
+        <li class="lc-done">
+          <h2>Payer ta licence au club</h2>
+          <p>50&nbsp;€ sur la boutique Boxing Center. Après le paiement, tu as reçu un mail avec ta facture et le formulaire médical.</p>
+        </li>
+        <li>
+          <h2>Faire remplir le certificat médical</h2>
+          <p>Télécharge le formulaire, imprime-le et fais-le remplir, signer et tamponner par ton médecin. Garde aussi son <b>numéro RPPS</b> (il est sur le tampon ou l'ordonnance) : la Fédération le demande.</p>
+          <div class="tr-actions">
+            <a class="tr-btn" href="/documents/licence-loisirs-ffboxe.pdf" target="_blank" rel="noopener">Formulaire médical FFBoxe Loisir</a>
+            <a class="tr-btn ghost" href="/documents/certificat-medical-ffkmda-loisir.pdf" target="_blank" rel="noopener">Certificat pied-poing (FFKMDA)</a>
+          </div>
+        </li>
+        <li>
+          <h2>Ouvrir ton compte « Mon Espace » FFBoxe</h2>
+          <p>Va sur <a href="https://monespace.ffboxe.com/auth/login" target="_blank" rel="noopener" style="color:var(--g-gold-2)">monespace.ffboxe.com</a> et clique sur <b>« Première visite ou création de compte »</b>.</p>
+          <ul>
+            <li><b>Tu as déjà eu une licence FFBoxe</b> : onglet « Compte existant ». Nom, prénom, date de naissance (le numéro de licence est facultatif), puis « Envoyer mes identifiants ». Tu les reçois par mail.</li>
+            <li><b>Jamais licencié</b> : onglet « Création de compte ». Nom, prénom, date de naissance (format JJ/MM/AAAA), tes infos et une <b>photo</b>. Coche <b>« Oui »</b> aux conditions d'utilisation des données, sinon la licence est bloquée.</li>
+          </ul>
+          <div class="tr-actions"><a class="tr-btn" href="https://monespace.ffboxe.com/auth/login" target="_blank" rel="noopener">Aller sur Mon Espace FFBoxe</a></div>
+        </li>
+        <li>
+          <h2>Prendre ta licence (4 écrans)</h2>
+          <p>Une fois connecté, clique sur <b>« Prendre une licence »</b> :</p>
+          <ul>
+            <li><b>Structure</b> : clique sur « changer de club » et cherche <span class="lc-club">NOBLE ART PORTÉSIEN</span> (département 31).</li>
+            <li><b>Tes informations</b> : vérifie-les et ajoute ta photo.</li>
+            <li><b>Choix de la licence</b> : licence <b>Loisir</b>. Remplis le questionnaire médical (nom du médecin, date du certificat, n° RPPS) et dépose le scan ou la photo du certificat signé.</li>
+            <li><b>Récapitulatif</b> : vérifie et valide. Tu n'as rien de plus à payer, les 50&nbsp;€ sont déjà réglés au club.</li>
+          </ul>
+          <p>Ta demande part en <b>attente de validation du club</b>. Tu suis l'avancement dans « Mes licences ».</p>
+        </li>
+        <li>
+          <h2>Noter ton numéro de licence</h2>
+          <p>Une fois la licence validée, ton numéro (6 ou 7 chiffres) apparaît dans « Mes licences ». Garde-le : c'est lui qui prouve que tu peux monter sur le ring.</p>
+        </li>
+      </ol>
+
+      <aside class="lc-side">
+        <section class="tr-panel">
+          <p class="tr-mono">Date limite</p>
+          <p class="lc-date">Jeudi 10 décembre 2026</p>
+          <p class="tr-note">Licence faite en ligne au plus tard <b>2 jours avant le gala</b>. Sans licence validée à cette date, tu ne boxes pas le 12 décembre.</p>
+        </section>
+        <section class="tr-panel">
+          <p class="tr-mono">Tutoriel officiel</p>
+          <h2 class="tr-h2">Le guide de la FFBoxe</h2>
+          <p class="tr-note" style="margin:8px 0 14px">Toutes les captures d'écran de Mon Espace, étape par étape (PDF de la Fédération).</p>
+          <a class="tr-btn ghost block" href="https://www.ffboxe.com/wp-content/uploads/2023/08/TUTORIEL-MON-ESPACE_LICENCE_2023-2024-2.pdf" target="_blank" rel="noopener">Ouvrir le tutoriel FFBoxe</a>
+        </section>
+        <section class="tr-panel">
+          <p class="tr-mono">Bloqué ?</p>
+          <p class="tr-note" style="margin-top:8px">Ton adresse mail n'est pas reconnue sur Mon Espace, ou tu ne trouves pas le club ? Appelle Mehdi au <a href="tel:+33772254117" style="color:var(--g-gold-2)">07 72 25 41 17</a> ou écris à <a href="mailto:boxingcenter31@gmail.com" style="color:var(--g-gold-2)">boxingcenter31@gmail.com</a>.</p>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="tr-foot">
+    <span>Boxing Trophy 20 · Samedi 12 décembre 2026 · Garage Moteka, Fenouillet</span>
+    <span><a href="/">Accueil</a><a href="/#licence">Inscription combat</a><a href="/classement">TrophyRec</a></span>
+  </footer>
+</body>
+</html>

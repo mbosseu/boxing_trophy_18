@@ -81,7 +81,13 @@
     }
     if (combatWrap) combatWrap.hidden = !unlocked;
     if (steps) steps.hidden = !unlocked;
-    fillHidden(readGate());
+    var gate = readGate();
+    var engage = document.getElementById('engagementFFBGroup');
+    var engageBox = document.getElementById('engagementFFB');
+    var mustEngage = !!(gate && gate.kind === 'paid_50');
+    if (engage) engage.hidden = !mustEngage;
+    if (engageBox) engageBox.required = mustEngage;
+    fillHidden(gate);
   }
 
   function goToInscription() {
