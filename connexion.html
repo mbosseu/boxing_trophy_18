@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connexion TrophyRec — Boxing Trophy</title>
+  <meta name="description" content="Creez votre acces TrophyRec pour renseigner salle, coach, photo et alias. Le palmares ne se modifie pas." />
+  <link rel="stylesheet" href="/trophyrec.css" />
+  <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
+</head>
+<body>
+  <nav class="tr-nav">
+    <a class="tr-brand" href="/">Boxing Trophy 20</a>
+    <a href="/classement">TrophyRec</a>
+    <a href="/connexion" class="is-on">Mon espace</a>
+  </nav>
+  <main class="tr-wrap">
+    <h1 class="tr-h1">Espace combattant</h1>
+    <p class="tr-lead">Creez un acces pour completer votre fiche : alias, photo, taille, gaucher ou droitier, salle Boxing Center et coach. Le classement et le palmares restent officiels.</p>
+    <div class="tr-card">
+      <form id="loginForm" class="tr-grid-2">
+        <div>
+          <label for="email">E-mail</label>
+          <input id="email" type="email" required autocomplete="email" />
+        </div>
+        <div>
+          <label for="password">Mot de passe</label>
+          <input id="password" type="password" required minlength="6" autocomplete="current-password" />
+        </div>
+        <button class="tr-btn" type="submit">Se connecter</button>
+        <button class="tr-btn ghost" type="button" id="signupBtn">Creer un acces</button>
+      </form>
+      <p id="authMsg" class="tr-error" hidden></p>
+    </div>
+  </main>
+  <script src="/env-loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/trophyrec.js"></script>
+  <script src="/trophyrec-account.js"></script>
+</body>
+</html>

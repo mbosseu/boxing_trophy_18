@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+User-agent: Googlebot-Image
+Allow: /
+Allow: /favicon.ico
+Allow: /image/
+
+Sitemap: https://boxing-trophy-20.vercel.app/sitemap.xml

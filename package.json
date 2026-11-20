@@ -8,7 +8,8 @@
     "config": "node scripts/generate-env.js",
     "test:bot-apis": "node scripts/test-bot-apis.js",
     "registrations:close": "node scripts/set-registrations-open.js false",
-    "registrations:open": "node scripts/set-registrations-open.js true"
+    "registrations:open": "node scripts/set-registrations-open.js true",
+    "test": "node test/trophyrec-rank.test.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.49.8"

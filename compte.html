@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mon profil TrophyRec</title>
+  <meta name="description" content="Modifier alias, photo, salle et coach. Palmares en lecture seule." />
+  <link rel="stylesheet" href="/trophyrec.css" />
+  <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
+</head>
+<body>
+  <nav class="tr-nav">
+    <a class="tr-brand" href="/">Boxing Trophy 20</a>
+    <a href="/classement">TrophyRec</a>
+    <a href="/compte" class="is-on">Mon espace</a>
+  </nav>
+  <main class="tr-wrap">
+    <h1 class="tr-h1">Profil Boxing Center</h1>
+    <p class="tr-lead">Salle d'appartenance et coach : c'est votre fiche publique. Vous ne pouvez pas modifier le palmares.</p>
+    <p id="trStatus" class="tr-note">Chargement…</p>
+    <form id="profileForm" class="tr-card" hidden>
+      <div class="tr-grid-2">
+        <div><label for="prenom">Prenom</label><input id="prenom" required /></div>
+        <div><label for="nom">Nom</label><input id="nom" required /></div>
+        <div><label for="alias">Alias / pseudo</label><input id="alias" /></div>
+        <div><label for="height_cm">Taille (cm)</label><input id="height_cm" type="number" min="120" max="230" /></div>
+        <div>
+          <label for="stance">Garde</label>
+          <select id="stance"></select>
+        </div>
+        <div>
+          <label for="gym_id">Salle d'appartenance</label>
+          <select id="gym_id"></select>
+        </div>
+        <div>
+          <label for="coach_id">Coach</label>
+          <select id="coach_id"></select>
+        </div>
+        <div>
+          <label for="gym_other">Si autre club, nom</label>
+          <input id="gym_other" />
+        </div>
+        <div>
+          <label for="photo_url">Photo (URL)</label>
+          <input id="photo_url" />
+        </div>
+        <div>
+          <label for="photoFile">Envoyer une photo</label>
+          <input id="photoFile" type="file" accept="image/jpeg,image/png,image/webp" />
+        </div>
+      </div>
+      <p class="tr-note" style="margin-top:12px">Le palmares se met a jour tout seul apres chaque gala.</p>
+      <p style="display:flex;flex-wrap:wrap;gap:10px;margin-top:16px">
+        <button class="tr-btn" type="submit">Enregistrer</button>
+        <a class="tr-btn ghost" id="publicLink" href="/classement">Voir ma fiche</a>
+        <button class="tr-btn ghost" type="button" id="logoutBtn">Deconnexion</button>
+      </p>
+      <p id="saveMsg" hidden></p>
+    </form>
+    <div class="tr-card">
+      <h2>Supprimer le compte</h2>
+      <p class="tr-meta">Le palmares officiel reste visible sous votre nom de ring. L'acces et l'e-mail sont retires.</p>
+      <button class="tr-btn danger" type="button" id="deleteBtn">Supprimer mon compte</button>
+    </div>
+  </main>
+  <script src="/env-loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="/supabase-config.js"></script>
+  <script src="/cloudinary-config.js?v=3"></script>
+  <script src="/trophyrec.js"></script>
+  <script src="/trophyrec-account.js"></script>
+</body>
+</html>

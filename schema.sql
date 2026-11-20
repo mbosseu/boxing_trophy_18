@@ -76,3 +76,4 @@ ALTER TABLE match_metadata ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS "Public match_metadata policy" ON match_metadata;
 CREATE POLICY "Public match_metadata policy" ON match_metadata
   FOR ALL USING (true) WITH CHECK (true);
+-- TrophyRec : executer aussi schema-trophyrec.sql (fighters, coaches, bouts, RLS).
