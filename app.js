@@ -711,6 +711,18 @@ function initForm() {
       }
     }
 
+    if (savedToCloud && formData.email) {
+      // Acces TrophyRec : identifiant + mot de passe provisoire envoyes par mail (licence verifiee ensuite par l'organisation)
+      try {
+        fetch('/api/trophyrec/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'provision', email: formData.email }),
+          keepalive: true
+        }).catch(function () {});
+      } catch (e) { /* l'inscription reste valide sans le compte */ }
+    }
+
     if (submitBtn) {
       submitBtn.disabled = false;
       submitBtn.textContent = originalBtnText;

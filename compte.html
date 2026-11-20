@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
-  <link rel="stylesheet" href="/trophyrec.css?v=2" />
+  <link rel="stylesheet" href="/trophyrec.css?v=3" />
   <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
 </head>
 <body>
@@ -34,6 +34,7 @@
         <div>
           <p class="tr-cap">Mon espace</p>
           <h1 class="tr-h1" id="accName">Mon profil</h1>
+          <p class="tr-licence" id="accLicence" hidden></p>
           <p class="tr-note">Ce que tu remplis ici s'affiche sur ta fiche publique. Le palmarès se met à jour tout seul après chaque gala.</p>
         </div>
         <a class="tr-btn ghost" id="publicLink" href="/classement">Voir ma fiche</a>
@@ -72,6 +73,17 @@
       <p id="saveMsg" hidden></p>
     </form>
 
+    <form id="passwordForm" class="tr-panel tr-in d2" hidden>
+      <h2 class="tr-section-title" id="motdepasse">Mot de passe</h2>
+      <p class="tr-note" style="margin:-4px 0 16px">Tu as reçu un mot de passe provisoire par mail ? Remplace-le ici par le tien.</p>
+      <div class="tr-grid-2">
+        <div class="tr-field"><label for="newPassword">Nouveau mot de passe</label><input id="newPassword" type="password" minlength="8" autocomplete="new-password" placeholder="8 caractères minimum" required /></div>
+        <div class="tr-field"><label for="newPassword2">Encore une fois</label><input id="newPassword2" type="password" minlength="8" autocomplete="new-password" required /></div>
+      </div>
+      <div class="tr-actions"><button class="tr-btn" type="submit">Changer mon mot de passe</button></div>
+      <p id="pwMsg" hidden></p>
+    </form>
+
     <section class="tr-panel tr-danger tr-in d2">
       <p class="tr-mono">Zone sensible</p>
       <h2 class="tr-h2">Supprimer mon compte</h2>
@@ -90,6 +102,6 @@
   <script src="/supabase-config.js"></script>
   <script src="/cloudinary-config.js?v=3"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-account.js?v=2"></script>
+  <script src="/trophyrec-account.js?v=3"></script>
 </body>
 </html>

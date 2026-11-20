@@ -1,5 +1,6 @@
 const { adminClient, checkAdminPassword, json, cors } = require('../../lib/supabase-admin');
 const TR = require('../../trophyrec.js');
+const { licenceOf } = require('./accounts.js');
 
 function readBody(req) {
   return new Promise(function (resolve, reject) {
@@ -63,7 +64,18 @@ module.exports = async function handler(req, res) {
         sexe: r.sexe || null,
         registration_id: r.id || null
       };
-      const ins = await supabase.from('trophyrec_fighters').insert([row]);
+      const lic = licenceOf(r);
+      const withLicence = Object.assign({}, row, {
+        licence_gate: lic ? lic.gate : null,
+        numero_licence: lic ? lic.numero : null,
+        licence_status: 'a_verifier',
+        account_status: 'actif'
+      });
+      let ins = await supabase.from('trophyrec_fighters').insert([withLicence]);
+      // Colonnes licence absentes tant que le SQL n'est pas passe
+      if (ins.error && /licence|account_status/i.test(ins.error.message || '')) {
+        ins = await supabase.from('trophyrec_fighters').insert([row]);
+      }
       if (ins.error) throw ins.error;
       created += 1;
       if (email) byEmail[email] = row;

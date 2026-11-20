@@ -83,6 +83,7 @@
     function frError(e) {
       var m = String((e && e.message) || '');
       if (/invalid login credentials/i.test(m)) return 'E-mail ou mot de passe incorrect.';
+      if (/banned/i.test(m)) return 'Ton compte a été fermé par l\'organisation. Pour toute question : boxingcenter31@gmail.com.';
       if (/email not confirmed/i.test(m)) return 'Reconnecte-toi : le mail de confirmation passe par Brevo, pas par un lien Supabase.';
       if (/already registered|already exists/i.test(m)) return 'Un accès existe déjà avec cet e-mail. Connecte-toi plutôt.';
       if (/rate limit|too many/i.test(m)) return 'Trop d\'essais d\'un coup. Attends une minute et réessaie.';
@@ -101,10 +102,10 @@
     async function doSignup(email, password) {
       var sb = client();
       if (!sb) return msg(err, 'Inscription indisponible pour le moment.');
-      var created = await fetch('/api/trophyrec/signup', {
+      var created = await fetch('/api/trophyrec/accounts', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email, password: password })
+        body: JSON.stringify({ action: 'signup', email: email, password: password })
       });
       var body = await created.json().catch(function () { return {}; });
       if (!created.ok) return msg(err, body.error || 'Inscription impossible.');
@@ -129,6 +130,22 @@
     });
     var signupBtn = document.getElementById('signupBtn');
     if (signupBtn) signupBtn.addEventListener('click', function () { setMode('signup'); });
+
+    var forgot = document.getElementById('forgotBtn');
+    if (forgot) forgot.addEventListener('click', async function () {
+      var email = document.getElementById('email').value.trim();
+      if (!/^\S+@\S+\.\S+$/.test(email)) return msg(err, 'Écris d\'abord ton e-mail dans le champ, puis clique sur « Mot de passe oublié ».');
+      forgot.disabled = true;
+      try {
+        await fetch('/api/trophyrec/accounts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'forgot', email: email })
+        });
+      } catch (e) { /* meme message dans tous les cas */ }
+      forgot.disabled = false;
+      msg(err, 'Si un accès existe pour cet e-mail, un lien pour choisir un nouveau mot de passe vient de partir. Regarde aussi dans les spams.', true);
+    });
   }
 
   async function initCompte() {
@@ -160,8 +177,33 @@
     }
 
     var claimed = await claim();
-    var fighterQ = await sb.from('trophyrec_fighters').select('*').eq('user_id', sess.user.id).maybeSingle();
+    var COLS = 'id,slug,prenom,nom,alias,photo_url,height_cm,stance,gym_id,gym_other,coach_id,sexe,user_id';
+    var COLS_STATUS = COLS + ',account_status,licence_status,licence_gate';
+    async function loadFighter() {
+      var q = await sb.from('trophyrec_fighters').select(COLS_STATUS).eq('user_id', sess.user.id).maybeSingle();
+      if (q.error) q = await sb.from('trophyrec_fighters').select(COLS).eq('user_id', sess.user.id).maybeSingle();
+      return q;
+    }
+    var fighterQ = await loadFighter();
     var fighter = fighterQ.data;
+    if (fighter && fighter.account_status === 'ferme') {
+      await sb.auth.signOut();
+      status.textContent = 'Ton compte a été fermé par l\'organisation. Pour toute question : boxingcenter31@gmail.com.';
+      return;
+    }
+    var licEl = document.getElementById('accLicence');
+    if (licEl && fighter && fighter.licence_status) {
+      var lic = {
+        a_verifier: ['Licence en cours de vérification', ''],
+        verifiee: ['Licence vérifiée', 'ok'],
+        refusee: ['Licence refusée', 'ko']
+      }[fighter.licence_status];
+      if (lic) {
+        licEl.textContent = (fighter.licence_gate === 'paid_50' ? 'Cotisation 50 € · ' : '') + lic[0];
+        licEl.className = 'tr-licence ' + lic[1];
+        licEl.hidden = false;
+      }
+    }
     if (!fighter) {
       status.textContent = (claimed && claimed.message) || 'Indique ton prénom et ton nom, enregistre, puis recharge la page.';
       form.hidden = false;
@@ -237,7 +279,7 @@
       var saveMsg = document.getElementById('saveMsg');
       if (!fighter) {
         claimed = await claim();
-        fighterQ = await sb.from('trophyrec_fighters').select('*').eq('user_id', sess.user.id).maybeSingle();
+        fighterQ = await loadFighter();
         fighter = fighterQ.data;
         if (!fighter) return msg(saveMsg, (claimed && claimed.error) || "Ta fiche n'est pas encore reliée. Inscris-toi au Trophy avec le même e-mail, ou demande à l'organisation.");
       }
@@ -257,6 +299,35 @@
       if (up.error) return msg(saveMsg, up.error.message);
       msg(saveMsg, 'Profil enregistré.', true);
     });
+
+    // Changement de mot de passe
+    var pwForm = document.getElementById('passwordForm');
+    if (pwForm) {
+      pwForm.hidden = false;
+      if (/[?&]motdepasse=1/.test(location.search)) {
+        var pwMsg0 = document.getElementById('pwMsg');
+        msg(pwMsg0, 'Tu es connecté. Choisis ton nouveau mot de passe ci-dessous.', true);
+        setTimeout(function () { pwForm.scrollIntoView({ behavior: 'smooth', block: 'center' }); document.getElementById('newPassword').focus(); }, 300);
+      }
+      pwForm.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var pwMsg = document.getElementById('pwMsg');
+        var p1 = document.getElementById('newPassword').value;
+        var p2 = document.getElementById('newPassword2').value;
+        if (p1.length < 8) return msg(pwMsg, 'Prends au moins 8 caractères.');
+        if (p1 !== p2) return msg(pwMsg, 'Les deux mots de passe ne sont pas identiques.');
+        var r = await sb.auth.updateUser({ password: p1 });
+        if (r.error) {
+          var m = String(r.error.message || '');
+          if (/different from the old|same/i.test(m)) return msg(pwMsg, 'C\'est déjà ton mot de passe actuel. Choisis-en un autre.');
+          if (/reauthentication|recent/i.test(m)) return msg(pwMsg, 'Par sécurité, déconnecte-toi puis reconnecte-toi avant de changer ton mot de passe.');
+          return msg(pwMsg, m || 'Changement impossible pour le moment.');
+        }
+        pwForm.reset();
+        if (/[?&]motdepasse=1/.test(location.search)) history.replaceState(null, '', '/compte');
+        msg(pwMsg, 'Mot de passe changé. Utilise-le à ta prochaine connexion.', true);
+      });
+    }
 
     document.getElementById('logoutBtn').addEventListener('click', async function () {
       await sb.auth.signOut();

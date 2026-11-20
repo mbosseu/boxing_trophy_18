@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
-  <link rel="stylesheet" href="/trophyrec.css?v=2" />
+  <link rel="stylesheet" href="/trophyrec.css?v=3" />
   <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
 </head>
 <body>
@@ -32,7 +32,7 @@
       <section class="tr-in">
         <p class="tr-cap">Espace combattant</p>
         <h1 class="tr-h1">Ta fiche, <span class="tr-gold">ton nom</span> de ring.</h1>
-        <p class="tr-lead">Tu as boxé au Trophy ? Ta fiche existe déjà dans le classement. Crée ton accès avec l'e-mail de ton inscription et complète-la.</p>
+        <p class="tr-lead">Dès ton inscription au Trophy validée (licence ou cotisation 50&nbsp;€), tu reçois par mail ton identifiant et un mot de passe provisoire. Pas reçu ? Crée ton accès ici avec le même e-mail.</p>
         <ol class="tr-steps">
           <li><b>Ton nom de ring</b><span>Le surnom qui s'affiche dans le classement à la place de ton nom.</span></li>
           <li><b>Ta photo et ta garde</b><span>Droitier ou gaucher, ta taille, une photo en tenue.</span></li>
@@ -61,6 +61,7 @@
           <button class="tr-btn block" type="submit" id="loginBtn">Se connecter</button>
           <button class="tr-btn ghost block" type="button" id="signupBtn" hidden>Créer mon accès</button>
           <p class="tr-note" id="authHint">Pas encore d'accès ? Passe sur « Créer mon accès ».</p>
+          <button type="button" class="tr-linkbtn" id="forgotBtn">Mot de passe oublié ?</button>
         </form>
         <p id="authMsg" class="tr-error" hidden></p>
       </section>
@@ -76,6 +77,6 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="/supabase-config.js"></script>
   <script src="/trophyrec.js"></script>
-  <script src="/trophyrec-account.js?v=2"></script>
+  <script src="/trophyrec-account.js?v=3"></script>
 </body>
 </html>

@@ -98,3 +98,21 @@ create policy "trophyrec bouts read" on trophyrec_bouts for select using (true);
 -- Inserts / updates bouts et coaches : cle service_role (API admin), pas d'anon write.
 
 alter table registrations add column if not exists "licenceGate" text;
+
+-- ─── Comptes TrophyRec : statut, licence verifiee par l'organisation ───
+alter table trophyrec_fighters add column if not exists account_status text not null default 'actif'; -- actif | ferme
+alter table trophyrec_fighters add column if not exists licence_status text not null default 'a_verifier'; -- a_verifier | verifiee | refusee
+alter table trophyrec_fighters add column if not exists licence_gate text; -- existing (licence) | paid_50 (cotisation)
+alter table trophyrec_fighters add column if not exists numero_licence text;
+alter table trophyrec_fighters add column if not exists closed_reason text;
+
+-- Lecture publique sans les donnees perso (e-mail, numero de licence) : le back office passe par l'API (service role).
+revoke select on trophyrec_fighters from anon, authenticated;
+grant select (id, slug, prenom, nom, alias, photo_url, height_cm, stance, gym_id, gym_other, coach_id, sexe,
+  user_id, registration_id, account_status, licence_status, licence_gate, created_at, updated_at)
+  on trophyrec_fighters to anon, authenticated;
+
+-- Le combattant ne modifie que son profil (jamais statut, licence, e-mail ou palmares).
+revoke update on trophyrec_fighters from anon, authenticated;
+grant update (prenom, nom, alias, height_cm, stance, gym_id, gym_other, coach_id, photo_url, updated_at)
+  on trophyrec_fighters to authenticated;

@@ -309,6 +309,14 @@ tr.top3 .tr-rank { color: var(--g-gold-2); }
 .tr-section-title:first-child { margin-top: 0; }
 .tr-section-title::after { content: ""; flex: 1; height: 1px; background: var(--g-line); }
 .tr-danger { border-color: rgba(255,107,91,.3); }
+.tr-licence { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 10px; padding: 6px 12px; border-radius: 999px; font: 500 10px/1.3 var(--tr-mono); letter-spacing: .14em; text-transform: uppercase;
+  color: var(--g-gold-2); background: rgba(232,171,54,.12); border: 1px solid rgba(232,171,54,.35); }
+.tr-licence::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.tr-licence.ok { color: var(--g-win); background: rgba(95,211,138,.1); border-color: rgba(95,211,138,.35); }
+.tr-licence.ko { color: var(--g-loss); background: rgba(216,53,42,.12); border-color: rgba(255,107,91,.4); }
+.tr-linkbtn { justify-self: start; min-height: 40px; padding: 0; border: 0; background: none; color: var(--g-gold-2); font: 500 13px/1.4 Geist, system-ui, sans-serif; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.tr-linkbtn:hover { color: var(--g-text); }
+.tr-linkbtn:disabled { opacity: .5; cursor: progress; }
 
 /* ─────────── Pied de page ─────────── */
 .tr-foot { position: relative; z-index: 1; width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 26px 0 36px; border-top: 1px solid var(--g-line);

@@ -349,6 +349,43 @@
                 <p class="section-desc">Palmares officiel : importer les inscrits, saisir V/D/N + methode, gerer les coachs.</p>
             </div>
             <p id="trAdminStatus" style="font-size:13px;color:var(--text-dim);margin-bottom:16px;"></p>
+            <div class="card" style="margin-bottom:16px;padding:16px;" id="trAccountsCard">
+                <h3>Comptes combattants</h3>
+                <p style="font-size:13px;color:var(--text-dim);">Chaque inscrit avec licence (6-7 chiffres) ou cotisation 50&nbsp;€ reçoit son identifiant et un mot de passe provisoire par mail. Ici on vérifie la licence sur le site FFBoxe, on valide ou on refuse, on ferme, on réactive, on supprime ou on crée un compte.</p>
+                <div class="stats-grid" id="trAccStats" style="margin:14px 0;"></div>
+                <div class="filters-bar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;">
+                    <button type="button" class="match-filter-btn is-active" data-accf="all">Tous</button>
+                    <button type="button" class="match-filter-btn" data-accf="a_verifier">Licence à vérifier</button>
+                    <button type="button" class="match-filter-btn" data-accf="actif">Actifs</button>
+                    <button type="button" class="match-filter-btn" data-accf="ferme">Fermés</button>
+                    <button type="button" class="match-filter-btn" data-accf="sans_acces">Sans accès</button>
+                    <input type="search" class="form-input" id="trAccSearch" placeholder="Nom, e-mail, n° de licence…" style="flex:1 1 220px;min-width:180px;">
+                    <button type="button" class="btn btn-outline btn-sm" id="trAccRefresh">Actualiser</button>
+                </div>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead><tr><th>Combattant</th><th>Licence</th><th>Vérification</th><th>Compte</th><th>Actions</th></tr></thead>
+                        <tbody id="trAccBody"><tr><td colspan="5" style="color:var(--text-dim)">Ouvrez l'onglet pour charger les comptes.</td></tr></tbody>
+                    </table>
+                </div>
+                <details style="margin-top:16px;">
+                    <summary style="cursor:pointer;font-weight:600;">Créer un compte à la main</summary>
+                    <form id="trAccCreate" style="display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));margin-top:12px;align-items:end;">
+                        <label>Prénom <input class="form-input" id="trAccPrenom" required></label>
+                        <label>Nom <input class="form-input" id="trAccNom" required></label>
+                        <label>E-mail <input class="form-input" id="trAccEmail" type="email" required></label>
+                        <label>N° de licence (facultatif) <input class="form-input" id="trAccLicence" inputmode="numeric" maxlength="7" pattern="[0-9]{6,7}"></label>
+                        <label>Licence
+                            <select class="form-select" id="trAccLicStatus">
+                                <option value="verifiee">Déjà vérifiée</option>
+                                <option value="a_verifier">À vérifier</option>
+                            </select>
+                        </label>
+                        <label style="display:flex;gap:8px;align-items:center;"><input type="checkbox" id="trAccSend" checked> Envoyer les accès par mail</label>
+                        <button type="submit" class="btn btn-primary btn-sm">Créer le compte</button>
+                    </form>
+                </details>
+            </div>
             <div class="card" style="margin-bottom:16px;padding:16px;">
                 <h3>1. Fiches combattants</h3>
                 <p style="font-size:13px;color:var(--text-dim);">Cree une fiche TrophyRec pour chaque inscription (e-mail, nom, photo).</p>
@@ -995,6 +1032,6 @@ create policy "Accès public total" on match_metadata
     <script src="poster.js?v=9"></script>
     <script src="trophyrec.js"></script>
     <script src="admin.js?v=24"></script>
-    <script src="admin-trophyrec.js"></script>
+    <script src="admin-trophyrec.js?v=2"></script>
 </body>
 </html>

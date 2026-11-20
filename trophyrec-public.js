@@ -92,11 +92,14 @@
     var local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
     if (local && /[?&]demo=1/.test(location.search)) return demoData();
     if (typeof supabaseClient === 'undefined' || !supabaseClient) throw new Error('Supabase indisponible');
+    var cols = 'id,slug,prenom,nom,alias,photo_url,height_cm,stance,gym_id,gym_other,coach_id,sexe';
     var res = await Promise.all([
-      supabaseClient.from('trophyrec_fighters').select('id,slug,prenom,nom,alias,photo_url,height_cm,stance,gym_id,gym_other,coach_id,sexe'),
+      supabaseClient.from('trophyrec_fighters').select(cols + ',account_status'),
       supabaseClient.from('trophyrec_bouts').select('*'),
       supabaseClient.from('trophyrec_coaches').select('id,name,gym_id,active')
     ]);
+    // Colonne account_status absente tant que le SQL n'est pas passe : on relit sans elle
+    if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols);
     res.forEach(function (r) { if (r.error) throw r.error; });
     return { fighters: res[0].data || [], bouts: res[1].data || [], coaches: res[2].data || [] };
   }
@@ -127,6 +130,12 @@
     data.fighters.forEach(function (f) { byId[f.id] = f; });
     var valid = data.bouts.filter(function (b) { return byId[b.fighter_a] && byId[b.fighter_b]; });
     var boards = TR.computeRankings(data.fighters, valid);
+    // Comptes fermes par l'organisation : retires du classement
+    Object.keys(boards).forEach(function (k) {
+      boards[k] = boards[k].filter(function (r) { return r.fighter.account_status !== 'ferme'; });
+      boards[k].forEach(function (r, i) { r.rank = i + 1; });
+      if (!boards[k].length) delete boards[k];
+    });
     var keys = Object.keys(boards).sort();
 
     // Chiffres du haut
@@ -405,6 +414,7 @@
 
     var f = data.fighters.find(function (x) { return x.slug === slug; });
     if (!f) return fail('Aucun combattant enregistré sous cette adresse.');
+    if (f.account_status === 'ferme') return fail('Cette fiche a été retirée par l\'organisation.');
 
     var byId = {};
     data.fighters.forEach(function (x) { byId[x.id] = x; });
@@ -412,6 +422,10 @@
     var history = TR.fighterBouts(f.id, valid, data.fighters)
       .sort(function (x, y) { return boutDate(y.bout).localeCompare(boutDate(x.bout)); });
     var boards = TR.computeRankings(data.fighters, valid);
+    Object.keys(boards).forEach(function (k) {
+      boards[k] = boards[k].filter(function (r) { return r.fighter.account_status !== 'ferme'; });
+      boards[k].forEach(function (r, i) { r.rank = i + 1; });
+    });
 
     var rec = { w: 0, l: 0, d: 0, ko: 0 };
     history.forEach(function (h) {
