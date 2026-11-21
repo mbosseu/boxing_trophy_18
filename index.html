@@ -137,7 +137,7 @@ html,body{overflow-x:hidden}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
 <link rel="stylesheet" href="gala.css?v=6">
-<link rel="stylesheet" href="night.css?v=16">
+<link rel="stylesheet" href="night.css?v=17">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
 <meta name="theme-color" content="#05060b">
@@ -867,14 +867,14 @@ html,body{overflow-x:hidden}
   /* ── Finition du logo (retour du coach : trop « bling-bling ») ──
      chrome-or : lettres chromées, coupe en or satiné (par défaut) · satin : or satiné sans diamants
      chrome : tout chromé · or : l'or d'origine. ?hero=… pour forcer, ?revue pour afficher le sélecteur. */
-  var HV=['chrome-or','satin','chrome','or'];
+  var HV=['or','or-doux','chrome-or','satin','chrome'];
   var REVUE=/[?&]revue\b/.test(location.search);
   var HERO=(location.search.match(/[?&]hero=([a-z-]+)/)||[])[1];
   if(HV.indexOf(HERO)<0&&REVUE){try{HERO=localStorage.getItem('bt20-hero')}catch(e){HERO=null}}
   if(HV.indexOf(HERO)<0)HERO='or';   // par défaut : l'or d'origine (validé par Eddy) ; les autres finitions ne servent qu'à comparer
   var heroPrev=HERO, heroMix=1;
   document.documentElement.setAttribute('data-hero',HERO);
-  function modeFor(v,key){ if(v==='or')return 0; if(v==='satin')return 2; if(v==='chrome')return 1; return key==='trophy'?2:1; }
+  function modeFor(v,key){ if(v==='or')return 0; if(v==='or-doux')return 3; if(v==='satin')return 2; if(v==='chrome')return 1; return key==='trophy'?2:1; }
   function cl(v){return v<0?0:v>1?1:v}
   function eo(t){return 1-Math.pow(1-t,3)}
   function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
@@ -922,6 +922,14 @@ html,body{overflow-x:hidden}
     // or satiné : même dégradé, sans pavé de diamants
     'vec3 goldRamp(float y){vec3 c=mix(vec3(1.,.95,.8),vec3(1.,.78,.45),smoothstep(0.,.38,y));c=mix(c,vec3(.9,.66,.22),smoothstep(.38,.5,y));c=mix(c,vec3(.56,.37,.1),smoothstep(.5,.56,y));c=mix(c,vec3(.93,.76,.43),smoothstep(.56,.75,y));return mix(c,vec3(1.,.9,.64),smoothstep(.75,1.,y));}',
     'vec3 shade(float m,vec4 c,vec3 N,vec3 Ns,vec3 L,vec3 L2,vec3 H,float lum,float lumb,float dia,vec2 cell,float edge){',
+    ' if(m>2.5){',                                                 // or adouci : mêmes diamants, moins de brillance
+    '  float d=max(dot(N,L),0.),d2=max(dot(N,L2),0.);',
+    '  float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
+    '  float r=hash(cell);',
+    '  float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.82,r);',
+    '  vec3 gold=vec3(1.,.82,.48);',
+    '  return c.rgb*(.6+.58*d+.12*d2)+s*mix(gold*1.5,vec3(1.4),dia)*(1.+.8*dia)*.48+tw*vec3(1.,.97,.9)*.62;',
+    ' }',
     ' if(m<.5){',                                                  // or d'origine + diamants
     '  float d=max(dot(N,L),0.),d2=max(dot(N,L2),0.);',
     '  float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
@@ -1320,7 +1328,7 @@ html,body{overflow-x:hidden}
   /* Sélecteur de finition, pour comparer en direct (mode revue : ?revue dans l'adresse, mémorisé) */
   if(REVUE){
     var box=document.createElement('div'); box.className='hero-revue'; box.setAttribute('role','group'); box.setAttribute('aria-label','Finition du logo');
-    box.innerHTML='<span>Finition du logo</span>'+[['chrome-or','Chrome · coupe or'],['satin','Or satiné'],['chrome','Tout chrome'],['or',"Or d'origine"]].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
+    box.innerHTML='<span>Finition du logo</span>'+[['or',"Or d'origine"],['or-doux','Or adouci']].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
     document.body.appendChild(box);
     var mark=function(){[].forEach.call(box.querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',b.getAttribute('data-v')===HERO?'true':'false')})};
     mark();

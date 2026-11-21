@@ -746,7 +746,11 @@ body { font-family: Barlow, Geist, system-ui, sans-serif; }
 
 /* ─────────── Hero : finitions du logo (retour du coach : moins « bling-bling ») ───────────
    La matière est calculée dans le shader du hero (uM/uM2/uX). Ici : ce qui l'accompagne. */
-html:not([data-hero="or"]) .lk .sp { display: none; }                       /* plus d'étoiles qui scintillent */
+html:not([data-hero="or"]):not([data-hero="or-doux"]) .lk .sp { display: none; }   /* finitions chrome/satin : pas d'étoiles */
+/* Or adouci : les mêmes diamants, une étoile sur deux, plus discrète ; halo plus doux */
+html[data-hero="or-doux"] .lk.live .sp { opacity: .5; }
+html[data-hero="or-doux"] .lk .sp:nth-of-type(2n) { display: none; }
+html[data-hero="or-doux"] .lk-halo { filter: saturate(.75) brightness(.72); }
 html[data-hero="chrome-or"], html[data-hero="chrome"] { --exf: grayscale(1) contrast(1.12) brightness(1.06); }
 html[data-hero="chrome-or"] .ly-trophy { --exf: saturate(.78) brightness(1.02); }   /* la coupe reste en or (l'or = le trophée) */
 html[data-hero="satin"] { --exf: saturate(.72) brightness(1.04); }
