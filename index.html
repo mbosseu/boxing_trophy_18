@@ -868,9 +868,10 @@ html,body{overflow-x:hidden}
      chrome-or : lettres chromées, coupe en or satiné (par défaut) · satin : or satiné sans diamants
      chrome : tout chromé · or : l'or d'origine. ?hero=… pour forcer, ?revue pour afficher le sélecteur. */
   var HV=['chrome-or','satin','chrome','or'];
+  var REVUE=/[?&]revue\b/.test(location.search);
   var HERO=(location.search.match(/[?&]hero=([a-z-]+)/)||[])[1];
-  if(HV.indexOf(HERO)<0){try{HERO=localStorage.getItem('bt20-hero')}catch(e){HERO=null}}
-  if(HV.indexOf(HERO)<0)HERO='chrome-or';
+  if(HV.indexOf(HERO)<0&&REVUE){try{HERO=localStorage.getItem('bt20-hero')}catch(e){HERO=null}}
+  if(HV.indexOf(HERO)<0)HERO='or';   // par défaut : l'or d'origine (validé par Eddy) ; les autres finitions ne servent qu'à comparer
   var heroPrev=HERO, heroMix=1;
   document.documentElement.setAttribute('data-hero',HERO);
   function modeFor(v,key){ if(v==='or')return 0; if(v==='satin')return 2; if(v==='chrome')return 1; return key==='trophy'?2:1; }
@@ -1317,8 +1318,7 @@ html,body{overflow-x:hidden}
   addEventListener('click',function(e){ if(!done&&!(e.target.closest&&e.target.closest('.hero-revue'))) start=performance.now()-T.end*1000; });
 
   /* Sélecteur de finition, pour comparer en direct (mode revue : ?revue dans l'adresse, mémorisé) */
-  var revue=/[?&]revue\b/.test(location.search); try{ if(revue)localStorage.setItem('bt20-revue','1'); else revue=localStorage.getItem('bt20-revue')==='1'; }catch(e){}
-  if(revue){
+  if(REVUE){
     var box=document.createElement('div'); box.className='hero-revue'; box.setAttribute('role','group'); box.setAttribute('aria-label','Finition du logo');
     box.innerHTML='<span>Finition du logo</span>'+[['chrome-or','Chrome · coupe or'],['satin','Or satiné'],['chrome','Tout chrome'],['or',"Or d'origine"]].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
     document.body.appendChild(box);
