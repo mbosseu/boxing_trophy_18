@@ -536,7 +536,8 @@ body { font-family: Barlow, Geist, system-ui, sans-serif; }
   .wk-stage { display: flex; gap: 0; width: 100%; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; padding: 40px 13vw 8px; perspective: 900px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   .wk-stage::-webkit-scrollbar { display: none; }
   .wk-night { flex: 0 0 74vw; scroll-snap-align: center; --d: 0; --ad: 0; }
-  .wk-poster { transform: rotateY(calc(var(--d) * -26deg)) scale(calc(1 - var(--ad) * .14)); transition: transform .15s linear; filter: brightness(calc(1 - var(--ad) * .45)); -webkit-box-reflect: below 2px linear-gradient(transparent 72%, rgba(255, 255, 255, .16)); }
+  .wk-poster { transform: translateY(calc((1 - var(--wp)) * 90px)) rotateX(calc((1 - var(--wp)) * 24deg + var(--tx))) rotateY(calc(var(--d) * -26deg + var(--ty))) scale(calc((1 - var(--ad) * .14) * (.86 + var(--wp) * .14))); opacity: calc(.15 + var(--wp) * .85); transition: transform .15s linear; filter: brightness(calc(1 - var(--ad) * .45)); -webkit-box-reflect: below 2px linear-gradient(transparent 72%, rgba(255, 255, 255, .16)); }
+  .wk.has-gyro .wk-glare { opacity: .8; }
   .wk-night { transform-style: flat; }
   .wk-ours { top: -14px; transform: translateX(-50%); }
   .wk-copy { margin-top: 40px; opacity: max(0, 1 - var(--ad) * 1.6); grid-template-columns: auto 1fr; }
@@ -547,13 +548,16 @@ body { font-family: Barlow, Geist, system-ui, sans-serif; }
   .wk-offer { flex-direction: column; align-items: stretch; text-align: center; }
   .wk-offer .g-actions { flex-direction: column; align-items: stretch; padding: 0 10px; }
   .vs { height: auto; display: flex; flex-direction: column; overflow: visible; }
-  .vs-side { position: relative; width: 100%; height: 68vh; min-height: 440px; max-height: 620px; left: auto; right: auto; transform: none; }
+  .vs-side { position: relative; width: 100%; height: 68vh; min-height: 440px; max-height: 620px; left: auto; right: auto; }
+  .vs-red { transform: translateX(calc((1 - var(--pp, 1)) * -36%)) rotate(calc((1 - var(--pp, 1)) * -3deg)); }
+  .vs-blue { transform: translateX(calc((1 - var(--pp, 1)) * 36%)) rotate(calc((1 - var(--pp, 1)) * 3deg)); }
+  .vs-side img { transform: scale(calc(1.18 - var(--pp, 1) * .1)); }
   .vs-red { clip-path: polygon(0 0, 100% 0, 100% 90%, 0 100%); }
   .vs-blue { clip-path: polygon(0 10%, 100% 0, 100% 100%, 0 100%); margin-top: -12vh; }
   .vs-red .vs-copy { bottom: 15%; left: 20px; right: 20px; }
   .vs-blue .vs-copy { left: 20px; right: 20px; text-align: left; }
   .vs-seam { display: none; }
-  .vs-badge { top: calc(68vh - 6vh); position: absolute; transform: translate(-50%, -50%); opacity: 1; }
+  .vs-badge { top: calc(68vh - 6vh); position: absolute; transform: translate(-50%, -50%) scale(calc(.4 + var(--vp) * .6)) rotate(calc((1 - var(--vp)) * -90deg)); opacity: var(--vp); }
   .vs:hover .vs-side { filter: none; }
   .mosaic { grid-template-columns: 1fr 1fr; grid-auto-rows: 38vw; gap: 6px; }
   .m-item, .m-w4t { grid-column: span 1; grid-row: span 1; }
@@ -739,3 +743,31 @@ body { font-family: Barlow, Geist, system-ui, sans-serif; }
 .pass-back .pb-title { top: 22%; }
 .pass-back .pb-price { top: 46%; }
 .pass-back .pb-steps { top: 66%; }
+
+/* ─────────── Hero : finitions du logo (retour du coach : moins « bling-bling ») ───────────
+   La matière est calculée dans le shader du hero (uM/uM2/uX). Ici : ce qui l'accompagne. */
+html:not([data-hero="or"]) .lk .sp { display: none; }                       /* plus d'étoiles qui scintillent */
+html[data-hero="chrome-or"], html[data-hero="chrome"] { --exf: grayscale(1) contrast(1.12) brightness(1.06); }
+html[data-hero="chrome-or"] .ly-trophy { --exf: saturate(.78) brightness(1.02); }   /* la coupe reste en or (l'or = le trophée) */
+html[data-hero="satin"] { --exf: saturate(.72) brightness(1.04); }
+html[data-hero="chrome-or"] .lk-halo, html[data-hero="chrome"] .lk-halo {
+  background: radial-gradient(closest-side, rgba(255, 255, 255, .14), rgba(140, 160, 255, .07) 55%, transparent); }
+html[data-hero="satin"] .lk-halo { background: radial-gradient(closest-side, rgba(255, 200, 120, .16), rgba(255, 140, 60, .05) 60%, transparent); }
+html[data-hero="chrome-or"] .pf-track i, html[data-hero="chrome"] .pf-track i { background: linear-gradient(90deg, rgba(180, 188, 197, 0), #b4bcc5 30%, #f4f6f8 70%, #7e8792); }
+html[data-hero="chrome-or"] .pf-track.r i, html[data-hero="chrome"] .pf-track.r i { background: linear-gradient(270deg, rgba(180, 188, 197, 0), #b4bcc5 30%, #f4f6f8 70%, #7e8792); }
+html[data-hero="chrome-or"] .pf-dia, html[data-hero="chrome"] .pf-dia { background: linear-gradient(135deg, #fff, #c9d0d7 35%, #5b636d 55%, #e6eaee 80%, #fff); box-shadow: 0 0 10px rgba(220, 230, 255, .7), 0 1px 2px rgba(20, 24, 30, .5); }
+html[data-hero="chrome"] .ly:not(.lit) .face, html[data-hero="chrome-or"] .ly:not(.lit):not(.ly-trophy) .face { filter: grayscale(1) contrast(1.1) brightness(1.08); }
+html[data-hero="satin"] .ly:not(.lit) .face { filter: saturate(.75); }
+.ly .ex { transition: filter .8s; }
+
+/* Sélecteur de finition (mode revue : ?revue) */
+.hero-revue { position: fixed; left: 16px; bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 75; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: calc(100% - 32px);
+  padding: 8px; border-radius: 6px; background: rgba(5, 6, 11, .78); border: 1px solid rgba(255, 255, 255, .18); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  transition: opacity .4s, transform .4s var(--n-ease); }
+.hero-revue.is-away { opacity: 0; transform: translateY(12px); pointer-events: none; }
+.hero-revue span { padding: 0 6px; font: 700 italic 12px/1 "Barlow Condensed", sans-serif; letter-spacing: .18em; text-transform: uppercase; color: rgba(255, 255, 255, .6); }
+.hero-revue button { padding: 9px 12px 8px; border: 1px solid rgba(255, 255, 255, .25); border-radius: 2px; transform: skewX(-12deg); cursor: pointer; background: rgba(255, 255, 255, .05); color: #fff;
+  font: 800 italic 13px/1 "Barlow Condensed", sans-serif; letter-spacing: .08em; text-transform: uppercase; transition: background .3s, border-color .3s; }
+.hero-revue button:hover { border-color: rgba(255, 255, 255, .6); }
+.hero-revue button[aria-pressed="true"] { background: linear-gradient(90deg, #b30d1b, #ff2a36 50%, #d4101f); border-color: #ff2a36; }
+@media (max-width: 760px) { .hero-revue { bottom: calc(70px + env(safe-area-inset-bottom, 0px)); } .hero-revue span { width: 100%; padding: 2px 4px 4px; } }

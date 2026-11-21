@@ -110,7 +110,9 @@
     raf = requestAnimationFrame(frame);
     var t = now / 1000;
     if (ptr && now - lastMove > 2600) { ptr = null; hovT = 0; }
+    var gy = window.BTGyro;
     if (ptr) { tgt.rx = ptr.rx; tgt.ry = ptr.ry; }
+    else if (!fine && gy && gy.on) { tgt.rx = -gy.x * 16; tgt.ry = gy.y * 24; hovT = .75; }   // téléphone : on incline l'appareil, le pass suit
     else { tgt.rx = Math.cos(t * .5) * 6; tgt.ry = Math.sin(t * .62) * 16; }
     cur.rx += (tgt.rx - cur.rx) * .08; cur.ry += (tgt.ry - cur.ry) * .08;
     imp *= .86; hov += (hovT - hov) * .1;

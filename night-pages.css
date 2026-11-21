@@ -1,0 +1,100 @@
+/* BOXING TROPHY 20 — ADN « nuit » des sous-pages (TrophyRec, fiche combattant, espace, connexion, 404, carte des combats).
+   Une seule couche chargée après trophyrec.css / poster.css : elle ne touche à aucun comportement.
+   Même grammaire que l'accueil (night.css) : fumée rouge/bleue vivante, chrome, rouge des bandeaux, Anton + Barlow. */
+
+:root {
+  --g-gold: #e11d2e;
+  --g-gold-2: #ff4b55;
+  --g-gold-deep: #a50d18;
+  --g-bg: #05060b;
+  --g-red: #ff2a36;
+  --g-blue: #3a86ff;
+  --g-text-2: rgba(236, 240, 246, .76);
+  --g-muted: rgba(236, 240, 246, .5);
+  --g-radius: 6px;
+  --tr-display: Anton, Impact, sans-serif;
+  --tr-mono: "Barlow Condensed", "Arial Narrow", sans-serif;
+  --n-chrome: linear-gradient(180deg, #ffffff 0%, #f1f4f7 28%, #b4bcc5 45%, #4b535c 50%, #7e8792 55%, #dde2e7 68%, #ffffff 82%, #a2abb5 100%);
+  --n-redfill: linear-gradient(180deg, #ff7a62 0%, #ff3434 32%, #e0101f 58%, #8e0714 100%);
+  --n-ease: cubic-bezier(.16, 1, .3, 1);
+}
+html, body { background: #05060b; }
+body { font-family: Barlow, Geist, system-ui, sans-serif; }
+::selection { background: rgba(255, 42, 54, .4); color: #fff; }
+
+/* ─── Fond : la fumée de l'affiche (smoke.js) remplace les taches de couleur ─── */
+.tr-bg { background: #05060b; }
+.tr-bg i { display: none; }
+.tr-bg .smoke { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.tr-bg .smoke.no-gl { background: radial-gradient(55% 70% at 0% 45%, rgba(200, 16, 30, .5), transparent 70%), radial-gradient(55% 70% at 100% 45%, rgba(30, 90, 255, .45), transparent 70%), #05060b; }
+.tr-bg::after { opacity: .05; }
+
+/* ─── En-tête ─── */
+.tr-top { background: linear-gradient(180deg, rgba(5, 6, 11, .9), rgba(5, 6, 11, .66)); border-bottom-color: rgba(255, 255, 255, .1);
+  box-shadow: 0 1px 0 rgba(255, 42, 54, .25), 0 10px 30px rgba(0, 0, 0, .4); }
+.tr-brand b { font: 400 18px/1 Anton, sans-serif; letter-spacing: .02em; text-transform: uppercase; }
+.tr-brand b span { color: transparent; background: var(--n-redfill); -webkit-background-clip: text; background-clip: text; }
+.tr-brand small { font: 600 11px/1 "Barlow Condensed", sans-serif; letter-spacing: .24em; }
+.tr-links a { font: 600 14px/1 "Barlow Condensed", sans-serif; letter-spacing: .14em; border-radius: 2px; }
+.tr-links a.is-on { color: #fff; background: rgba(255, 42, 54, .16); box-shadow: inset 0 -2px 0 #ff2a36; }
+.tr-links a.tr-cta, .tr-links a.tr-cta:hover { color: #fff; transform: skewX(-12deg); font-style: italic; font-weight: 800; background: linear-gradient(90deg, #b30d1b, #ff2a36 50%, #d4101f); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .4), 0 10px 26px -10px rgba(255, 42, 54, .8); }
+
+/* ─── Typographie ─── */
+.tr-cap { font: 600 13px/1.4 "Barlow Condensed", sans-serif; letter-spacing: .3em; }
+.tr-cap::before { width: 34px; height: 3px; transform: skewX(-30deg); background: linear-gradient(90deg, #ff2a36 0 50%, #3a86ff 50% 100%); }
+.tr-h1 { font: 400 clamp(38px, 6.2vw, 86px)/.95 Anton, Impact, sans-serif; text-transform: uppercase; letter-spacing: .008em;
+  background: var(--n-chrome) 0 0 / 100% .95em repeat-y; -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tr-h2 { font: 400 clamp(20px, 2.4vw, 30px)/1.05 Anton, Impact, sans-serif; text-transform: uppercase; letter-spacing: .01em; }
+.tr-gold { background: var(--n-redfill); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tr-mono, .tr-label, .tr-field label { font-family: "Barlow Condensed", sans-serif; font-weight: 600; letter-spacing: .16em; }
+
+/* ─── Panneaux : plaques sombres bordées de rouge à gauche, de bleu à droite ─── */
+.tr-panel, .rx-box, .rx-bar {
+  border-radius: 6px; background: linear-gradient(180deg, rgba(16, 18, 28, .82), rgba(6, 7, 12, .9));
+  border: 1px solid rgba(255, 255, 255, .1);
+  box-shadow: -1px 0 0 rgba(255, 42, 54, .55), 1px 0 0 rgba(58, 134, 255, .55), 0 30px 80px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 255, 255, .1);
+  -webkit-backdrop-filter: blur(14px) saturate(140%); backdrop-filter: blur(14px) saturate(140%); }
+
+/* ─── Boutons : bandeaux rouges inclinés ─── */
+.tr-btn { border-radius: 2px; transform: skewX(-12deg); font: 800 italic 15px/1 "Barlow Condensed", sans-serif; letter-spacing: .08em; text-transform: uppercase;
+  color: #fff; border: 0; background: linear-gradient(90deg, #b30d1b, #ff2a36 50%, #d4101f); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 14px 30px -12px rgba(255, 42, 54, .8);
+  transition: transform .35s var(--n-ease), box-shadow .35s, filter .3s; }
+.tr-btn:hover { transform: skewX(-12deg) translateY(-2px); filter: brightness(1.08); }
+.tr-btn.ghost { color: #fff; background: rgba(255, 255, 255, .05); border: 1px solid rgba(255, 255, 255, .34); box-shadow: none; }
+.tr-btn.ghost:hover { background: rgba(255, 255, 255, .12); border-color: rgba(255, 255, 255, .7); }
+.tr-btn.danger { background: linear-gradient(90deg, #5a0a12, #8e0714); }
+.tr-panel input:not([type="file"]):not([type="checkbox"]), .tr-panel select, .tr-search input, .rx-search input { border-radius: 3px; font-family: Barlow, sans-serif; }
+.tr-panel input:focus, .tr-panel select:focus, .tr-search input:focus, .rx-search input:focus { border-color: #ff4b55; box-shadow: 0 0 0 3px rgba(255, 42, 54, .18); }
+
+/* ─── TrophyRec : onglets, puces, tableaux ─── */
+.tr-chip, .rx-tabs a { border-radius: 2px; font-family: "Barlow Condensed", sans-serif; font-weight: 700; letter-spacing: .08em; }
+.tr-chip.is-on, .rx-tabs a.is-on { color: #fff; background: linear-gradient(90deg, #b30d1b, #ff2a36); border-color: transparent; transform: skewX(-10deg); }
+.rx-brand { font-family: Anton, sans-serif; text-transform: uppercase; letter-spacing: .02em; }
+.rx-brand span { color: transparent; background: var(--n-redfill); -webkit-background-clip: text; background-clip: text; }
+.rx-h { font-family: Anton, sans-serif; text-transform: uppercase; letter-spacing: .02em; }
+.tr-table tbody tr:hover { background: rgba(255, 42, 54, .07); }
+.tr-table th button.is-sort { color: #ff5a62; }
+.tr-rank, .rx-rk { font-family: Anton, sans-serif; }
+.tr-pts, .tr-pod-pts { font-family: Anton, sans-serif; color: #fff; }
+.tr-stat b { font-family: Anton, sans-serif; background: var(--n-chrome); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tr-stat:first-child b { background: var(--n-redfill); -webkit-background-clip: text; background-clip: text; }
+
+/* ─── Carte des combats (affiche.html) ─── */
+body.nt-affiche { background: #05060b; font-family: Barlow, sans-serif; }
+body.nt-affiche > *:not(.tr-bg) { position: relative; z-index: 1; }
+.nt-affiche .affiche-page-header { border-bottom-color: rgba(255, 255, 255, .1); background: rgba(5, 6, 11, .7); -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+.nt-affiche .affiche-page-header a { color: #fff; font: 700 italic 14px/1 "Barlow Condensed", sans-serif; letter-spacing: .2em; }
+.nt-affiche .affiche-page-header a:hover { color: #ff5a62; }
+.nt-affiche .affiche-soon h1 { font: 400 clamp(36px, 7vw, 64px)/.95 Anton, sans-serif; letter-spacing: .01em; color: transparent; background: var(--n-chrome); -webkit-background-clip: text; background-clip: text; }
+.nt-affiche .affiche-soon p { color: rgba(236, 240, 246, .76); font-family: Barlow, sans-serif; }
+.nt-affiche .affiche-soon .affiche-soon-back, .nt-affiche .affiche-toolbar button {
+  border: 0; border-radius: 2px; transform: skewX(-12deg); color: #fff; font: 800 italic 14px/1 "Barlow Condensed", sans-serif; letter-spacing: .1em;
+  background: linear-gradient(90deg, #b30d1b, #ff2a36 50%, #d4101f); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .45), 0 14px 30px -12px rgba(255, 42, 54, .8); }
+.nt-affiche .affiche-soon .affiche-soon-back:hover { background: linear-gradient(90deg, #c40d1e, #ff4b55 50%, #e11d2e); }
+.nt-affiche .affiche-soon-icon { filter: hue-rotate(-10deg) saturate(1.2); }
+.nt-affiche .affiche-sync-note, .nt-affiche .affiche-public-note { color: rgba(236, 240, 246, .5); font-family: "Barlow Condensed", sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+.nt-affiche .tr-bg { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tr-btn, .tr-btn:hover { transition: none; }
+}

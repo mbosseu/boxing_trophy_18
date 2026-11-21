@@ -76,7 +76,9 @@
   size(); addEventListener('resize', size);
 
   // Équilibre rouge/bleu et intensité : suivent la section au centre de l'écran
-  var cur = { b: 0, i: 1 }, tgt = { b: 0, i: 1 }, mouse = { x: .5, tx: .5 };
+  var base = (document.body.getAttribute('data-smoke') || '0,1').split(',');
+  var B0 = parseFloat(base[0]) || 0, I0 = isNaN(parseFloat(base[1])) ? 1 : parseFloat(base[1]);
+  var cur = { b: B0, i: I0 }, tgt = { b: B0, i: I0 }, mouse = { x: .5, tx: .5 };
   var secs = document.querySelectorAll('[data-smoke]');
   if ('IntersectionObserver' in window && secs.length) {
     var io = new IntersectionObserver(function (entries) {
@@ -88,7 +90,7 @@
     }, { rootMargin: '-48% 0px -48% 0px' });
     secs.forEach(function (s) { io.observe(s); });
   }
-  addEventListener('scroll', function () { if (scrollY < innerHeight * .5) { tgt.b = 0; tgt.i = 1; } }, { passive: true });
+  addEventListener('scroll', function () { if (scrollY < innerHeight * .5) { tgt.b = B0; tgt.i = I0; } }, { passive: true });
   addEventListener('pointermove', function (e) { mouse.tx = e.clientX / innerWidth; }, { passive: true });
 
   var t0 = performance.now(), last = 0, raf = 0, running = true;
@@ -96,6 +98,7 @@
     raf = requestAnimationFrame(draw);
     if (now - last < 33) return;           // 30 images par seconde suffisent pour de la fumée
     last = now;
+    if (window.BTGyro && window.BTGyro.on) mouse.tx = .5 + window.BTGyro.y * .35;
     cur.b += (tgt.b - cur.b) * .04; cur.i += (tgt.i - cur.i) * .04; mouse.x += (mouse.tx - mouse.x) * .03;
     gl.uniform2f(U.R, cv.width, cv.height);
     gl.uniform1f(U.T, (now - t0) / 1000);

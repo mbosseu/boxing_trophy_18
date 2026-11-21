@@ -137,7 +137,7 @@ html,body{overflow-x:hidden}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
 <link rel="stylesheet" href="gala.css?v=6">
-<link rel="stylesheet" href="night.css?v=14">
+<link rel="stylesheet" href="night.css?v=16">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
 <meta name="theme-color" content="#05060b">
@@ -864,6 +864,16 @@ html,body{overflow-x:hidden}
 (function(){
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(id){return document.getElementById(id)};
+  /* ── Finition du logo (retour du coach : trop « bling-bling ») ──
+     chrome-or : lettres chromées, coupe en or satiné (par défaut) · satin : or satiné sans diamants
+     chrome : tout chromé · or : l'or d'origine. ?hero=… pour forcer, ?revue pour afficher le sélecteur. */
+  var HV=['chrome-or','satin','chrome','or'];
+  var HERO=(location.search.match(/[?&]hero=([a-z-]+)/)||[])[1];
+  if(HV.indexOf(HERO)<0){try{HERO=localStorage.getItem('bt20-hero')}catch(e){HERO=null}}
+  if(HV.indexOf(HERO)<0)HERO='chrome-or';
+  var heroPrev=HERO, heroMix=1;
+  document.documentElement.setAttribute('data-hero',HERO);
+  function modeFor(v,key){ if(v==='or')return 0; if(v==='satin')return 2; if(v==='chrome')return 1; return key==='trophy'?2:1; }
   function cl(v){return v<0?0:v>1?1:v}
   function eo(t){return 1-Math.pow(1-t,3)}
   function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
@@ -887,7 +897,7 @@ html,body{overflow-x:hidden}
     // épaisseur : tranches d'or massif (silhouette pleine), de plus en plus sombres vers l'arrière
     if(k!=='sub') for(var e=EX;e>=1;e--){
       var f=e/EX;
-      html+='<img class="ex" src="'+src.replace('.webp','-wall.webp')+'" alt="" style="transform:translateZ('+(-e*EXD).toFixed(1)+'px);filter:brightness('+(1-.62*f).toFixed(2)+')">';
+      html+='<img class="ex" src="'+src.replace('.webp','-wall.webp')+'" alt="" style="transform:translateZ('+(-e*EXD).toFixed(1)+'px);filter:var(--exf,saturate(1)) brightness('+(1-.62*f).toFixed(2)+')">';
     }
     html+='<img class="face" src="'+src+'" alt="">';
     html+='<canvas class="mat"></canvas>';
@@ -904,25 +914,51 @@ html,body{overflow-x:hidden}
   var VS='attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x*.5+.5,.5-p.y*.5);gl_Position=vec4(p,0.,1.);}';
   var FS=[
     'precision mediump float;',
-    'uniform sampler2D uC,uN;uniform vec3 uL;uniform float uAsp,uT,uK;uniform vec2 uCells;varying vec2 v;',
+    'uniform sampler2D uC,uN;uniform vec3 uL;uniform float uAsp,uT,uK,uM,uM2,uX;uniform vec2 uCells,uTx;varying vec2 v;',
     'float hash(vec2 q){return fract(sin(dot(q,vec2(12.9898,78.233)))*43758.5453);}',
+    // dégradé chromé de l'affiche : blanc, gris clair, bande sombre au milieu, puis blanc
+    'vec3 chromeRamp(float y){vec3 c=mix(vec3(1.),vec3(.95,.96,.98),smoothstep(0.,.28,y));c=mix(c,vec3(.71,.74,.78),smoothstep(.28,.45,y));c=mix(c,vec3(.27,.31,.35),smoothstep(.45,.5,y));c=mix(c,vec3(.5,.54,.58),smoothstep(.5,.55,y));c=mix(c,vec3(.88,.9,.92),smoothstep(.55,.68,y));c=mix(c,vec3(1.),smoothstep(.68,.82,y));return mix(c,vec3(.64,.67,.71),smoothstep(.82,1.,y));}',
+    // or satiné : même dégradé, sans pavé de diamants
+    'vec3 goldRamp(float y){vec3 c=mix(vec3(1.,.95,.8),vec3(1.,.78,.45),smoothstep(0.,.38,y));c=mix(c,vec3(.9,.66,.22),smoothstep(.38,.5,y));c=mix(c,vec3(.56,.37,.1),smoothstep(.5,.56,y));c=mix(c,vec3(.93,.76,.43),smoothstep(.56,.75,y));return mix(c,vec3(1.,.9,.64),smoothstep(.75,1.,y));}',
+    'vec3 shade(float m,vec4 c,vec3 N,vec3 Ns,vec3 L,vec3 L2,vec3 H,float lum,float lumb,float dia,vec2 cell,float edge){',
+    ' if(m<.5){',                                                  // or d'origine + diamants
+    '  float d=max(dot(N,L),0.),d2=max(dot(N,L2),0.);',
+    '  float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
+    '  float r=hash(cell);',
+    '  float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.55,r);',
+    '  vec3 gold=vec3(1.,.82,.48);',
+    '  return c.rgb*(.55+.7*d+.14*d2)+s*mix(gold*1.5,vec3(1.4),dia)*(1.+.8*dia)+tw*vec3(1.,.97,.9)*1.6;',
+    ' }',
+    ' float d=max(dot(Ns,L),0.),d2=max(dot(Ns,L2),0.),rim=clamp(1.-Ns.z,0.,1.);',
+    ' if(m<1.5){',                                                 // chrome lisse
+    '  float s=pow(max(dot(Ns,H),0.),30.);',
+    '  float fl=step(uK,3.);',                                       // « La coupe de gala » : lettres fines, chrome clair et lisible
+    '  vec3 col=mix(chromeRamp(clamp(v.y,0.,1.)),vec3(.93,.95,.98),fl*.75)*(.84+.3*d+.1*d2)+s*1.35+rim*vec3(.7,.76,.86)*.42;',
+    '  return col*(.93+.1*lumb)*(1.-edge*.64*(1.-fl*.6));',
+    ' }',
+    ' float s=pow(max(dot(Ns,H),0.),16.);',                         // or satiné
+    ' float fg=step(uK,3.);',
+    ' return (mix(goldRamp(clamp(v.y,0.,1.)),vec3(1.,.86,.55),fg*.7)*(.8+.32*d+.08*d2)*(.93+.1*lumb)+s*vec3(1.,.9,.7)*.62+rim*vec3(1.,.84,.5)*.24)*(1.-edge*.56*(1.-fg*.6));',
+    '}',
     'void main(){',
     ' vec4 c=texture2D(uC,v); if(c.a<.01){gl_FragColor=vec4(0.);return;}',
     ' vec3 n=texture2D(uN,v).rgb; vec2 g=(n.rg-.5)*2.;',
     ' vec3 N=normalize(vec3(-g.x*uK,-g.y*uK,1.));',
+    // normale et couleur adoucies : le pavé de diamants disparaît, il reste un biseau propre
+    ' vec2 o=uTx*1.3, oc=uTx*2.4, oe=uTx*2.2;',
+    ' vec3 nb=(n+texture2D(uN,v+vec2(o.x,0.)).rgb+texture2D(uN,v-vec2(o.x,0.)).rgb+texture2D(uN,v+vec2(0.,o.y)).rgb+texture2D(uN,v-vec2(0.,o.y)).rgb)/5.;',
+    ' vec2 gb=(nb.rg-.5)*2.; vec3 Ns=normalize(vec3(-gb.x*uK*.8,-gb.y*uK*.8,1.));',
+    ' vec3 cb=(c.rgb+texture2D(uC,v+vec2(oc.x,0.)).rgb+texture2D(uC,v-vec2(oc.x,0.)).rgb+texture2D(uC,v+vec2(0.,oc.y)).rgb+texture2D(uC,v-vec2(0.,oc.y)).rgb)/5.;',
+    // contour gravé : là où l'alpha retombe, le métal s'assombrit (lettres nettes comme sur l'affiche)
+    ' float ea=min(min(texture2D(uC,v+vec2(oe.x,0.)).a,texture2D(uC,v-vec2(oe.x,0.)).a),min(texture2D(uC,v+vec2(0.,oe.y)).a,texture2D(uC,v-vec2(0.,oe.y)).a));',
+    ' float edge=clamp(1.-ea,0.,1.);',
     ' vec3 L=normalize(vec3((uL.x-v.x)*uAsp,(uL.y-v.y),uL.z));',
-    ' vec3 L2=normalize(vec3(-.6,.9,.5));',                       // lumière d'appoint, en bas à gauche
+    ' vec3 L2=normalize(vec3(-.6,.9,.5));',
     ' vec3 H=normalize(L+vec3(0.,0.,1.));',
-    ' float lum=dot(c.rgb,vec3(.299,.587,.114));',
-    ' float dia=smoothstep(.62,.9,lum);',                          // zones « diamant » (claires)
-    ' float d=max(dot(N,L),0.), d2=max(dot(N,L2),0.);',
-    ' float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
-    ' vec2 cell=floor(v*uCells); float r=hash(cell);',
-    ' float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.55,r);',  // éclats des diamants
-    ' vec3 gold=vec3(1.,.82,.48);',
-    ' vec3 base=c.rgb*(.55+.7*d+.14*d2);',
-    ' vec3 spec=s*mix(gold*1.5,vec3(1.4),dia)*(1.+.8*dia);',
-    ' vec3 col=base+spec+tw*vec3(1.,.97,.9)*1.6;',
+    ' float lum=dot(c.rgb,vec3(.299,.587,.114)), lumb=dot(cb,vec3(.299,.587,.114));',
+    ' float dia=smoothstep(.62,.9,lum);',
+    ' vec2 cell=floor(v*uCells);',
+    ' vec3 col=mix(shade(uM,c,N,Ns,L,L2,H,lum,lumb,dia,cell,edge),shade(uM2,c,N,Ns,L,L2,H,lum,lumb,dia,cell,edge),uX);',
     ' gl_FragColor=vec4(col*c.a,c.a);',
     '}'].join('\n');
   var GL_OK=true;
@@ -941,7 +977,8 @@ html,body{overflow-x:hidden}
     return Promise.all([loadImg(L.src),loadImg(L.src.replace('.webp','-n.webp'))]).then(function(im){
       tex(im[0],0);tex(im[1],1);
       L.gl=gl;L.nat=[im[0].naturalWidth,im[0].naturalHeight];
-      L.u={C:gl.getUniformLocation(pr,'uC'),N:gl.getUniformLocation(pr,'uN'),L:gl.getUniformLocation(pr,'uL'),asp:gl.getUniformLocation(pr,'uAsp'),T:gl.getUniformLocation(pr,'uT'),K:gl.getUniformLocation(pr,'uK'),cells:gl.getUniformLocation(pr,'uCells')};
+      L.u={C:gl.getUniformLocation(pr,'uC'),N:gl.getUniformLocation(pr,'uN'),L:gl.getUniformLocation(pr,'uL'),asp:gl.getUniformLocation(pr,'uAsp'),T:gl.getUniformLocation(pr,'uT'),K:gl.getUniformLocation(pr,'uK'),cells:gl.getUniformLocation(pr,'uCells'),M:gl.getUniformLocation(pr,'uM'),M2:gl.getUniformLocation(pr,'uM2'),X:gl.getUniformLocation(pr,'uX'),tx:gl.getUniformLocation(pr,'uTx')};
+      gl.uniform2f(L.u.tx,1/L.nat[0],1/L.nat[1]);
       gl.uniform1i(L.u.C,0);gl.uniform1i(L.u.N,1);
       gl.uniform2f(L.u.cells,L.nat[0]/9,L.nat[1]/9);
       gl.uniform1f(L.u.K,L.key==='sub'?2.:4.2);
@@ -960,6 +997,7 @@ html,body{overflow-x:hidden}
     gl.uniform3f(L.u.L,(lx-r.left)/r.width,(ly-r.top)/r.height,lz/r.height);
     gl.uniform1f(L.u.asp,r.width/r.height);
     gl.uniform1f(L.u.T,t);
+    gl.uniform1f(L.u.M,modeFor(heroPrev,L.key));gl.uniform1f(L.u.M2,modeFor(HERO,L.key));gl.uniform1f(L.u.X,eio(heroMix));
     gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   }
@@ -967,7 +1005,7 @@ html,body{overflow-x:hidden}
   /* ── Préface : logo Boxing Center en relief sur le marbre ── */
   var PF={cv:$('pfMat'),src:'image/intro/pf-logo.webp',el:$('pfLy'),key:'pf'};
   (function(){ var lg=$('pfLogo'), html=''; var n=small?3:4;
-    for(var e=n;e>=1;e--){var f=e/n; html+='<img class="ex" src="image/intro/pf-logo-wall.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ('+(-e*3.4).toFixed(1)+'px);filter:brightness('+(1-.55*f).toFixed(2)+')">';}
+    for(var e=n;e>=1;e--){var f=e/n; html+='<img class="ex" src="image/intro/pf-logo-wall.webp" alt="" style="position:absolute;inset:0;width:100%;height:100%;transform:translateZ('+(-e*3.4).toFixed(1)+'px);filter:var(--exf,saturate(1)) brightness('+(1-.55*f).toFixed(2)+')">';}
     lg.insertAdjacentHTML('afterbegin',html); lg.insertBefore($('pfShadow'),lg.firstChild);
   })();
   try{ setupGL(PF).catch(function(){}) }catch(e){}
@@ -1029,7 +1067,7 @@ html,body{overflow-x:hidden}
       var tw=.35+.65*Math.pow(Math.max(0,Math.sin(t*p.sp+p.ph)),3);
       var a=tw*(dark>.5?.55:.85)*fadeOut;
       // dans la salle : braises rouges côté coin rouge, étincelles bleues côté coin bleu (comme l'affiche)
-      var col=p.gold?(dark>.5?(p.x<.5?'255,96,64':'110,165,255'):'184,134,48'):(dark>.5?'255,236,220':'150,150,160');
+      var col=p.gold?(dark>.5?(p.x<.5?'255,96,64':'110,165,255'):(HERO==='or'||HERO==='satin'?'184,134,48':'128,136,150')):(dark>.5?'255,236,220':'150,150,160');
       var X=p.x*w,Y=p.y*h,S=p.s*(dark>.5?1.1:1);
       dctx.fillStyle='rgba('+col+','+a.toFixed(3)+')';
       dctx.beginPath();dctx.arc(X,Y,S,0,6.283);dctx.fill();
@@ -1053,12 +1091,12 @@ html,body{overflow-x:hidden}
     lkShadow.style.transform='translate3d('+((cx-light.x)*.07).toFixed(1)+'px,'+(18+(cy-light.y)*.05).toFixed(1)+'px,-170px) scale(1.12)';
   }
 
-  /* Géométrie du logo à l'écran */
+  /* Géométrie du logo à l'écran : un peu au-dessus du centre (retour du coach : trop haut, trop de vide en bas) */
   function geo(vw,vh){
     var narrow=vw<=760||vw/vh<=1;
     var W=narrow?vw*.86:Math.min(vw*.84,1250,vh*1.5);
     var H=W*739/2129;
-    var top=narrow?Math.max(72,vh*.24):Math.max(64,vh*.08);
+    var top=narrow?Math.max(72,vh*.43-H/2):Math.max(64,vh*.44-H/2);
     return {W:W,H:H,top:top,left:(vw-W)/2};
   }
 
@@ -1066,6 +1104,22 @@ html,body{overflow-x:hidden}
   var tilt={x:0,y:0,tx:0,ty:0,has:false};
   addEventListener('pointermove',function(e){tilt.has=true;tilt.tx=(e.clientY/innerHeight-.5);tilt.ty=(e.clientX/innerWidth-.5)});
   addEventListener('pointerleave',function(){tilt.has=false});
+  // Téléphone : le gyroscope pilote la même inclinaison et la même lumière que la souris sur ordinateur
+  var gyro={x:0,y:0,on:false,b0:null}; window.BTGyro=gyro;
+  function onOri(e){
+    if(e.beta==null)return;
+    if(gyro.b0==null)gyro.b0=e.beta;
+    gyro.b0+=(e.beta-gyro.b0)*.004;                     // la position de repos suit doucement la main
+    gyro.x=Math.max(-1,Math.min(1,(e.beta-gyro.b0)/28));
+    gyro.y=Math.max(-1,Math.min(1,(e.gamma||0)/28));
+    gyro.on=true; tilt.has=true; tilt.tx=gyro.x*.5; tilt.ty=gyro.y*.5;
+  }
+  function startGyro(){ if(startGyro.done)return; startGyro.done=true; addEventListener('deviceorientation',onOri); }
+  if(!matchMedia('(pointer: fine)').matches&&'DeviceOrientationEvent' in window){
+    if(typeof DeviceOrientationEvent.requestPermission==='function'){
+      addEventListener('touchend',function ask(){ removeEventListener('touchend',ask); DeviceOrientationEvent.requestPermission().then(function(r){ if(r==='granted')startGyro(); }).catch(function(){}); });
+    } else startGyro();
+  }
 
   /* ── Affiches ── */
   var TITLES=['VICTOIRE','COIN ROUGE','PIED-POING','LE DIRECT','RESPECT','COIN BLEU','ROUND 3','L’ESQUIVE','HIGH KICK'];
@@ -1196,6 +1250,7 @@ html,body{overflow-x:hidden}
     frozen=false;
 
     /* 1. chargement */
+    if(heroMix<1)heroMix=Math.min(1,heroMix+.028);
     preface(t,vw,vh); drawDust(t);
     if(t>T.load+.4&&!stage.classList.contains('on'))stage.classList.add('on');
 
@@ -1259,7 +1314,24 @@ html,body{overflow-x:hidden}
   addEventListener('scroll',function(){ if(frozen&&scrollY/innerHeight<.98){ frozen=false; lastP=-1; requestAnimationFrame(frame); } },{passive:true});
   addEventListener('resize',function(){ if(frozen){ lastP=-1; applyScroll(1,innerHeight); } });
   // Un clic pendant l'intro la fait passer
-  addEventListener('click',function(){ if(!done) start=performance.now()-T.end*1000; });
+  addEventListener('click',function(e){ if(!done&&!(e.target.closest&&e.target.closest('.hero-revue'))) start=performance.now()-T.end*1000; });
+
+  /* Sélecteur de finition, pour comparer en direct (mode revue : ?revue dans l'adresse, mémorisé) */
+  var revue=/[?&]revue\b/.test(location.search); try{ if(revue)localStorage.setItem('bt20-revue','1'); else revue=localStorage.getItem('bt20-revue')==='1'; }catch(e){}
+  if(revue){
+    var box=document.createElement('div'); box.className='hero-revue'; box.setAttribute('role','group'); box.setAttribute('aria-label','Finition du logo');
+    box.innerHTML='<span>Finition du logo</span>'+[['chrome-or','Chrome · coupe or'],['satin','Or satiné'],['chrome','Tout chrome'],['or',"Or d'origine"]].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
+    document.body.appendChild(box);
+    var mark=function(){[].forEach.call(box.querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',b.getAttribute('data-v')===HERO?'true':'false')})};
+    mark();
+    box.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b)return; var v=b.getAttribute('data-v'); if(v===HERO)return;
+      heroPrev=HERO; HERO=v; heroMix=0; document.documentElement.setAttribute('data-hero',v);
+      try{localStorage.setItem('bt20-hero',v)}catch(err){}
+      mark(); if(frozen){frozen=false;lastP=-1;requestAnimationFrame(frame);}
+    });
+    addEventListener('scroll',function(){ box.classList.toggle('is-away',scrollY>innerHeight*.7); },{passive:true});
+  }
 })();
 </script>
 
@@ -1272,11 +1344,11 @@ html,body{overflow-x:hidden}
 <script src="registration-gate.js"></script>
 <script src="home-combats.js"></script>
 <script src="licence-gate.js?v=3"></script>
-<script src="pass.js?v=2" defer></script>
+<script src="pass.js?v=3" defer></script>
 <script src="app.js?v=12"></script>
 <script src="gallery.js?v=2"></script>
-<script src="smoke.js?v=1"></script>
-<script src="night.js?v=3"></script>
+<script src="smoke.js?v=3"></script>
+<script src="night.js?v=4"></script>
 <script>
   // Masque l'indication « Découvrir la soirée » dès qu'on défile
   addEventListener('scroll', function () {

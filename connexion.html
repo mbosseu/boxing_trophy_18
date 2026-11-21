@@ -6,15 +6,17 @@
   <title>Mon espace combattant — Boxing Trophy 20</title>
   <meta name="description" content="Connecte-toi à ton espace TrophyRec pour compléter ta fiche : surnom, photo, garde, salle Boxing Center et coach. Le palmarès reste officiel." />
   <meta name="robots" content="noindex" />
-  <meta name="theme-color" content="#0a0807" />
+  <meta name="theme-color" content="#05060b" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Boldonse&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" />
   <link rel="stylesheet" href="/trophyrec.css?v=3" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/night-pages.css?v=1" />
   <link rel="icon" type="image/png" href="/image/logo_boxing_center.png" />
 </head>
-<body>
-  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<body data-smoke="0,.72">
+  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><canvas class="smoke" id="smoke"></canvas></div>
 
   <header class="tr-top">
     <a class="tr-brand" href="/"><img src="/image/logo_boxing_center.png" alt="" width="30" height="30" /><span><b>Boxing Trophy <span>20</span></b><small>TrophyRec</small></span></a>
@@ -74,5 +76,6 @@
   <script src="/supabase-config.js"></script>
   <script src="/trophyrec.js"></script>
   <script src="/trophyrec-account.js?v=4"></script>
+  <script src="/smoke.js?v=3" defer></script>
 </body>
 </html>

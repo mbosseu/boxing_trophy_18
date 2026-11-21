@@ -22,14 +22,19 @@
       if (vs && !phone.matches) {
         var rv = vs.getBoundingClientRect();
         vs.style.setProperty('--vp', eo(cl((vh * 1.02 - rv.top) / (vh * .75))).toFixed(3));
+      } else if (vs) {                // téléphone : chaque coin arrive de son côté, le badge VS tourne et tombe entre les deux
+        vsSides.forEach(function (sd) { var r = sd.getBoundingClientRect(); sd.style.setProperty('--pp', eo(cl((vh * 1.02 - r.top) / (vh * .6))).toFixed(3)); });
+        if (vsBadge) { var rb = vsBadge.getBoundingClientRect(); vs.style.setProperty('--vp', eo(cl((vh * .98 - rb.top) / (vh * .4))).toFixed(3)); }
       }
-      if (week && !phone.matches) {   // les trois affiches sortent de la pile et se déploient
+      if (week) {                     // les trois affiches sortent de la pile et se déploient (ordinateur et téléphone)
         var rw = week.getBoundingClientRect();
-        week.style.setProperty('--wp', eo(cl((vh * 1.05 - rw.top) / (vh * .7))).toFixed(3));
+        week.style.setProperty('--wp', eo(cl((vh * 1.05 - rw.top) / (vh * (phone.matches ? .55 : .7)))).toFixed(3));
       }
     });
   }
   var week = document.querySelector('[data-week]');
+  var vsSides = vs ? Array.prototype.slice.call(vs.querySelectorAll('.vs-side')) : [];
+  var vsBadge = vs ? vs.querySelector('.vs-badge') : null;
   if (!reduce) { addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); onScroll(); }
   else { if (screen) screen.style.setProperty('--cp', 1); if (vs) vs.style.setProperty('--vp', 1); }
 
@@ -81,6 +86,25 @@
       wio.observe(week);
     }
     stage.addEventListener('scroll', flow, { passive: true });
+    if (!matchMedia('(pointer: fine)').matches && !reduce) {
+      var wkIn = false;
+      if ('IntersectionObserver' in window) new IntersectionObserver(function (en) { wkIn = en[0].isIntersecting; if (wkIn) requestAnimationFrame(gyroLoop); }, { threshold: .1 }).observe(week);
+      var gyroLoop = function () {
+        if (!wkIn) return;
+        var g = window.BTGyro;
+        if (g && g.on) {
+          week.classList.add('has-gyro');
+          var posters = week.querySelectorAll('.wk-poster');
+          for (var i = 0; i < posters.length; i++) {
+            posters[i].style.setProperty('--tx', (-g.x * 9).toFixed(2) + 'deg');
+            posters[i].style.setProperty('--ty', (g.y * 13).toFixed(2) + 'deg');
+            posters[i].style.setProperty('--gx', (50 + g.y * 45).toFixed(1) + '%');
+            posters[i].style.setProperty('--gy', (40 + g.x * 40).toFixed(1) + '%');
+          }
+        }
+        requestAnimationFrame(gyroLoop);
+      };
+    }
     addEventListener('resize', function () { if (phone.matches) centerOn(1, false); flow(); });
     tabs.forEach(function (t) { t.addEventListener('click', function () { centerOn(parseInt(t.getAttribute('data-wk-go'), 10), !reduce); }); });
     if (phone.matches) centerOn(1, false);   // sur téléphone, on arrive sur le samedi
