@@ -34,9 +34,11 @@
     @media (max-width: 960px) { .lc-grid { grid-template-columns: 1fr; } .lc-side { position: static; } }
     @media (max-width: 560px) { .lc-steps > li { padding: 62px 18px 18px; } .lc-steps > li::before { top: 18px; left: 18px; } }
   </style>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,700;1,800&family=Barlow:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="/night-pages.css?v=1" />
 </head>
-<body>
-  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<body data-smoke="0,.72">
+  <div class="tr-bg" aria-hidden="true"><i></i><i></i><i></i><i></i><canvas class="smoke" id="smoke"></canvas></div>
 
   <header class="tr-top">
     <a class="tr-brand" href="/"><img src="/image/logo_boxing_center.png" alt="" width="30" height="30" /><span><b>Boxing Trophy <span>20</span></b><small>Licence FFBoxe</small></span></a>
@@ -123,5 +125,6 @@
     <span>Boxing Trophy 20 · Samedi 12 décembre 2026 · Garage Moteka, Fenouillet</span>
     <span><a href="/">Accueil</a><a href="/#licence">Inscription combat</a><a href="/classement">TrophyRec</a></span>
   </footer>
+  <script src="/smoke.js?v=3" defer></script>
 </body>
 </html>
