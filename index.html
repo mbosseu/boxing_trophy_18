@@ -137,7 +137,7 @@ html,body{overflow-x:hidden}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
 <link rel="stylesheet" href="gala.css?v=6">
-<link rel="stylesheet" href="night.css?v=18">
+<link rel="stylesheet" href="night.css?v=19">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
 <meta name="theme-color" content="#05060b">
@@ -864,14 +864,10 @@ html,body{overflow-x:hidden}
 (function(){
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var $=function(id){return document.getElementById(id)};
-  /* ── Finition du logo (retour du coach : trop « bling-bling ») ──
-     chrome-or : lettres chromées, coupe en or satiné (par défaut) · satin : or satiné sans diamants
-     chrome : tout chromé · or : l'or d'origine. ?hero=… pour forcer, ?revue pour afficher le sélecteur. */
-  var HV=['or','or-doux','chrome-or','satin','chrome'];
-  var REVUE=/[?&]revue\b/.test(location.search);
-  var HERO=(location.search.match(/[?&]hero=([a-z-]+)/)||[])[1];
-  if(HV.indexOf(HERO)<0&&REVUE){try{HERO=localStorage.getItem('bt20-hero')}catch(e){HERO=null}}
-  if(HV.indexOf(HERO)<0)HERO='or';   // par défaut : l'or d'origine (validé par Eddy) ; les autres finitions ne servent qu'à comparer
+  /* ── Finition du logo du hero : tout chrome (choix d'Eddy le 22/11/2026, après le retour du coach « trop bling-bling »).
+     Lettres et coupe chromées, diamants gardés, lisibilité d'origine (le shader recolore la luminance d'origine).
+     Le logo or du pied de page n'est pas concerné. */
+  var HERO='chrome';
   var heroPrev=HERO, heroMix=1;
   document.documentElement.setAttribute('data-hero',HERO);
   function modeFor(v,key){ if(v==='or')return 0; if(v==='or-doux')return 3; var cup=key==='trophy'; if(v==='satin')return cup?3:2; if(v==='chrome')return cup?4:1; return cup?3:1; }
@@ -1325,23 +1321,8 @@ html,body{overflow-x:hidden}
   addEventListener('scroll',function(){ if(frozen&&scrollY/innerHeight<.98){ frozen=false; lastP=-1; requestAnimationFrame(frame); } },{passive:true});
   addEventListener('resize',function(){ if(frozen){ lastP=-1; applyScroll(1,innerHeight); } });
   // Un clic pendant l'intro la fait passer
-  addEventListener('click',function(e){ if(!done&&!(e.target.closest&&e.target.closest('.hero-revue'))) start=performance.now()-T.end*1000; });
+  addEventListener('click',function(){ if(!done) start=performance.now()-T.end*1000; });
 
-  /* Sélecteur de finition, pour comparer en direct (mode revue : ?revue dans l'adresse, mémorisé) */
-  if(REVUE){
-    var box=document.createElement('div'); box.className='hero-revue'; box.setAttribute('role','group'); box.setAttribute('aria-label','Finition du logo');
-    box.innerHTML='<span>Finition du logo</span>'+[['or',"Or d'origine"],['or-doux','Or adouci'],['chrome-or','Chrome · coupe or'],['satin','Or satiné'],['chrome','Tout chrome']].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
-    document.body.appendChild(box);
-    var mark=function(){[].forEach.call(box.querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',b.getAttribute('data-v')===HERO?'true':'false')})};
-    mark();
-    box.addEventListener('click',function(e){
-      var b=e.target.closest('button'); if(!b)return; var v=b.getAttribute('data-v'); if(v===HERO)return;
-      heroPrev=HERO; HERO=v; heroMix=0; document.documentElement.setAttribute('data-hero',v);
-      try{localStorage.setItem('bt20-hero',v)}catch(err){}
-      mark(); if(frozen){frozen=false;lastP=-1;requestAnimationFrame(frame);}
-    });
-    addEventListener('scroll',function(){ box.classList.toggle('is-away',scrollY>innerHeight*.7); },{passive:true});
-  }
 })();
 </script>
 
