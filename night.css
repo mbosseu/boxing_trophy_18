@@ -746,13 +746,13 @@ body { font-family: Barlow, Geist, system-ui, sans-serif; }
 
 /* ─────────── Hero : finitions du logo (retour du coach : moins « bling-bling ») ───────────
    La matière est calculée dans le shader du hero (uM/uM2/uX). Ici : ce qui l'accompagne. */
-html:not([data-hero="or"]):not([data-hero="or-doux"]) .lk .sp { display: none; }   /* finitions chrome/satin : pas d'étoiles */
-/* Or adouci : les mêmes diamants, une étoile sur deux, plus discrète ; halo plus doux */
-html[data-hero="or-doux"] .lk.live .sp { opacity: .5; }
-html[data-hero="or-doux"] .lk .sp:nth-of-type(2n) { display: none; }
-html[data-hero="or-doux"] .lk-halo { filter: saturate(.75) brightness(.72); }
+/* Étoiles : sur les lettres, seulement l'or d'origine ; sur la coupe, une sur trois, discrètes (moins brillante) */
+html:not([data-hero="or"]) .lk .ly:not(.ly-trophy) .sp { display: none; }
+html:not([data-hero="or"]) .lk .ly-trophy .sp:not(:nth-of-type(3n)) { display: none; }
+html:not([data-hero="or"]) .lk.live .ly-trophy .sp { opacity: .4; }
+html[data-hero="or-doux"] .lk-halo { filter: saturate(.7) brightness(.6); }
 html[data-hero="chrome-or"], html[data-hero="chrome"] { --exf: grayscale(1) contrast(1.12) brightness(1.06); }
-html[data-hero="chrome-or"] .ly-trophy { --exf: saturate(.78) brightness(1.02); }   /* la coupe reste en or (l'or = le trophée) */
+html[data-hero="chrome-or"] .ly-trophy, html[data-hero="satin"] .ly-trophy { --exf: saturate(1); }   /* la coupe garde son or serti */
 html[data-hero="satin"] { --exf: saturate(.72) brightness(1.04); }
 html[data-hero="chrome-or"] .lk-halo, html[data-hero="chrome"] .lk-halo {
   background: radial-gradient(closest-side, rgba(255, 255, 255, .14), rgba(140, 160, 255, .07) 55%, transparent); }

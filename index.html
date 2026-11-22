@@ -137,7 +137,7 @@ html,body{overflow-x:hidden}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
 <link rel="stylesheet" href="gala.css?v=6">
-<link rel="stylesheet" href="night.css?v=17">
+<link rel="stylesheet" href="night.css?v=18">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
 <meta name="theme-color" content="#05060b">
@@ -874,7 +874,7 @@ html,body{overflow-x:hidden}
   if(HV.indexOf(HERO)<0)HERO='or';   // par défaut : l'or d'origine (validé par Eddy) ; les autres finitions ne servent qu'à comparer
   var heroPrev=HERO, heroMix=1;
   document.documentElement.setAttribute('data-hero',HERO);
-  function modeFor(v,key){ if(v==='or')return 0; if(v==='or-doux')return 3; if(v==='satin')return 2; if(v==='chrome')return 1; return key==='trophy'?2:1; }
+  function modeFor(v,key){ if(v==='or')return 0; if(v==='or-doux')return 3; var cup=key==='trophy'; if(v==='satin')return cup?3:2; if(v==='chrome')return cup?4:1; return cup?3:1; }
   function cl(v){return v<0?0:v>1?1:v}
   function eo(t){return 1-Math.pow(1-t,3)}
   function eio(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
@@ -921,33 +921,35 @@ html,body{overflow-x:hidden}
     'vec3 chromeRamp(float y){vec3 c=mix(vec3(1.),vec3(.95,.96,.98),smoothstep(0.,.28,y));c=mix(c,vec3(.71,.74,.78),smoothstep(.28,.45,y));c=mix(c,vec3(.27,.31,.35),smoothstep(.45,.5,y));c=mix(c,vec3(.5,.54,.58),smoothstep(.5,.55,y));c=mix(c,vec3(.88,.9,.92),smoothstep(.55,.68,y));c=mix(c,vec3(1.),smoothstep(.68,.82,y));return mix(c,vec3(.64,.67,.71),smoothstep(.82,1.,y));}',
     // or satiné : même dégradé, sans pavé de diamants
     'vec3 goldRamp(float y){vec3 c=mix(vec3(1.,.95,.8),vec3(1.,.78,.45),smoothstep(0.,.38,y));c=mix(c,vec3(.9,.66,.22),smoothstep(.38,.5,y));c=mix(c,vec3(.56,.37,.1),smoothstep(.5,.56,y));c=mix(c,vec3(.93,.76,.43),smoothstep(.56,.75,y));return mix(c,vec3(1.,.9,.64),smoothstep(.75,1.,y));}',
-    'vec3 shade(float m,vec4 c,vec3 N,vec3 Ns,vec3 L,vec3 L2,vec3 H,float lum,float lumb,float dia,vec2 cell,float edge){',
-    ' if(m>2.5){',                                                 // or adouci : mêmes diamants, moins de brillance
-    '  float d=max(dot(N,L),0.),d2=max(dot(N,L2),0.);',
-    '  float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
-    '  float r=hash(cell);',
-    '  float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.82,r);',
-    '  vec3 gold=vec3(1.,.82,.48);',
-    '  return c.rgb*(.6+.58*d+.12*d2)+s*mix(gold*1.5,vec3(1.4),dia)*(1.+.8*dia)*.48+tw*vec3(1.,.97,.9)*.62;',
-    ' }',
-    ' if(m<.5){',                                                  // or d'origine + diamants
-    '  float d=max(dot(N,L),0.),d2=max(dot(N,L2),0.);',
-    '  float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
-    '  float r=hash(cell);',
+    'vec3 shade(float m,vec4 c,vec3 N,vec3 Ns,vec3 L,vec3 L2,vec3 H,float lum,float lumb,vec3 cb,float dia,vec2 cell,float edge){',
+    ' float d=max(dot(N,L),0.),d2=max(dot(N,L2),0.);',
+    ' float s=pow(max(dot(N,H),0.),mix(22.,110.,dia));',
+    ' float r=hash(cell);',
+    ' vec3 gold=vec3(1.,.82,.48);',
+    ' if(m<.5){',                                                   // 0 · or d'origine + diamants
     '  float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.55,r);',
-    '  vec3 gold=vec3(1.,.82,.48);',
     '  return c.rgb*(.55+.7*d+.14*d2)+s*mix(gold*1.5,vec3(1.4),dia)*(1.+.8*dia)+tw*vec3(1.,.97,.9)*1.6;',
     ' }',
-    ' float d=max(dot(Ns,L),0.),d2=max(dot(Ns,L2),0.),rim=clamp(1.-Ns.z,0.,1.);',
-    ' if(m<1.5){',                                                 // chrome lisse
-    '  float s=pow(max(dot(Ns,H),0.),30.);',
-    '  float fl=step(uK,3.);',                                       // « La coupe de gala » : lettres fines, chrome clair et lisible
-    '  vec3 col=mix(chromeRamp(clamp(v.y,0.,1.)),vec3(.93,.95,.98),fl*.75)*(.84+.3*d+.1*d2)+s*1.35+rim*vec3(.7,.76,.86)*.42;',
-    '  return col*(.93+.1*lumb)*(1.-edge*.64*(1.-fl*.6));',
+    ' float face=smoothstep(.42,.72,lumb);',                         // les faces serties (le pavé), pas les contours
+    ' if(m>2.5&&m<3.5){',                                            // 3 · or adouci : mêmes diamants, nettement moins de brillance
+    '  vec3 base=mix(c.rgb,cb,face*.4);',                            // le scintillement du pavé est calmé, les pierres restent visibles
+    '  float tw=pow(max(0.,sin(uT*(1.3+r*2.6)+r*60.)),30.)*dia*step(.9,r);',
+    '  return base*(.62+.5*d+.1*d2)+s*mix(gold*1.2,vec3(1.1),dia)*.28+tw*vec3(1.,.97,.9)*.4;',
     ' }',
-    ' float s=pow(max(dot(Ns,H),0.),16.);',                         // or satiné
-    ' float fg=step(uK,3.);',
-    ' return (mix(goldRamp(clamp(v.y,0.,1.)),vec3(1.,.86,.55),fg*.7)*(.8+.32*d+.08*d2)*(.93+.1*lumb)+s*vec3(1.,.9,.7)*.62+rim*vec3(1.,.84,.5)*.24)*(1.-edge*.56*(1.-fg*.6));',
+    // métaux qui gardent la lecture d'origine : on recolore la luminance d'origine (contours sombres, faces claires),
+    // les faces sont lissées pour enlever le pavé sur les lettres ; m=4 garde les diamants (la coupe en chrome)
+    ' float sm=m>3.5?0.:.8;',
+    ' float Ls=mix(lum,lumb,face*sm);',
+    ' float k=smoothstep(.05,.85,Ls);',
+    ' float sp=pow(max(dot(N,H),0.),36.);',
+    ' if(m<1.5||m>3.5){',                                            // 1 · chrome (lettres) · 4 · chrome serti (coupe)
+    '  vec3 col=mix(vec3(.04,.05,.07),vec3(.97,.98,1.),k);',
+    '  col*=mix(1.,.84+.26*chromeRamp(clamp(v.y,0.,1.)).r,face*.5);',
+    '  col=col*(.8+.3*d+.08*d2)+sp*(m>3.5?.3:.75)*face;',
+    '  return col*(1.-edge*.45);',
+    ' }',
+    ' vec3 g=mix(mix(vec3(.13,.07,.02),vec3(.86,.6,.2),smoothstep(0.,.55,k)),vec3(1.,.9,.62),smoothstep(.55,1.,k));',  // 2 · or satiné
+    ' return (g*(.8+.3*d+.08*d2)+sp*vec3(1.,.9,.7)*.4*face)*(1.-edge*.4);',
     '}',
     'void main(){',
     ' vec4 c=texture2D(uC,v); if(c.a<.01){gl_FragColor=vec4(0.);return;}',
@@ -967,7 +969,7 @@ html,body{overflow-x:hidden}
     ' float lum=dot(c.rgb,vec3(.299,.587,.114)), lumb=dot(cb,vec3(.299,.587,.114));',
     ' float dia=smoothstep(.62,.9,lum);',
     ' vec2 cell=floor(v*uCells);',
-    ' vec3 col=mix(shade(uM,c,N,Ns,L,L2,H,lum,lumb,dia,cell,edge),shade(uM2,c,N,Ns,L,L2,H,lum,lumb,dia,cell,edge),uX);',
+    ' vec3 col=mix(shade(uM,c,N,Ns,L,L2,H,lum,lumb,cb,dia,cell,edge),shade(uM2,c,N,Ns,L,L2,H,lum,lumb,cb,dia,cell,edge),uX);',
     ' gl_FragColor=vec4(col*c.a,c.a);',
     '}'].join('\n');
   var GL_OK=true;
@@ -1328,7 +1330,7 @@ html,body{overflow-x:hidden}
   /* Sélecteur de finition, pour comparer en direct (mode revue : ?revue dans l'adresse, mémorisé) */
   if(REVUE){
     var box=document.createElement('div'); box.className='hero-revue'; box.setAttribute('role','group'); box.setAttribute('aria-label','Finition du logo');
-    box.innerHTML='<span>Finition du logo</span>'+[['or',"Or d'origine"],['or-doux','Or adouci']].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
+    box.innerHTML='<span>Finition du logo</span>'+[['or',"Or d'origine"],['or-doux','Or adouci'],['chrome-or','Chrome · coupe or'],['satin','Or satiné'],['chrome','Tout chrome']].map(function(o){return '<button type="button" data-v="'+o[0]+'">'+o[1]+'</button>'}).join('');
     document.body.appendChild(box);
     var mark=function(){[].forEach.call(box.querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',b.getAttribute('data-v')===HERO?'true':'false')})};
     mark();
