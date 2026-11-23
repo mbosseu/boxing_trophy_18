@@ -4,7 +4,7 @@
     window.__ENV__ = window.__ENV__ || {};
     try {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', 'env.js', false);
+        xhr.open('GET', '/env.js', false); // chemin absolu : marche aussi sur /boxeur/nom
         xhr.send(null);
         if (xhr.status >= 200 && xhr.status < 300 && xhr.responseText) {
             // eslint-disable-next-line no-new-func
