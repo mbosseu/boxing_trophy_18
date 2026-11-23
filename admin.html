@@ -548,6 +548,11 @@
                         <h3 id="t19DlgTitle" style="margin:0 0 6px;">Décision du combat</h3>
                         <p id="t19DlgFighters" style="margin:0;font-size:14px;"></p>
                     </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <label>Coin 1 <select id="t19F1" class="form-select"></select></label>
+                        <label>Coin 2 <select id="t19F2" class="form-select"></select></label>
+                    </div>
+                    <p id="t19OppNote" style="margin:-6px 0 0;font-size:12px;color:var(--gold);" hidden>Adversaire modifié : la carte du Trophy 19 sera corrigée à l'enregistrement.</p>
                     <fieldset style="border:0;padding:0;margin:0;display:grid;gap:8px;">
                         <legend style="font-size:13px;color:var(--text-dim);margin-bottom:6px;">Résultat</legend>
                         <label style="display:flex;gap:10px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.12);border-radius:10px;cursor:pointer;"><input type="radio" name="t19Res" value="a_win"> <span id="t19ResA">Victoire coin 1</span></label>
@@ -1161,6 +1166,6 @@ create policy "Accès public total" on match_metadata
     <script src="trophyrec.js"></script>
     <script src="admin.js?v=26"></script>
     <script src="admin-trophyrec.js?v=5"></script>
-    <script src="admin-t19.js?v=5"></script>
+    <script src="admin-t19.js?v=6"></script>
 </body>
 </html>

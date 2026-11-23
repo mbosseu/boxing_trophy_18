@@ -101,6 +101,20 @@ module.exports = async function handler(req, res) {
 
     // Carte des combats : vainqueur reporte sur le combat de l'affiche (id distinct possible pour les archives)
     const afficheId = body.affiche_match_id != null ? body.affiche_match_id : body.source_match_id;
+    // Affiche erronee : les vrais adversaires remplacent ceux de la carte (fiches reprises des inscriptions)
+    const af = body.affiche_fighters;
+    if (af && body.affiche_match_id != null && af.fighter1 && af.fighter2) {
+      const { data: regs, error: regErr } = await supabase
+        .from('registrations')
+        .select('*')
+        .in('id', [String(af.fighter1), String(af.fighter2)]);
+      if (regErr) throw regErr;
+      const r1 = (regs || []).find((r) => String(r.id) === String(af.fighter1));
+      const r2 = (regs || []).find((r) => String(r.id) === String(af.fighter2));
+      if (!r1 || !r2) return json(res, 400, { error: 'Combattant introuvable dans les inscriptions' });
+      const upF = await supabase.from('matches').update({ fighter1: r1, fighter2: r2 }).eq('id', body.affiche_match_id);
+      if (upF.error) throw upF.error;
+    }
     if (body.sync_affiche && afficheId != null) {
       const winner = result === 'a_win' ? 'fighter1' : result === 'b_win' ? 'fighter2' : null;
       if (winner || body.affiche_match_id != null) {
