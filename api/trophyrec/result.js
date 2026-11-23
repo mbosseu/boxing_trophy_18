@@ -25,6 +25,26 @@ module.exports = async function handler(req, res) {
     const body = await readBody(req);
     const action = String(body.action || 'save');
 
+    if (action === 'ensure_fighter') {
+      // Combattant non inscrit (ajoute a la main sur la carte d'un gala archive)
+      const id = String(body.id || '');
+      const prenom = String(body.prenom || '').trim();
+      const nom = String(body.nom || '').trim();
+      if (!/^ext_[a-z0-9_-]{3,80}$/.test(id) || !prenom || !nom) return json(res, 400, { error: 'Prénom et nom obligatoires' });
+      const { data: existing } = await supabase.from('trophyrec_fighters').select('id').eq('id', id).maybeSingle();
+      if (existing) return json(res, 200, { ok: true, id: id });
+      const TR = require('../../trophyrec.js');
+      let slug = TR.slugify(prenom + '-' + nom) || 'combattant';
+      const { data: clash } = await supabase.from('trophyrec_fighters').select('id').eq('slug', slug).maybeSingle();
+      if (clash) slug = slug + '-' + id.slice(-4);
+      const ins = await supabase.from('trophyrec_fighters').insert([{
+        id: id, slug: slug, prenom: prenom, nom: nom,
+        gym_id: 'autre', gym_other: body.club ? String(body.club).trim() : null
+      }]);
+      if (ins.error) throw ins.error;
+      return json(res, 200, { ok: true, id: id, created: true });
+    }
+
     if (action === 'delete') {
       if (!body.id) return json(res, 400, { error: 'Combat introuvable' });
       const del = await supabase.from('trophyrec_bouts').delete().eq('id', String(body.id));
@@ -109,8 +129,11 @@ module.exports = async function handler(req, res) {
         .select('*')
         .in('id', [String(af.fighter1), String(af.fighter2)]);
       if (regErr) throw regErr;
-      const r1 = (regs || []).find((r) => String(r.id) === String(af.fighter1));
-      const r2 = (regs || []).find((r) => String(r.id) === String(af.fighter2));
+      const extraList = Array.isArray(af.extra) ? af.extra : [];
+      const pick = (id) => (regs || []).find((r) => String(r.id) === String(id)) ||
+        extraList.find((x) => String(x.id) === String(id) && /^ext_/.test(String(x.id)));
+      const r1 = pick(af.fighter1);
+      const r2 = pick(af.fighter2);
       if (!r1 || !r2) return json(res, 400, { error: 'Combattant introuvable dans les inscriptions' });
       const upF = await supabase.from('matches').update({ fighter1: r1, fighter2: r2 }).eq('id', body.affiche_match_id);
       if (upF.error) throw upF.error;

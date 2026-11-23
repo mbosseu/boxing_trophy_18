@@ -153,21 +153,42 @@
   }
 
   /* ───────── Choix des adversaires (affiche erronée : le vrai adversaire était un autre) ───────── */
+  var extras = []; // combattants non inscrits ajoutes a la main (ex. remplaçant le soir du gala)
   function regById(id, fallback) {
-    return data.registrations.find(function (r) { return String(r.id) === String(id); }) || fallback || null;
+    return data.registrations.find(function (r) { return String(r.id) === String(id); }) ||
+      extras.find(function (r) { return String(r.id) === String(id); }) || fallback || null;
   }
 
-  function fillCorners(m) {
-    var regs = data.registrations.slice().sort(function (a, b) { return fullName(a).localeCompare(fullName(b), 'fr'); });
+  function slugId(s) {
+    return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  /* « + Combattant non inscrit… » : prénom, nom, club, puis il devient choisissable dans les deux coins */
+  function addExternal(sel) {
+    var prenom = (prompt('Prénom du combattant non inscrit :') || '').trim();
+    var nom = prenom ? (prompt('Nom de ' + prenom + ' :') || '').trim() : '';
+    if (!prenom || !nom) { sel.value = sel.getAttribute('data-prev') || ''; return; }
+    var club = (prompt('Club de ' + prenom + ' ' + nom + ' (facultatif) :') || '').trim();
+    var f = { id: 'ext_t19_' + slugId(prenom + '-' + nom), prenom: prenom, nom: nom, club: club, ext: true };
+    if (!regById(f.id)) extras.push(f);
+    var m = current;
+    fillCorners(m, { t19F1: $('t19F1').value, t19F2: $('t19F2').value });
+    sel.value = f.id;
+    refreshCorners();
+  }
+
+  function fillCorners(m, keep) {
+    var regs = data.registrations.concat(extras).sort(function (a, b) { return fullName(a).localeCompare(fullName(b), 'fr'); });
     [[m.fighter1, 't19F1'], [m.fighter2, 't19F2']].forEach(function (pair) {
       var f = pair[0], sel = $(pair[1]);
       var list = regs.slice();
       if (f && !regById(f.id)) list.unshift(f); // combattant de l'affiche absent des inscrits : on le garde
       sel.innerHTML = list.map(function (r) {
-        var extra = [r.club, r.categoriePoids].filter(Boolean).join(' · ');
+        var extra = [r.ext ? 'non inscrit' : '', r.club, r.categoriePoids].filter(Boolean).join(' · ');
         return '<option value="' + esc(r.id) + '">' + esc(fullName(r)) + (extra ? ' — ' + esc(extra) : '') + '</option>';
-      }).join('');
-      sel.value = f ? String(f.id) : '';
+      }).join('') + '<option value="__new">+ Combattant non inscrit…</option>';
+      sel.value = keep && keep[pair[1]] ? keep[pair[1]] : (f ? String(f.id) : '');
+      sel.setAttribute('data-prev', sel.value);
     });
   }
 
@@ -199,7 +220,12 @@
       data.fighters = list.accounts || [];
       fightersSynced = true;
     }
-    function find(f) {
+    async function find(f) {
+      if (f.ext) {
+        // Non inscrit : fiche TrophyRec creee (ou retrouvee) par le serveur
+        var created = await post('/api/trophyrec/result', { action: 'ensure_fighter', id: f.id, prenom: f.prenom, nom: f.nom, club: f.club || null });
+        return created.id;
+      }
       var email = String(f.email || '').trim().toLowerCase();
       var hit = data.fighters.find(function (x) { return String(x.id) === String(f.id); }) ||
         data.fighters.find(function (x) { return x.registration_id && String(x.registration_id) === String(f.id); }) ||
@@ -207,7 +233,7 @@
       if (!hit) throw new Error('Fiche TrophyRec introuvable pour ' + fullName(f) + '.');
       return hit.id;
     }
-    return { a: find(m.f1), b: find(m.f2) };
+    return { a: await find(m.f1), b: await find(m.f2) };
   }
 
   async function saveDecision(e) {
@@ -237,7 +263,10 @@
         bout_date: T19_DATE, edition_id: 't19',
         source_match_id: sourceId(m),
         affiche_match_id: m.id,
-        affiche_fighters: changed ? { fighter1: c.f1.id, fighter2: c.f2.id } : undefined,
+        affiche_fighters: changed ? {
+          fighter1: c.f1.id, fighter2: c.f2.id,
+          extra: [c.f1, c.f2].filter(function (f) { return f.ext; }).map(function (f) { return { id: f.id, prenom: f.prenom, nom: f.nom, club: f.club || '' }; })
+        } : undefined,
         sync_affiche: true
       });
       if (changed) { m.fighter1 = c.f1; m.fighter2 = c.f2; }
@@ -306,8 +335,14 @@
     });
     document.querySelectorAll('input[name="t19Res"]').forEach(function (r) { r.addEventListener('change', updateMethodState); });
     $('t19DlgForm').addEventListener('submit', saveDecision);
-    $('t19F1').addEventListener('change', refreshCorners);
-    $('t19F2').addEventListener('change', refreshCorners);
+    ['t19F1', 't19F2'].forEach(function (id) {
+      $(id).addEventListener('change', function () {
+        var sel = $(id);
+        if (sel.value === '__new') { addExternal(sel); return; }
+        sel.setAttribute('data-prev', sel.value);
+        refreshCorners();
+      });
+    });
     $('t19DlgCancel').addEventListener('click', function () { $('t19Dlg').close(); });
     $('t19DlgDelete').addEventListener('click', deleteDecision);
   });
