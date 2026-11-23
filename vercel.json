@@ -31,7 +31,7 @@
     },
     {
       "source": "/boxeur/:slug",
-      "destination": "/boxeur.html"
+      "destination": "/boxeur"
     },
     {
       "source": "/sitemap.xml",
