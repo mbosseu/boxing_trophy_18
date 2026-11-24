@@ -30,7 +30,7 @@
   function clubTag(f) {
     var g = clubShort(f);
     if (!g) return '';
-    var c = CLUB_COLORS[(f && f.gym_id) || 'autre'] || CLUB_COLORS.autre;
+    var c = CLUB_COLORS[TR.resolveGymId(f) || 'autre'] || CLUB_COLORS.autre;
     return '<span class="rx-club" style="--c:' + c + '">' + esc(g) + '</span>';
   }
   function photo(f, cls) {
@@ -329,7 +329,7 @@
     S.overall.forEach(function (r) {
       var f = r.fighter;
       var name = P.gymName(f) || 'Club non renseigné';
-      if (!clubs[name]) clubs[name] = { name: name, gym: f.gym_id, n: 0, w: 0, l: 0, d: 0, ud: 0, points: 0, best: null };
+      if (!clubs[name]) clubs[name] = { name: name, gym: TR.resolveGymId(f), n: 0, w: 0, l: 0, d: 0, ud: 0, points: 0, best: null };
       var c = clubs[name];
       // Points club : 3 par victoire, 1 par nul, +1 si decision unanime
       c.n++; c.w += r.w; c.l += r.l; c.d += r.d; c.ud += r.ud || 0; c.points += r.w * 3 + r.d + (r.ud || 0);

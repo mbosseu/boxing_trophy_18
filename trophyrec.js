@@ -70,6 +70,29 @@
     return g ? g.label : (id || '—');
   }
 
+  // Club ecrit a la main a l'inscription (« Portet », « Porter », « Boxing center st cyprien »...) -> salle Boxing Center
+  var GYM_PATTERNS = [
+    ['portet', /porte[tr]/],
+    ['minimes', /minime/],
+    ['st-cyprien', /cyprien/],
+    ['etats-unis', /etats?[\s-]*unis?/],
+    ['ramonville', /ramonville/],
+    ['moteka', /moteka/]
+  ];
+  function gymIdFromText(text) {
+    var t = String(text || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    if (!t || /boxing club|usr|toulousain|aucamville/.test(t)) return null; // autres clubs
+    for (var i = 0; i < GYM_PATTERNS.length; i++) {
+      if (GYM_PATTERNS[i][1].test(t)) return GYM_PATTERNS[i][0];
+    }
+    return null;
+  }
+  function resolveGymId(f) {
+    if (!f) return '';
+    if ((!f.gym_id || f.gym_id === 'autre') && f.gym_other) return gymIdFromText(f.gym_other) || 'autre';
+    return f.gym_id || '';
+  }
+
   function methodLabel(id) {
     var m = METHODS.find(function (x) { return x.id === id; });
     return m ? m.label : (LEGACY_METHODS[id] || id || '—');
@@ -272,6 +295,8 @@
     SEED_COACHES: SEED_COACHES,
     slugify: slugify,
     gymLabel: gymLabel,
+    gymIdFromText: gymIdFromText,
+    resolveGymId: resolveGymId,
     methodLabel: methodLabel,
     methodShort: methodShort,
     methodWeight: methodWeight,

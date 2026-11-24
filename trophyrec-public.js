@@ -28,8 +28,9 @@
   }
   function gymName(f) {
     if (!f) return '';
-    if (f.gym_id === 'autre' && f.gym_other) return f.gym_other;
-    return f.gym_id ? TR.gymLabel(f.gym_id) : '';
+    var id = TR.resolveGymId(f);
+    if (id === 'autre') return f.gym_other || TR.gymLabel('autre');
+    return id ? TR.gymLabel(id) : '';
   }
   function coachName(id, coaches) {
     var c = (coaches || []).find(function (x) { return x.id === id; });

@@ -119,7 +119,7 @@ async function ensureFighter(supabase, email, reg, extra) {
     nom: nom,
     email: email,
     photo_url: (reg && reg.photoUrl) || null,
-    gym_id: 'autre',
+    gym_id: TR.gymIdFromText(reg && reg.club) || 'autre',
     gym_other: (reg && reg.club) || null,
     sexe: (reg && reg.sexe) || null,
     registration_id: (reg && reg.id) || null,
@@ -251,6 +251,77 @@ async function actForgot(supabase, body) {
 
 /* ───────── Actions admin ───────── */
 
+/* Invitation TrophyRec : accès (créé si besoin) + photo de profil + résultats après chaque combat */
+async function sendWelcome(f, email, password) {
+  const link = site() + '/connexion';
+  const fiche = site() + '/boxeur/' + encodeURIComponent(f.slug || '');
+  const classement = site() + '/classement';
+  const hello = f.prenom ? 'Salut ' + esc(f.prenom) + ',' : 'Salut,';
+  const p = function (t) { return '<p style="line-height:1.6;color:#e7dfd9">' + t + '</p>'; };
+  const access = password
+    ? '<table style="width:100%;margin:14px 0;border-collapse:collapse;font-size:15px">' +
+      '<tr><td style="padding:10px 12px;border:1px solid #3a2a20;color:#9a8f88">Identifiant</td><td style="padding:10px 12px;border:1px solid #3a2a20;color:#fff"><b>' + esc(email) + '</b></td></tr>' +
+      '<tr><td style="padding:10px 12px;border:1px solid #3a2a20;color:#9a8f88">Mot de passe provisoire</td><td style="padding:10px 12px;border:1px solid #3a2a20;color:#fff;font-family:monospace;font-size:17px"><b>' + esc(password) + '</b></td></tr></table>' +
+      p('Change ce mot de passe dès ta première connexion, rubrique « Mot de passe » de ton espace.')
+    : p('Ton identifiant, c\'est ton adresse e-mail : <b style="color:#fff">' + esc(email) + '</b>. Tu as oublié ton mot de passe ? Clique sur « Mot de passe oublié » sur la page de connexion, tu en recevras un nouveau.');
+  const html = mailShell('Ta fiche TrophyRec est en ligne',
+    p(hello) +
+    p('Le Boxing Center a lancé <b style="color:#fff">TrophyRec</b>, le classement officiel du Boxing Trophy. Ta fiche combattant est en ligne, avec ton palmarès.') +
+    p('<b style="color:#ffc570">Ajoute ta photo de profil</b> (de face, en tenue si possible) depuis ton espace combattant. Tu peux aussi y mettre ton nom de ring, ta salle et ton coach.') +
+    access +
+    button(link, 'Mettre ma photo') +
+    p('Désormais, <b style="color:#fff">après chaque combat, tu retrouveras ton résultat dans TrophyRec</b> : ton bilan, ta place dans ta catégorie et le classement de ton club.') +
+    p('Le classement : <a href="' + esc(classement) + '" style="color:#ffc570">' + esc(classement.replace('https://', '')) + '</a><br>Ta fiche : <a href="' + esc(fiche) + '" style="color:#ffc570">' + esc(fiche.replace('https://', '')) + '</a>'));
+  const text = 'Ta fiche TrophyRec est en ligne.\nAjoute ta photo de profil depuis ton espace : ' + link +
+    (password ? '\nIdentifiant : ' + email + '\nMot de passe provisoire : ' + password : '\nIdentifiant : ' + email + ' (mot de passe oublié ? lien sur la page de connexion)') +
+    '\nAprès chaque combat, ton résultat sera dans TrophyRec : ' + classement + '\nTa fiche : ' + fiche;
+  await sendEmailViaBrevo({ to: email, subject: 'Ta fiche TrophyRec est en ligne : ajoute ta photo', html: html, text: text });
+}
+
+async function actWelcome(supabase, body) {
+  const f = await fighterById(supabase, body.id);
+  if (!f) return [404, { error: 'Fiche introuvable' }];
+  if (!f.email) return [200, { ok: true, status: 'skipped', reason: 'pas d\'e-mail' }];
+  if (f.account_status === 'ferme') return [200, { ok: true, status: 'skipped', reason: 'compte fermé' }];
+  if (!isConfigured()) return [500, { error: 'BREVO_API_KEY manquante sur Vercel : aucun mail ne peut partir' }];
+  const email = cleanEmail(f.email);
+
+  let user = null;
+  if (f.user_id) {
+    const r = await supabase.auth.admin.getUserById(f.user_id);
+    user = r && r.data ? r.data.user : null;
+  }
+  if (!user) {
+    user = await findUserByEmail(supabase, email);
+    if (user) await supabase.from('trophyrec_fighters').update({ user_id: user.id }).eq('id', f.id);
+  }
+  const meta = (user && user.user_metadata) || {};
+  if (meta.trophyrec_welcome_at && !body.force) return [200, { ok: true, status: 'already' }];
+
+  let password = null;
+  let created = false;
+  if (!user) {
+    password = tempPassword();
+    user = await createAccess(supabase, email, password, f);
+    created = true;
+  } else if (!user.last_sign_in_at) {
+    // Jamais connecte : il n'a peut-etre jamais recu (ou a perdu) son mot de passe provisoire
+    password = tempPassword();
+    const up = await supabase.auth.admin.updateUserById(user.id, { password: password });
+    if (up.error) throw up.error;
+  }
+  try {
+    await sendWelcome(f, email, password);
+  } catch (e) {
+    // Mail refuse : on renvoie le mot de passe pour le transmettre a la main, sans marquer l'invitation
+    return [200, { ok: false, status: 'mail_failed', reason: e.message, password: password || undefined }];
+  }
+  await supabase.auth.admin.updateUserById(user.id, {
+    user_metadata: Object.assign({}, meta, { trophyrec_welcome_at: new Date().toISOString() })
+  });
+  return [200, { ok: true, status: created ? 'created' : (password ? 'sent_new_password' : 'sent') }];
+}
+
 async function fighterById(supabase, id) {
   const { data, error } = await supabase.from('trophyrec_fighters').select('*').eq('id', String(id || '')).maybeSingle();
   if (error) throw error;
@@ -282,6 +353,7 @@ async function actList(supabase) {
       bouts: bouts[x.id] || 0,
       has_access: Boolean(u),
       last_sign_in_at: u ? u.last_sign_in_at : null,
+      welcome_sent_at: u && u.user_metadata ? u.user_metadata.trophyrec_welcome_at || null : null,
       banned_until: u ? u.banned_until : null
     });
   });
@@ -443,7 +515,8 @@ const ADMIN = {
   activate: actActivate,
   resend: actResend,
   delete: actDelete,
-  update_profile: actUpdateProfile
+  update_profile: actUpdateProfile,
+  welcome: actWelcome
 };
 
 module.exports = async function handler(req, res) {

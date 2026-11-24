@@ -28,7 +28,13 @@ module.exports = async function handler(req, res) {
     const { data: regs, error } = await supabase.from('registrations').select('*');
     if (error) throw error;
 
-    const { data: existing } = await supabase.from('trophyrec_fighters').select('id, slug, email');
+    const { data: existing } = await supabase.from('trophyrec_fighters').select('id, slug, email, gym_id, gym_other');
+    // Fiches deja creees avec un club ecrit a la main : rattachees a la bonne salle Boxing Center
+    for (const f of existing || []) {
+      if (f.gym_id && f.gym_id !== 'autre') continue;
+      const gym = TR.gymIdFromText(f.gym_other);
+      if (gym) await supabase.from('trophyrec_fighters').update({ gym_id: gym }).eq('id', f.id);
+    }
     const slugs = new Set((existing || []).map(function (f) { return f.slug; }));
     const byEmail = {};
     (existing || []).forEach(function (f) {
@@ -60,7 +66,7 @@ module.exports = async function handler(req, res) {
         email: email || null,
         photo_url: r.photoUrl || null,
         gym_other: r.club || null,
-        gym_id: 'autre',
+        gym_id: TR.gymIdFromText(r.club) || 'autre',
         sexe: r.sexe || null,
         registration_id: r.id || null
       };
