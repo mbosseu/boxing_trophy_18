@@ -1,4 +1,5 @@
 const { adminClient, checkAdminPassword, json, cors } = require('../../lib/supabase-admin');
+const { archiveAndSoftDelete } = require('../../lib/soft-delete');
 
 function readBody(req) {
   return new Promise(function (resolve, reject) {
@@ -47,8 +48,12 @@ module.exports = async function handler(req, res) {
 
     if (action === 'delete') {
       if (!body.id) return json(res, 400, { error: 'Combat introuvable' });
-      const del = await supabase.from('trophyrec_bouts').delete().eq('id', String(body.id));
-      if (del.error) throw del.error;
+      await archiveAndSoftDelete(supabase, {
+        table: 'trophyrec_bouts',
+        idColumn: 'id',
+        id: String(body.id),
+        deletedBy: 'trophyrec-admin',
+      });
       if (body.affiche_match_id != null) {
         await supabase.from('matches').update({ winner: null }).eq('id', body.affiche_match_id);
       }

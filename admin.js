@@ -410,7 +410,8 @@
                 await ensureEdition();
                 const { data, error } = await scoped(supabaseClient
                     .from('registrations')
-                    .select('*'));
+                    .select('*')
+                    .is('deleted_at', null));
                 if (error) throw error;
                 registrations = data || [];
                 enrichMatchesFromRegistrations();
@@ -501,7 +502,7 @@
                 // Puis retrait des anciennes lignes. S'il échoue, les combats sont quand même
                 // enregistrés : la lecture ignore les anciennes lignes (latestGeneration)
                 // et le prochain enregistrement les retirera.
-                let oldRows = scoped(supabaseClient.from('matches').delete());
+                let oldRows = scoped(supabaseClient.from('matches').update({ deleted_at: new Date().toISOString() }).is('deleted_at', null));
                 oldRows = oldestNewId != null ? oldRows.lt('id', oldestNewId) : oldRows.neq('id', -1);
                 const { error: deleteError } = await oldRows;
                 if (deleteError) console.warn('Retrait des anciens combats :', deleteError);
@@ -729,7 +730,8 @@
                 await ensureEdition();
                 const { data, error } = await scoped(supabaseClient
                     .from('matches')
-                    .select('*'))
+                    .select('*')
+                    .is('deleted_at', null))
                     .order('sort_order', { ascending: true });
                 if (error) throw error;
 
@@ -1284,7 +1286,7 @@
             try {
                 const { error } = await supabaseClient
                     .from('registrations')
-                    .delete()
+                    .update({ deleted_at: new Date().toISOString() })
                     .eq('id', pendingDeleteId);
                 if (error) throw error;
             } catch (e) {
@@ -3083,10 +3085,10 @@
                     // 3. Clear Supabase tables
                     if (supabaseClient) {
                         await ensureEdition();
-                        const { error: e1 } = await scoped(supabaseClient.from('registrations').delete().neq('id', ''));
+                        const { error: e1 } = await scoped(supabaseClient.from('registrations').update({ deleted_at: new Date().toISOString() }).is('deleted_at', null).neq('id', ''));
                         if (e1) throw new Error('Erreur suppression inscriptions : ' + e1.message);
 
-                        const { error: e2 } = await scoped(supabaseClient.from('matches').delete().gte('id', 0));
+                        const { error: e2 } = await scoped(supabaseClient.from('matches').update({ deleted_at: new Date().toISOString() }).is('deleted_at', null).gte('id', 0));
                         if (e2) throw new Error('Erreur suppression combats : ' + e2.message);
 
                         // 4. Reset metadata flags

@@ -15,6 +15,7 @@
  */
 const crypto = require('crypto');
 const { adminClient, checkAdminPassword, json, cors } = require('../../lib/supabase-admin');
+const { archiveAndSoftDelete, excludeDeleted } = require('../../lib/soft-delete');
 const { sendEmailViaBrevo, isConfigured } = require('../../lib/brevo-send');
 const TR = require('../../trophyrec.js');
 
@@ -307,15 +308,17 @@ async function actWelcome(supabase, body) {
 }
 
 async function fighterById(supabase, id) {
-  const { data, error } = await supabase.from('trophyrec_fighters').select('*').eq('id', String(id || '')).maybeSingle();
+  const { data, error } = await excludeDeleted(
+    supabase.from('trophyrec_fighters').select('*').eq('id', String(id || ''))
+  ).maybeSingle();
   if (error) throw error;
   return data;
 }
 
 async function actList(supabase) {
   const [f, b] = await Promise.all([
-    supabase.from('trophyrec_fighters').select('*').order('created_at', { ascending: false }),
-    supabase.from('trophyrec_bouts').select('fighter_a,fighter_b')
+    excludeDeleted(supabase.from('trophyrec_fighters').select('*').order('created_at', { ascending: false })),
+    excludeDeleted(supabase.from('trophyrec_bouts').select('fighter_a,fighter_b'))
   ]);
   if (f.error) throw f.error;
   const users = {};
@@ -469,23 +472,28 @@ async function actDelete(supabase, body) {
   const f = await fighterById(supabase, body.id);
   if (!f) return [404, { error: 'Fiche introuvable' }];
   if (f.user_id) {
-    const r = await supabase.auth.admin.deleteUser(f.user_id);
+    const r = await supabase.auth.admin.updateUserById(f.user_id, {
+      email: 'deleted_' + f.user_id + '@deleted.invalid',
+      ban_duration: BAN_FOREVER,
+    });
     if (r.error && !/not found/i.test(r.error.message || '')) throw r.error;
   }
-  const { count } = await supabase.from('trophyrec_bouts').select('id', { count: 'exact', head: true })
-    .or('fighter_a.eq.' + f.id + ',fighter_b.eq.' + f.id);
-  if (count) {
-    // Des combats officiels existent : on garde le palmares, on retire l'acces et les donnees perso.
-    const up = await supabase.from('trophyrec_fighters').update({
-      user_id: null, email: null, numero_licence: null, account_status: 'ferme',
-      closed_reason: 'Compte supprimé', updated_at: new Date().toISOString()
-    }).eq('id', f.id);
-    if (up.error) throw up.error;
-    return [200, { ok: true, kept: true }];
-  }
-  const del = await supabase.from('trophyrec_fighters').delete().eq('id', f.id);
-  if (del.error) throw del.error;
-  return [200, { ok: true, kept: false }];
+  await archiveAndSoftDelete(supabase, {
+    table: 'trophyrec_fighters',
+    idColumn: 'id',
+    id: f.id,
+    deletedBy: 'trophyrec-admin',
+    extraPatch: {
+      user_id: null,
+      email: null,
+      numero_licence: null,
+      account_status: 'ferme',
+      closed_reason: 'Compte supprime',
+      slug: String(f.slug || f.id) + '-del-' + Date.now(),
+      updated_at: new Date().toISOString(),
+    },
+  });
+  return [200, { ok: true, kept: true }];
 }
 
 const PUBLIC = { provision: actProvision, forgot: actForgot };

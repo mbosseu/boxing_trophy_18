@@ -94,11 +94,12 @@
     if (typeof supabaseClient === 'undefined' || !supabaseClient) throw new Error('Supabase indisponible');
     var cols = 'id,slug,prenom,nom,alias,photo_url,height_cm,stance,gym_id,gym_other,coach_id,sexe';
     var res = await Promise.all([
-      supabaseClient.from('trophyrec_fighters').select(cols + ',account_status'),
-      supabaseClient.from('trophyrec_bouts').select('*'),
+      supabaseClient.from('trophyrec_fighters').select(cols + ',account_status').is('deleted_at', null),
+      supabaseClient.from('trophyrec_bouts').select('*').is('deleted_at', null),
       supabaseClient.from('trophyrec_coaches').select('id,name,gym_id,active')
     ]);
     // Colonne account_status absente tant que le SQL n'est pas passe : on relit sans elle
+    if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols).is('deleted_at', null);
     if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols);
     res.forEach(function (r) { if (r.error) throw r.error; });
     return { fighters: res[0].data || [], bouts: res[1].data || [], coaches: res[2].data || [] };
