@@ -560,6 +560,8 @@ function initForm() {
   async function validateStep1Async() {
     hideError('email-duplicate-error');
     hideError('telephone-duplicate-error');
+    const already = document.getElementById('alreadyRegistered');
+    if (already) already.hidden = true;
     
     const isBasicValid = validateStep(1);
     if (!isBasicValid) return false;
@@ -580,6 +582,8 @@ function initForm() {
       document.getElementById('telephone').classList.add('error');
       ok = false;
     }
+    // Déjà inscrit : on rassure et on montre la suite plutôt qu'une simple erreur
+    if (!ok && already) already.hidden = false;
     return ok;
   }
 

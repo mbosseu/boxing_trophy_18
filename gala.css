@@ -523,3 +523,10 @@ body.intro-done.g-scrolled .hint { opacity: 0; translate: 0 8px; pointer-events:
   .t3d-orbit-2 { transform: rotateX(64deg) rotateY(18deg); }
   .t3d-orbit-3 { transform: rotateX(80deg) rotateY(-24deg); }
 }
+
+/* Inscription déjà enregistrée : message rassurant + prochaine étape */
+.already-registered { margin: 18px 0 4px; padding: 16px 18px; border-radius: 14px; border: 1px solid rgba(95, 211, 138, .45); background: rgba(95, 211, 138, .1); font-size: 14px; line-height: 1.6; }
+.already-registered p { margin: 0 0 8px; }
+.already-registered ul { margin: 0; padding-left: 18px; }
+.already-registered li + li { margin-top: 6px; }
+.already-registered a { color: inherit; font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }

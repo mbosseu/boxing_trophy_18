@@ -136,7 +136,7 @@ html,body{overflow-x:hidden}
 @media (prefers-reduced-motion:reduce){.ch-face,.hint-cue::after{animation:none}}
 </style>
 <link rel="stylesheet" href="poster.css?v=8">
-<link rel="stylesheet" href="gala.css?v=6">
+<link rel="stylesheet" href="gala.css?v=7">
 <link rel="stylesheet" href="night.css?v=19">
 <link rel="icon" type="image/png" href="image/logo_boxing_center.png">
 <meta name="description" content="Boxing Trophy 20 — la coupe de gala du Boxing Center. Samedi 12 décembre 2026 dès 19h au garage Moteka, Fenouillet. Boxe anglaise et pied-poing. Place public 10 €.">
@@ -708,14 +708,21 @@ html,body{overflow-x:hidden}
                   <label class="form-label" for="email">Adresse e-mail <span class="required">*</span></label>
                   <input type="email" class="form-input" id="email" name="email" placeholder="exemple@mail.com" autocomplete="email" required>
                   <div class="form-error" id="email-error">Veuillez saisir une adresse e-mail valide</div>
-                  <div class="form-error" id="email-duplicate-error">Cette adresse e-mail est déjà inscrite</div>
+                  <div class="form-error" id="email-duplicate-error">Déjà inscrit(e) au Trophy 20 avec cet e-mail</div>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="telephone">Téléphone <span class="required">*</span></label>
                   <input type="tel" class="form-input" id="telephone" name="telephone" placeholder="06 12 34 56 78" autocomplete="tel" required>
                   <div class="form-error" id="telephone-error">Veuillez saisir un numéro de téléphone valide</div>
-                  <div class="form-error" id="telephone-duplicate-error">Ce numéro de téléphone est déjà inscrit</div>
+                  <div class="form-error" id="telephone-duplicate-error">Déjà inscrit(e) au Trophy 20 avec ce numéro</div>
                 </div>
+              </div>
+              <div class="already-registered" id="alreadyRegistered" hidden role="status">
+                <p><strong>C'est tout bon : ton inscription au Trophy 20 est déjà enregistrée.</strong> Rien à refaire ici.</p>
+                <ul>
+                  <li><strong>Licence payée au club ?</strong> Il te reste à faire ta licence en ligne sur Mon Espace FFBoxe, club <strong>Noble Art Portésien</strong>, avant le 10 décembre : <a href="/licence">suis le tutoriel pas à pas</a>.</li>
+                  <li><strong>Ton espace combattant</strong> : identifiant et mot de passe envoyés par mail après l'inscription (regarde aussi les spams). Pas reçu ? <a href="/connexion">« Mot de passe oublié »</a> avec ton e-mail.</li>
+                </ul>
               </div>
               <div class="form-nav"><div></div><button type="button" class="btn btn-next" data-next="2">Suivant →</button></div>
             </div>
@@ -1336,7 +1343,7 @@ html,body{overflow-x:hidden}
 <script src="home-combats.js"></script>
 <script src="licence-gate.js?v=3"></script>
 <script src="pass.js?v=3" defer></script>
-<script src="app.js?v=12"></script>
+<script src="app.js?v=13"></script>
 <script src="gallery.js?v=2"></script>
 <script src="smoke.js?v=3"></script>
 <script src="night.js?v=4"></script>
