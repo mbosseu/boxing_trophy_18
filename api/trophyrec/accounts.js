@@ -162,22 +162,6 @@ async function sendCredentials(email, password, prenom) {
   return { sent: true };
 }
 
-async function sendWelcome(email, prenom) {
-  if (!isConfigured()) return { sent: false, reason: 'BREVO_API_KEY manquante' };
-  const link = site() + '/connexion';
-  const hello = prenom ? 'Salut ' + esc(prenom) + ',' : 'Salut,';
-  await sendEmailViaBrevo({
-    to: email,
-    subject: 'Ton accès TrophyRec est prêt — Boxing Trophy 20',
-    html: mailShell('Ton accès est prêt',
-      '<p style="line-height:1.6;color:#e7dfd9">' + hello + '</p>' +
-      '<p style="line-height:1.6;color:#e7dfd9">Ton accès TrophyRec est créé pour <b style="color:#fff">' + esc(email) + '</b>, avec le mot de passe que tu as choisi.</p>' +
-      button(link, 'Ouvrir mon espace')),
-    text: 'Ton accès TrophyRec est prêt : ' + link
-  });
-  return { sent: true };
-}
-
 async function sendClosed(email, prenom, reason) {
   if (!isConfigured()) return { sent: false };
   const hello = prenom ? 'Bonjour ' + esc(prenom) + ',' : 'Bonjour,';
