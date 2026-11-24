@@ -222,69 +222,6 @@
     }
   }
 
-  /* Invitation TrophyRec pour tous les combattants T19 + T20 :
-     acces cree si besoin, mail « ajoute ta photo » + resultats apres chaque combat. Une seule fois par personne. */
-  async function inviteEveryone() {
-    var btn = document.getElementById('trAccWelcome');
-    var box = document.getElementById('trWelcomeBox');
-    var bar = document.getElementById('trWelcomeBar');
-    var text = document.getElementById('trWelcomeText');
-    var log = document.getElementById('trWelcomeLog');
-    var title = document.getElementById('trWelcomeTitle');
-    btn.disabled = true;
-    box.hidden = false;
-    log.hidden = true;
-    log.textContent = '';
-    title.textContent = 'Invitation TrophyRec';
-    bar.style.width = '0';
-    try {
-      text.textContent = 'Import des inscriptions du Trophy 19 et du Trophy 20…';
-      await api('/api/trophyrec/sync-fighters', {});
-      var list = (await api('/api/trophyrec/accounts', { action: 'list' })).accounts || [];
-      var todo = list.filter(function (a) { return a.email && a.account_status !== 'ferme' && !a.welcome_sent_at; });
-      var noMail = list.filter(function (a) { return !a.email; }).length;
-      var already = list.filter(function (a) { return a.welcome_sent_at; }).length;
-      if (!todo.length) {
-        text.textContent = 'Tout le monde a déjà reçu l\'invitation (' + already + ' combattant(s)).' + (noMail ? ' ' + noMail + ' fiche(s) sans e-mail.' : '');
-        return;
-      }
-      var msg = 'Envoyer l\'invitation TrophyRec à ' + todo.length + ' combattant(s) ?\n\n' +
-        '- Accès créé pour ceux qui n\'en ont pas (mot de passe provisoire dans le mail).\n' +
-        '- Mail : « Ta fiche TrophyRec est en ligne : ajoute ta photo », et après chaque combat le résultat sera dans TrophyRec (avec le lien).\n' +
-        '- Ceux qui se sont déjà connectés gardent leur mot de passe.\n\n' +
-        (already ? already + ' combattant(s) déjà invité(s) ne recevront rien. ' : '') + (noMail ? noMail + ' fiche(s) sans e-mail ignorée(s).' : '');
-      if (!confirm(msg)) { text.textContent = 'Envoi annulé.'; return; }
-      var done = { created: 0, sent: 0, failed: 0 };
-      var lines = [];
-      for (var i = 0; i < todo.length; i++) {
-        var a = todo[i];
-        var name = ((a.prenom || '') + ' ' + (a.nom || '')).trim();
-        text.textContent = 'Envoi ' + (i + 1) + ' / ' + todo.length + ' : ' + name;
-        bar.style.width = Math.round(((i + 1) / todo.length) * 100) + '%';
-        try {
-          var r = await api('/api/trophyrec/accounts', { action: 'welcome', id: a.id });
-          if (r.status === 'created') done.created++;
-          else if (r.status === 'mail_failed') {
-            done.failed++;
-            lines.push(name + ' (' + a.email + ') : mail refusé' + (r.password ? ', mot de passe provisoire ' + r.password : '') + ' — ' + (r.reason || ''));
-          } else if (r.status !== 'already' && r.status !== 'skipped') done.sent++;
-        } catch (e) {
-          done.failed++;
-          lines.push(name + ' (' + a.email + ') : ' + e.message);
-          if (/BREVO_API_KEY/.test(e.message)) break;
-        }
-      }
-      title.textContent = 'Invitation terminée';
-      text.textContent = (done.created + done.sent) + ' mail(s) envoyé(s), dont ' + done.created + ' accès créé(s).' + (done.failed ? ' ' + done.failed + ' en échec (détail ci-dessous).' : '');
-      if (lines.length) { log.textContent = lines.join('\n'); log.hidden = false; }
-      await loadLists();
-    } catch (e) {
-      text.textContent = e.message;
-    } finally {
-      btn.disabled = false;
-    }
-  }
-
   function initAccounts() {
     var card = document.getElementById('trAccountsCard');
     if (!card) return;
@@ -308,8 +245,6 @@
     });
     var search = document.getElementById('trAccSearch');
     if (search) search.addEventListener('input', function () { accQuery = search.value.trim().toLowerCase(); renderAccounts(); });
-    var welcomeBtn = document.getElementById('trAccWelcome');
-    if (welcomeBtn) welcomeBtn.addEventListener('click', inviteEveryone);
     var refresh = document.getElementById('trAccRefresh');
     if (refresh) refresh.addEventListener('click', loadLists);
     var create = document.getElementById('trAccCreate');
