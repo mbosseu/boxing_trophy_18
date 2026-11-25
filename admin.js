@@ -37,19 +37,33 @@
     // Edition en cours : le back office ne touche qu'au Trophy 20. Le Trophy 19 est archive (onglet dedie).
     const EDITION = 't20';
     let editionReady = null;
+    // Soft delete : la colonne deleted_at n'existe qu'apres le SQL schema-soft-delete.sql.
+    // Tant qu'elle manque, on lit sans ce filtre (sinon toutes les lectures echouent : tableau de bord a 0).
+    let softDeleteReady = null;
     async function ensureEdition() {
-        if (editionReady !== null) return editionReady;
-        if (typeof supabaseClient === 'undefined' || !supabaseClient) return (editionReady = false);
+        if (editionReady !== null && softDeleteReady !== null) return editionReady;
+        if (typeof supabaseClient === 'undefined' || !supabaseClient) {
+            softDeleteReady = false;
+            return (editionReady = false);
+        }
         try {
-            const { error } = await supabaseClient.from('registrations').select('edition').limit(1);
-            editionReady = !error;
+            const [ed, sd] = await Promise.all([
+                supabaseClient.from('registrations').select('edition').limit(1),
+                supabaseClient.from('registrations').select('deleted_at').limit(1)
+            ]);
+            editionReady = !ed.error;
+            softDeleteReady = !sd.error;
         } catch (e) {
             editionReady = false;
+            softDeleteReady = false;
         }
         return editionReady;
     }
     function scoped(query) {
         return editionReady ? query.eq('edition', EDITION) : query;
+    }
+    function alive(query) {
+        return softDeleteReady ? query.is('deleted_at', null) : query;
     }
     const REG_KEY = 'boxingtrophy19_registrations';
     const MATCH_KEY = 'boxingtrophy19_matches';
@@ -408,10 +422,9 @@
         if (typeof supabaseClient !== 'undefined' && supabaseClient) {
             try {
                 await ensureEdition();
-                const { data, error } = await scoped(supabaseClient
+                const { data, error } = await alive(scoped(supabaseClient
                     .from('registrations')
-                    .select('*')
-                    .is('deleted_at', null));
+                    .select('*')));
                 if (error) throw error;
                 registrations = data || [];
                 enrichMatchesFromRegistrations();
@@ -728,10 +741,9 @@
             try {
                 const generationAtStart = matchesWriteGeneration;
                 await ensureEdition();
-                const { data, error } = await scoped(supabaseClient
+                const { data, error } = await alive(scoped(supabaseClient
                     .from('matches')
-                    .select('*')
-                    .is('deleted_at', null))
+                    .select('*')))
                     .order('sort_order', { ascending: true });
                 if (error) throw error;
 

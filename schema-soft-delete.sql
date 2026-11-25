@@ -35,3 +35,12 @@ begin
       on public.trophyrec_bouts (deleted_at) where deleted_at is null;
   end if;
 end $$;
+
+-- trophyrec_fighters est lu colonne par colonne par le public (e-mail et licence proteges) :
+-- sans ce droit, le filtre deleted_at casse le classement public.
+do $$
+begin
+  if exists (select 1 from information_schema.tables where table_schema = 'public' and table_name = 'trophyrec_fighters') then
+    grant select (deleted_at) on public.trophyrec_fighters to anon, authenticated;
+  end if;
+end $$;

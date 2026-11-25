@@ -99,7 +99,10 @@
       supabaseClient.from('trophyrec_coaches').select('id,name,gym_id,active')
     ]);
     // Colonne account_status absente tant que le SQL n'est pas passe : on relit sans elle
-    if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols).is('deleted_at', null);
+    // Colonnes absentes tant que les SQL ne sont pas passes (deleted_at, account_status) : on relit sans elles
+    if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols + ',account_status');
+    if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols);
+    if (res[1].error) res[1] = await supabaseClient.from('trophyrec_bouts').select('*');
     if (res[0].error) res[0] = await supabaseClient.from('trophyrec_fighters').select(cols);
     res.forEach(function (r) { if (r.error) throw r.error; });
     return { fighters: res[0].data || [], bouts: res[1].data || [], coaches: res[2].data || [] };

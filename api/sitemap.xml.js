@@ -19,7 +19,8 @@ module.exports = async function handler(req, res) {
   try {
     const supabase = adminClient();
     if (supabase) {
-      const { data } = await supabase.from('trophyrec_fighters').select('slug, updated_at').is('deleted_at', null);
+      let { data, error } = await supabase.from('trophyrec_fighters').select('slug, updated_at').is('deleted_at', null);
+      if (error) ({ data } = await supabase.from('trophyrec_fighters').select('slug, updated_at'));
       (data || []).forEach(function (f) {
         if (f.slug) urls.push({ path: '/boxeur/' + encodeURIComponent(f.slug), pri: '0.8', freq: 'weekly' });
       });
