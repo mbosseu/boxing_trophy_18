@@ -691,8 +691,9 @@ html,body{overflow-x:hidden}
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label" for="dateNaissance">Date de naissance <span class="required">*</span></label>
-                  <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" autocomplete="bday" required>
+                  <input type="date" class="form-input" id="dateNaissance" name="dateNaissance" autocomplete="bday" max="2008-12-12" required>
                   <div class="form-error" id="dateNaissance-error">Veuillez saisir votre date de naissance</div>
+                  <p class="licence-help">Inscription réservée aux majeurs (18 ans le jour du gala).</p>
                 </div>
                 <div class="form-group">
                   <span class="form-label">Sexe <span class="required">*</span></span>
@@ -1343,7 +1344,7 @@ html,body{overflow-x:hidden}
 <script src="home-combats.js"></script>
 <script src="licence-gate.js?v=3"></script>
 <script src="pass.js?v=3" defer></script>
-<script src="app.js?v=13"></script>
+<script src="app.js?v=14"></script>
 <script src="gallery.js?v=2"></script>
 <script src="smoke.js?v=3"></script>
 <script src="night.js?v=4"></script>

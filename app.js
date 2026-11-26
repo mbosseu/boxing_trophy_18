@@ -450,7 +450,7 @@ function initForm() {
     if (step === 1) {
       valid = validateField('nom') && valid;
       valid = validateField('prenom') && valid;
-      valid = validateField('dateNaissance') && valid;
+      valid = validateAgeField('dateNaissance') && valid;
       valid = validateRadio('sexe', 'sexe-error') && valid;
       valid = validateEmailField('email') && valid;
       valid = validatePhoneField('telephone') && valid;
@@ -489,6 +489,42 @@ function initForm() {
 
     field.classList.remove('error');
     hideError(errorId);
+    return true;
+  }
+
+  // Inscription reservee aux majeurs : 18 ans revolus le jour du gala.
+  const GALA_DATE = { y: 2026, m: 12, d: 12 };
+  const MIN_AGE = 18;
+
+  function ageAtGala(value) {
+    const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || '').trim());
+    if (!m) return null;
+    const y = +m[1], mo = +m[2], d = +m[3];
+    const check = new Date(y, mo - 1, d);
+    if (check.getFullYear() !== y || check.getMonth() !== mo - 1 || check.getDate() !== d) return null;
+    let age = GALA_DATE.y - y;
+    if (GALA_DATE.m < mo || (GALA_DATE.m === mo && GALA_DATE.d < d)) age -= 1;
+    return age;
+  }
+
+  function validateAgeField(id) {
+    const field = document.getElementById(id);
+    const error = document.getElementById(id + '-error');
+    const age = ageAtGala(field.value);
+    let message = '';
+    if (!field.value.trim() || age == null || age > 100) {
+      message = 'Veuillez saisir une date de naissance valide';
+    } else if (age < MIN_AGE) {
+      message = 'Le Boxing Trophy est réservé aux majeurs : il faut avoir 18 ans le jour du gala (12 décembre 2026).';
+    }
+    if (message) {
+      field.classList.add('error');
+      if (error) error.textContent = message;
+      showError(id + '-error');
+      return false;
+    }
+    field.classList.remove('error');
+    hideError(id + '-error');
     return true;
   }
 
@@ -685,6 +721,16 @@ function initForm() {
       const err = document.getElementById('engagementFFB-error');
       if (err) err.classList.add('visible');
       engageBox.focus();
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+      return;
+    }
+
+    // Garde-fou : jamais d'inscription d'un mineur, meme si l'etape 1 a ete contournee.
+    if (!validateAgeField('dateNaissance')) {
+      goToStep(1);
       if (submitBtn) {
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnText;
