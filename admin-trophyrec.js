@@ -5,20 +5,12 @@
     return sessionStorage.getItem('boxingtrophy19_admin_auth') ? document.getElementById('loginPassword') : null;
   }
 
-  function password() {
-    try {
-      return sessionStorage.getItem('bt20_admin_pw') || '';
-    } catch (e) {
-      return '';
-    }
-  }
-
   async function api(path, body) {
     var res = await fetch(path, {
       method: 'POST',
+      credentials: 'include',
       headers: {
-        'Content-Type': 'application/json',
-        'x-admin-password': password()
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(body || {})
     });
@@ -151,7 +143,7 @@
     var tb = document.getElementById('trAccBody');
     if (!tb) return;
     if (!window.__trAccountsLoaded) {
-      tb.innerHTML = '<tr><td colspan="5" style="color:var(--text-dim)">Comptes indisponibles : vérifiez SUPABASE_SERVICE_ROLE_KEY et ADMIN_PASSWORD sur Vercel, et passez le SQL de schema-trophyrec.sql.</td></tr>';
+      tb.innerHTML = '<tr><td colspan="5" style="color:var(--text-dim)">Comptes indisponibles : verifiez SUPABASE_SERVICE_ROLE_KEY, SUPER_ADMIN_EMAIL / SUPER_ADMIN_PASSWORD et SESSION_SECRET sur Vercel, et passez le SQL de schema-trophyrec.sql.</td></tr>';
       return;
     }
     var all = window.__trFighters || [];

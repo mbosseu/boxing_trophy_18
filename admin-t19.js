@@ -18,19 +18,15 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  function pw() { return sessionStorage.getItem('bt20_admin_pw') || ''; }
-
-  /* Mot de passe change sur Vercel depuis la connexion : on deconnecte proprement. */
   function sessionExpired() {
     sessionStorage.removeItem('boxingtrophy20_admin_auth');
-    sessionStorage.removeItem('bt20_admin_pw');
-    alert('Le mot de passe admin a changé depuis votre connexion. Reconnectez-vous avec le nouveau.');
+    alert('Session admin expiree. Reconnecte-toi avec le meme email que la boutique.');
     location.reload();
   }
   window.BT20AdminExpired = sessionExpired;
 
   async function post(path, body) {
-    var r = await fetch(path, { method: 'POST', headers: { 'Content-Type': 'application/json', 'x-admin-password': pw() }, body: JSON.stringify(body) });
+    var r = await fetch(path, { method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
     var j = await r.json().catch(function () { return {}; });
     if (r.status === 401) { sessionExpired(); throw new Error('Session expirée'); }
     if (!r.ok) throw new Error(j.error || 'Erreur ' + r.status);
@@ -56,7 +52,7 @@
     var status = $('t19Status');
     status.textContent = 'Chargement des archives…';
     try {
-      var res = await fetch('/api/admin/sync?edition=t19', { cache: 'no-store', headers: { 'x-admin-password': pw() } });
+      var res = await fetch('/api/admin/sync?edition=t19', { cache: 'no-store', credentials: 'include' });
       var body = await res.json().catch(function () { return {}; });
       if (res.status === 401) return sessionExpired();
       if (!res.ok) throw new Error(body.error || 'Archives indisponibles');

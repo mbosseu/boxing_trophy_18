@@ -1,13 +1,14 @@
 /**
  * Sync admin — inscriptions + combats (Supabase).
- * Auth : header x-admin-password (même mot de passe que l’admin).
+ * Auth : cookie session admin (meme login que BOXPLUS /admin).
  */
 const { createClient } = require('@supabase/supabase-js');
+const { requireAdmin } = require('../../lib/admin-session');
 
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-password');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
@@ -16,10 +17,7 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const adminPass = (req.headers['x-admin-password'] || '').trim();
-  const expected =
-    (process.env.ADMIN_PASSWORD || '').trim();
-  if (!adminPass || adminPass !== expected) {
+  if (!(await requireAdmin(req))) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 

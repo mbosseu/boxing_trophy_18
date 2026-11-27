@@ -1,7 +1,8 @@
 /**
  * Signature Cloudinary pour uploads signés (preset ml_default, etc.)
- * Protégé par le mot de passe admin (header x-admin-password).
+ * Protege par la session admin (cookie, meme login que BOXPLUS /admin).
  */
+const { requireAdmin } = require('../../lib/admin-session');
 const crypto = require('crypto');
 
 function parseCloudinaryUrl(url) {
@@ -39,7 +40,7 @@ module.exports = async function handler(req, res) {
   if (req.query && req.query.op === "licence-checkout") return licenceCheckout(req, res);
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-password');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') {
     return res.status(204).end();
@@ -48,11 +49,8 @@ module.exports = async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const adminPass = (req.headers['x-admin-password'] || '').trim();
-  const expected =
-    (process.env.ADMIN_PASSWORD || '').trim();
-  if (!adminPass || adminPass !== expected) {
-    return res.status(401).json({ error: 'Mot de passe admin invalide' });
+  if (!(await requireAdmin(req))) {
+    return res.status(401).json({ error: 'Non autorise' });
   }
 
   const creds = getCredentials();

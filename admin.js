@@ -32,7 +32,6 @@
     // ── Constants ──────────────────────────────────────────
     // Le mot de passe admin n'est plus livre au navigateur : il est verifie par le serveur.
     const AUTH_KEY = 'boxingtrophy20_admin_auth';
-    const ADMIN_PW_KEY = 'bt20_admin_pw';
 
     // Edition en cours : le back office ne touche qu'au Trophy 20. Le Trophy 19 est archive (onglet dedie).
     const EDITION = 't20';
@@ -82,6 +81,7 @@
     const loginScreen = $('#loginScreen');
     const adminPanel = $('#adminPanel');
     const loginForm = $('#loginForm');
+    const loginEmail = $('#loginEmail');
     const loginPassword = $('#loginPassword');
     const loginError = $('#loginError');
     const logoutBtn = $('#logoutBtn');
@@ -154,28 +154,25 @@
     //  AUTH
     // ═══════════════════════════════════════════════════════
     async function checkAuth() {
-        if (sessionStorage.getItem(AUTH_KEY) !== 'true') {
-            showLogin();
-            return;
-        }
-        // Le mot de passe a pu changer sur Vercel depuis la connexion : on le revérifie.
         try {
             const res = await fetch('/api/trophyrec/accounts', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-admin-password': sessionStorage.getItem(ADMIN_PW_KEY) || '' },
-                body: JSON.stringify({ action: 'admin_login' })
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'session_me' })
             });
-            if (res.status === 401) {
+            if (!res.ok) {
                 sessionStorage.removeItem(AUTH_KEY);
-                sessionStorage.removeItem(ADMIN_PW_KEY);
                 showLogin();
-                if (loginError) {
-                    loginError.textContent = 'Le mot de passe a changé : reconnectez-vous avec le nouveau.';
-                    loginError.hidden = false;
-                }
                 return;
             }
-        } catch (e) { /* hors ligne : on garde la session */ }
+            sessionStorage.setItem(AUTH_KEY, 'true');
+        } catch (e) {
+            if (sessionStorage.getItem(AUTH_KEY) !== 'true') {
+                showLogin();
+                return;
+            }
+        }
         showAdmin();
     }
 
@@ -275,10 +272,9 @@
                 enrichMatchesFromRegistrations();
                 await loadMatches();
             } else {
-                var adminPw = sessionStorage.getItem(ADMIN_PW_KEY) || '';
                 var res = await fetch('/api/admin/sync', {
                     cache: 'no-store',
-                    headers: { 'x-admin-password': adminPw }
+                    credentials: 'include'
                 });
                 if (res.status === 401) return;
                 if (!res.ok) throw new Error('Sync API');
@@ -333,39 +329,51 @@
 
     loginForm.addEventListener('submit', async function (e) {
         e.preventDefault();
+        const email = loginEmail ? loginEmail.value : '';
         const pw = loginPassword.value;
         const submit = loginForm.querySelector('[type="submit"]');
         if (submit) submit.disabled = true;
         let ok = false;
+        let errText = 'Email ou mot de passe incorrect.';
         try {
             const res = await fetch('/api/trophyrec/accounts', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'x-admin-password': pw },
-                body: JSON.stringify({ action: 'admin_login' })
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'session_login', email: email, password: pw })
             });
+            const data = await res.json().catch(function () { return {}; });
             ok = res.ok;
+            if (!ok && data.error) errText = data.error;
         } catch (err) {
             ok = false;
         }
         if (submit) submit.disabled = false;
         if (ok) {
             sessionStorage.setItem(AUTH_KEY, 'true');
-            sessionStorage.setItem(ADMIN_PW_KEY, pw);
             loginError.hidden = true;
             showAdmin();
         } else {
-            loginError.textContent = 'Mot de passe incorrect.';
+            loginError.textContent = errText;
             loginError.hidden = false;
             loginPassword.value = '';
             loginPassword.focus();
         }
     });
 
-    logoutBtn.addEventListener('click', function () {
+    logoutBtn.addEventListener('click', async function () {
         stopDataAutoSync();
+        try {
+            await fetch('/api/trophyrec/accounts', {
+                method: 'POST',
+                credentials: 'include',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action: 'session_logout' })
+            });
+        } catch (e) { /* deconnexion locale quand meme */ }
         sessionStorage.removeItem(AUTH_KEY);
-        sessionStorage.removeItem(ADMIN_PW_KEY);
         showLogin();
+        if (loginEmail) loginEmail.value = '';
         loginPassword.value = '';
     });
 
@@ -1380,8 +1388,7 @@
                 if (typeof BT19Cloudinary === 'undefined' || !BT19Cloudinary.getCloudinaryConfig().isConfigured()) {
                     throw new Error('Cloudinary non configuré (Paramètres)');
                 }
-                var adminPw = sessionStorage.getItem(ADMIN_PW_KEY) || '';
-                var url = await BT19Cloudinary.uploadFile(file, { adminPassword: adminPw });
+                var url = await BT19Cloudinary.uploadFile(file, { adminSession: true });
                 updateEditPhotoPreview(url);
                 showNotification('✅ Photo prête — enregistrez le candidat');
             } catch (err) {
@@ -2809,8 +2816,7 @@
                 try {
                     var url;
                     if (typeof BT19Cloudinary !== 'undefined' && BT19Cloudinary.getCloudinaryConfig().isConfigured()) {
-                        var adminPw = sessionStorage.getItem(ADMIN_PW_KEY) || '';
-                        url = await BT19Cloudinary.uploadFile(file, { adminPassword: adminPw });
+                        url = await BT19Cloudinary.uploadFile(file, { adminSession: true });
                     } else {
                         throw new Error(
                             'Cloudinary non configuré : Paramètres → Photos (cloud dhbh6wcak + preset).'

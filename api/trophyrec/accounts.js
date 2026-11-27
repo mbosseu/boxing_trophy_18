@@ -7,7 +7,7 @@
  *                mot de passe provisoire et envoie identifiant + mot de passe par Brevo.
  *  - forgot    : envoie par Brevo un lien pour choisir un nouveau mot de passe.
  *
- * Actions admin (en-tete x-admin-password) :
+ * Actions admin (cookie session boutique, meme email / mot de passe que BOXPLUS /admin) :
  *  - list, create, verify_licence, refuse_licence, close, activate, resend, delete, update_profile
  *
  * Le numero de licence n'est verifie que sur le format ici : le controle reel se fait
@@ -15,6 +15,12 @@
  */
 const crypto = require('crypto');
 const { adminClient, checkAdminPassword, json, cors } = require('../../lib/supabase-admin');
+const { verifyAdminLogin } = require('../../lib/admin-auth');
+const {
+  setAdminSessionCookie,
+  getAdminSession,
+  clearAdminSessionCookie,
+} = require('../../lib/admin-session');
 const { archiveAndSoftDelete, excludeDeleted } = require('../../lib/soft-delete');
 const { sendEmailViaBrevo, isConfigured } = require('../../lib/brevo-send');
 const TR = require('../../trophyrec.js');
@@ -516,23 +522,43 @@ module.exports = async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
 
-  const supabase = adminClient();
-  if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    return json(res, 500, { error: 'Supabase non configuré (SUPABASE_SERVICE_ROLE_KEY manquante)' });
-  }
-
   try {
     const body = await readBody(req);
     const action = String(body.action || '');
+
+    if (action === 'session_login') {
+      const user = await verifyAdminLogin(body.email, body.password);
+      if (!user) return json(res, 401, { error: 'Email ou mot de passe incorrect' });
+      setAdminSessionCookie(res, user);
+      return json(res, 200, { ok: true, user: { email: user.email, name: user.name, role: user.role } });
+    }
+    if (action === 'session_logout') {
+      clearAdminSessionCookie(res);
+      return json(res, 200, { ok: true });
+    }
+    if (action === 'session_me' || action === 'admin_login') {
+      const session = getAdminSession(req);
+      if (!session) return json(res, 401, { error: 'Non autorise' });
+      return json(res, 200, { ok: true, user: session });
+    }
+
+    const supabase = adminClient();
+    if (!supabase || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      return json(res, 500, { error: 'Supabase non configuré (SUPABASE_SERVICE_ROLE_KEY manquante)' });
+    }
+
     let fn = PUBLIC[action];
     if (!fn && ADMIN[action]) {
-      if (!checkAdminPassword(req)) return json(res, 401, { error: 'Non autorisé' });
+      if (!(await checkAdminPassword(req))) return json(res, 401, { error: 'Non autorisé' });
       fn = ADMIN[action];
     }
     if (!fn) return json(res, 400, { error: 'Action inconnue' });
     const out = await fn(supabase, body);
     return json(res, out[0], out[1]);
   } catch (e) {
+    if (e.message === 'session_secret_missing') {
+      return json(res, 503, { error: 'SESSION_SECRET manquant (meme secret que la boutique)' });
+    }
     return json(res, 500, { error: e.message || 'Erreur compte' });
   }
 };

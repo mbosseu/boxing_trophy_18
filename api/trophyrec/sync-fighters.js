@@ -18,7 +18,7 @@ module.exports = async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return json(res, 405, { error: 'Method not allowed' });
-  if (!checkAdminPassword(req)) return json(res, 401, { error: 'Non autorise' });
+  if (!(await checkAdminPassword(req))) return json(res, 401, { error: 'Non autorise' });
 
   const supabase = adminClient();
   if (!supabase) return json(res, 500, { error: 'Supabase non configure' });

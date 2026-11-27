@@ -60,9 +60,9 @@
     function uploadSigned(file, conf, adminPassword) {
         return fetch('/api/cloudinary/sign', {
             method: 'POST',
+            credentials: 'include',
             headers: {
-                'Content-Type': 'application/json',
-                'x-admin-password': adminPassword
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ upload_preset: conf.uploadPreset })
         })
@@ -103,7 +103,7 @@
 
   /**
    * @param {File} file
-   * @param {{ adminPassword?: string }} [options] — admin : upload signé via /api/cloudinary/sign
+   * @param {{ adminSession?: boolean, adminPassword?: string }} [options] — admin : upload signe via cookie session
    */
     function uploadFile(file, options) {
         options = options || {};
@@ -116,7 +116,7 @@
         }
 
         var trySigned = function (unsignedErr) {
-            if (!options.adminPassword) {
+            if (!options.adminSession && !options.adminPassword) {
                 var hint =
                     'Le preset « ' +
                     conf.uploadPreset +
@@ -132,7 +132,7 @@
         };
 
         return uploadUnsigned(file, conf).catch(function (err) {
-            if (options.adminPassword || isUnsignedPresetError(err)) {
+            if (options.adminSession || options.adminPassword || isUnsignedPresetError(err)) {
                 return trySigned(err);
             }
             throw err;

@@ -12,6 +12,7 @@
     "test": "node test/trophyrec-rank.test.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.49.8"
+    "@supabase/supabase-js": "^2.49.8",
+    "bcryptjs": "^2.4.3"
   }
 }

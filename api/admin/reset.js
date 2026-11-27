@@ -1,19 +1,19 @@
 /**
  * Reset BT19 — vide registrations + matches et remet les flags à false.
- * Auth : header x-admin-password
+ * Auth : cookie session admin
  * DELETE /api/admin/reset
  */
+const { requireAdmin } = require('../../lib/admin-session');
+
 module.exports = async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-admin-password');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'DELETE') return res.status(405).json({ error: 'Method not allowed' });
 
-  const adminPass = (req.headers['x-admin-password'] || '').trim();
-  const expected = (process.env.ADMIN_PASSWORD || '').trim();
-  if (!adminPass || adminPass !== expected) {
+  if (!(await requireAdmin(req))) {
     return res.status(401).json({ error: 'Non autorisé' });
   }
 

@@ -28,11 +28,15 @@
                 <h1>BOXING TROPHY <span class="gold">20</span></h1>
                 <p class="login-subtitle">Panneau d'administration</p>
             </div>
-            <form id="loginForm" autocomplete="off">
+            <form id="loginForm" autocomplete="on">
+                <div class="input-group">
+                    <label for="loginEmail">Email</label>
+                    <input type="email" id="loginEmail" name="email" autocomplete="username" placeholder="Email admin boutique" required>
+                </div>
                 <div class="input-group" style="position: relative;">
                     <label for="loginPassword">Mot de passe</label>
                     <div style="position: relative; display: flex; align-items: center; width: 100%;">
-                        <input type="password" id="loginPassword" placeholder="Entrez le mot de passe" required style="padding-right: 44px; width: 100%;">
+                        <input type="password" id="loginPassword" name="password" autocomplete="current-password" placeholder="Mot de passe" required style="padding-right: 44px; width: 100%;">
                         <button type="button" id="togglePasswordBtn" class="btn-ghost" style="position: absolute; right: 0; border: none; background: transparent; color: var(--text-dim); cursor: pointer; padding: 10px; display: flex; align-items: center; justify-content: center; height: 100%; width: 44px; border-radius: var(--radius-xs); z-index: 2;">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="eyeIcon">
                                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
@@ -45,7 +49,7 @@
                     <span>Se connecter</span>
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
                 </button>
-                <p id="loginError" class="login-error" hidden>Mot de passe incorrect.</p>
+                <p id="loginError" class="login-error" hidden>Email ou mot de passe incorrect.</p>
             </form>
         </div>
     </div>
@@ -1164,8 +1168,8 @@ create policy "Accès public total" on match_metadata
     <script src="cloudinary-config.js?v=4"></script>
     <script src="poster.js?v=9"></script>
     <script src="trophyrec.js"></script>
-    <script src="admin.js?v=27"></script>
-    <script src="admin-trophyrec.js?v=7"></script>
-    <script src="admin-t19.js?v=7"></script>
+    <script src="admin.js?v=28"></script>
+    <script src="admin-trophyrec.js?v=8"></script>
+    <script src="admin-t19.js?v=8"></script>
 </body>
 </html>
